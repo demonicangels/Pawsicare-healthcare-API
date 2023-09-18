@@ -1,6 +1,6 @@
 package com.example.PawsiCare.persistence.impl;
 
-import com.example.PawsiCare.persistence.DTOs.ClientDTO;
+import com.example.PawsiCare.business.domain.Client;
 import org.springframework.stereotype.Repository;
 import com.example.PawsiCare.persistence.ClientRepository;
 
@@ -8,14 +8,14 @@ import java.util.*;
 
 @Repository
 public class FakeClientRepositoryImpl implements ClientRepository {
-    private final List<ClientDTO> clients;
+    private final List<Client> clients;
     int fakeID = 1;
 
     public FakeClientRepositoryImpl(){
         this.clients = new ArrayList<>();
     }
     @Override
-    public ClientDTO createClient(ClientDTO client) {
+    public Client createClient(Client client) {
         client.setId(fakeID);
         fakeID++;
 
@@ -24,36 +24,36 @@ public class FakeClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public ClientDTO updateClient(long id, ClientDTO client) {
-        Optional<ClientDTO> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
+    public Client updateClient(long id, Client client) {
+        Optional<Client> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
         if(cli.isPresent()){
             int index = clients.indexOf(cli.get());
 
-            ClientDTO clientDTO = cli.get();
-            clientDTO.setName(client.getName());
-            clientDTO.setEmail(client.getEmail());
-            clientDTO.setPhoneNumber(client.getPhoneNumber());
-            clientDTO.setPassword(client.getPassword());
+            Client c = cli.get();
+            c.setName(client.getName());
+            c.setEmail(client.getEmail());
+            c.setPhoneNumber(client.getPhoneNumber());
+            c.setPassword(client.getPassword());
 
-            clients.set(index, clientDTO);
+            clients.set(index, c);
 
-            return clientDTO;
+            return c;
         }
         return null;
     }
 
     @Override
-    public ClientDTO getClient(long id) {
-        Optional<ClientDTO> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
+    public Client getClient(long id) {
+        Optional<Client> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
         if(cli.isPresent()){
-            ClientDTO client = cli.get();
+            Client client = cli.get();
             return client;
         }
         return null;
     }
 
     @Override
-    public List<ClientDTO> getClients() {
+    public List<Client> getClients() {
         return clients;
     }
 

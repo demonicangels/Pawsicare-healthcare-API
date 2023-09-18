@@ -1,15 +1,16 @@
 package com.example.PawsiCare.persistence;
 
-import com.example.PawsiCare.persistence.DTOs.DoctorDTO;
+import com.example.PawsiCare.business.domain.Doctor;
+
 
 import java.util.List;
 
 public interface DoctorRepository {
-    DoctorDTO createDoctor(DoctorDTO doctor);
-    DoctorDTO updateDoctor(long id, DoctorDTO doctor);
+    Doctor createDoctor(Doctor doctor);
+    Doctor updateDoctor(long id, Doctor doctor);
 
-    DoctorDTO getDoctor(long id);
+    Doctor getDoctor(long id);
 
-    List<DoctorDTO> getDoctors();
+    List<Doctor> getDoctors();
     void deleteDoctor(long id);
 }

@@ -1,5 +1,7 @@
 package com.example.PawsiCare.business;
 
+import com.example.PawsiCare.business.domain.Pet;
+
 import java.util.List;
 
 public interface PetManager {

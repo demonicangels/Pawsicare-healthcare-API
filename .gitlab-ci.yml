@@ -10,5 +10,5 @@ build:
 
 test:
   stage: test
-  script: 
+  script:
     - ./gradlew test

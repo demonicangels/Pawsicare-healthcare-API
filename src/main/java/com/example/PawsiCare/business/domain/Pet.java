@@ -1,4 +1,4 @@
-package com.example.PawsiCare.persistence.DTOs;
+package com.example.PawsiCare.business.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PetDTO {
+public class Pet {
 
     private long id;
     private long ownerId;

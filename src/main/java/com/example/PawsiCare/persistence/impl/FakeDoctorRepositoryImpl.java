@@ -1,6 +1,6 @@
 package com.example.PawsiCare.persistence.impl;
 
-import com.example.PawsiCare.persistence.DTOs.DoctorDTO;
+import com.example.PawsiCare.business.domain.Doctor;
 import org.springframework.stereotype.Repository;
 import com.example.PawsiCare.persistence.DoctorRepository;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public class FakeDoctorRepositoryImpl implements DoctorRepository {
 
-    private final List<DoctorDTO> doctors;
+    private final List<Doctor> doctors;
     private int doctorId = 1;
 
     public FakeDoctorRepositoryImpl(){
@@ -19,7 +19,7 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
     }
 
     @Override
-    public DoctorDTO createDoctor(DoctorDTO doctor) {
+    public Doctor createDoctor(Doctor doctor) {
         doctor.setId(doctorId);
         doctorId++;
 
@@ -28,12 +28,12 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
     }
 
     @Override
-    public DoctorDTO updateDoctor(long id, DoctorDTO doctor) {
-        Optional<DoctorDTO> doc = this.doctors.stream().filter(d -> d.getId() == id).findFirst();
+    public Doctor updateDoctor(long id, Doctor doctor) {
+        Optional<Doctor> doc = this.doctors.stream().filter(d -> d.getId() == id).findFirst();
         if(doc.isPresent()){
             int index = doctors.indexOf(doc.get());
 
-            DoctorDTO doctorDTO = doc.get();
+            Doctor doctorDTO = doc.get();
             doctorDTO.setName(doctor.getName());
             doctorDTO.setField(doctor.getField());
             doctorDTO.setAge(doctor.getAge());
@@ -51,17 +51,17 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
     }
 
     @Override
-    public DoctorDTO getDoctor(long id) {
-        Optional<DoctorDTO> doc = this.doctors.stream().filter(d -> d.getId() == id).findFirst();
+    public Doctor getDoctor(long id) {
+        Optional<Doctor> doc = this.doctors.stream().filter(d -> d.getId() == id).findFirst();
         if(doc.isPresent()){
-            DoctorDTO doctor = doc.get();
+            Doctor doctor = doc.get();
             return doctor;
         }
         return null;
     }
 
     @Override
-    public List<DoctorDTO> getDoctors() {
+    public List<Doctor> getDoctors() {
         return this.doctors;
     }
 

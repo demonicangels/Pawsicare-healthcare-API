@@ -1,4 +1,4 @@
-package com.example.PawsiCare.business;
+package com.example.PawsiCare.business.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

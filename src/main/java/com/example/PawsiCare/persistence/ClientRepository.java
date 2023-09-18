@@ -1,13 +1,13 @@
 package com.example.PawsiCare.persistence;
 
-import com.example.PawsiCare.persistence.DTOs.ClientDTO;
+import com.example.PawsiCare.business.domain.Client;
 
 import java.util.List;
 
 public interface ClientRepository {
-    ClientDTO createClient(ClientDTO client);
-    ClientDTO updateClient(long id, ClientDTO client);
-    ClientDTO getClient(long id);
-    List<ClientDTO> getClients();
+    Client createClient(Client client);
+    Client updateClient(long id, Client client);
+    Client getClient(long id);
+    List<Client> getClients();
     void deleteClient(long id);
 }

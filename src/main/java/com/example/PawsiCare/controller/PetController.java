@@ -1,6 +1,6 @@
 package com.example.PawsiCare.controller;
 
-import com.example.PawsiCare.business.Pet;
+import com.example.PawsiCare.business.domain.Pet;
 import com.example.PawsiCare.business.PetManager;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
