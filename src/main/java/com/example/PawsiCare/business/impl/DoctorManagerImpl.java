@@ -13,6 +13,20 @@ import java.util.List;
 @AllArgsConstructor
 public class DoctorManagerImpl implements DoctorManager {
     private final DoctorRepository doctorRepository;
+
+    /**
+     *
+     * @param doctor
+     * @return doctor when created
+     * @should return a filled in doctor object when the doctor is created
+     * @return updated doctor when updated
+     * @should return a doctor object with updated fields
+     * @return doctors when asked for doctors
+     * @should return a list with all doctors when doctors are present
+     * @should return an empty list when no doctors are present
+     *
+     */
+
     @Override
     public Doctor createDoctor(Doctor doctor) {
         return doctorRepository.createDoctor(doctor);

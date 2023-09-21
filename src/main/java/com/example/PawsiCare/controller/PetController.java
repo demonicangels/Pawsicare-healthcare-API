@@ -22,6 +22,7 @@ public class PetController {
 
     private final PetManager petManager;
 
+
     @PostMapping()
     public ResponseEntity<CreatePetResponse> createPet(@RequestBody @Valid CreatePetRequest request){
         Pet pet = Pet.builder()

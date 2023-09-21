@@ -13,6 +13,15 @@ import java.util.*;
 @AllArgsConstructor
 public class PetManagerImpl implements PetManager {
     private final PetRepository petRepository;
+
+     /**
+       *
+       *
+       * @return pets with the wanted ownerId
+        * @should return a response with list containing all pets with the specified ownerId when such pets are present
+        * @should return a response with an empty list when there are no pets with the specified ownerId present
+        */
+
     @Override
     public Pet createPet(Pet pet) {
         return petRepository.createPet(pet);
