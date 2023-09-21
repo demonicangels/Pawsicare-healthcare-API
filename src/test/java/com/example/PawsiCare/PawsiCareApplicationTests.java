@@ -4,27 +4,24 @@ import com.example.PawsiCare.business.DoctorManager;
 import com.example.PawsiCare.business.PetManager;
 import com.example.PawsiCare.business.domain.Doctor;
 import com.example.PawsiCare.business.domain.Pet;
-import com.example.PawsiCare.persistence.DoctorRepository;
-import com.example.PawsiCare.persistence.PetRepository;
+import com.example.PawsiCare.business.repositories.DoctorRepository;
+import com.example.PawsiCare.business.repositories.PetRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.*;
 
+
 @SpringBootTest
 class PawsiCareApplicationTests {
 
 	private final DoctorManager doctorManager;
-	private final DoctorRepository doctorRepository;
-	private final PetRepository petRepository;
 	private final PetManager petManager;
 
 	@Autowired
-	PawsiCareApplicationTests(DoctorManager doctorManager, DoctorRepository doctorRepository, PetRepository petRepository, PetManager petManager) {
+	PawsiCareApplicationTests(DoctorManager doctorManager, PetManager petManager) {
 		this.doctorManager = doctorManager;
-		this.doctorRepository = doctorRepository;
-		this.petRepository = petRepository;
 		this.petManager = petManager;
 	}
 
@@ -32,8 +29,8 @@ class PawsiCareApplicationTests {
 	void getEntityById() {
 		Doctor doc = new Doctor(1,"Maia",30,"123","hi","cardiology","maia@gmail.com","+123456");
 		Doctor doc2 = new Doctor(2,"Nia",25,"123","ola","cardiology","nia@gmail.com","+123456");
-		doctorRepository.createDoctor(doc);
-		doctorRepository.createDoctor(doc2);
+		doctorManager.createDoctor(doc);
+		doctorManager.createDoctor(doc2);
 
 		Doctor actual = doctorManager.getDoctor(2);
 
@@ -83,6 +80,4 @@ class PawsiCareApplicationTests {
 
 		Assertions.assertEquals(actual.size(),expectedNum);
 	}
-
-
 }

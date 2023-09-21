@@ -4,7 +4,7 @@ import com.example.PawsiCare.business.domain.Client;
 import com.example.PawsiCare.business.ClientManager;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.example.PawsiCare.persistence.ClientRepository;
+import com.example.PawsiCare.business.repositories.ClientRepository;
 
 import java.util.*;
 

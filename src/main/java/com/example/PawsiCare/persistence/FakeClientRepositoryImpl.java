@@ -1,8 +1,8 @@
-package com.example.PawsiCare.persistence.impl;
+package com.example.PawsiCare.persistence;
 
 import com.example.PawsiCare.business.domain.Client;
 import org.springframework.stereotype.Repository;
-import com.example.PawsiCare.persistence.ClientRepository;
+import com.example.PawsiCare.business.repositories.ClientRepository;
 
 import java.util.*;
 

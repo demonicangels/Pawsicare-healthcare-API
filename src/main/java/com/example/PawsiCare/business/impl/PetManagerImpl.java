@@ -4,7 +4,7 @@ import com.example.PawsiCare.business.domain.Pet;
 import com.example.PawsiCare.business.PetManager;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.example.PawsiCare.persistence.PetRepository;
+import com.example.PawsiCare.business.repositories.PetRepository;
 
 import java.util.*;
 

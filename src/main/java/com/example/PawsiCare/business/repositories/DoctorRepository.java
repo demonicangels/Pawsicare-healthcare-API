@@ -1,4 +1,4 @@
-package com.example.PawsiCare.persistence;
+package com.example.PawsiCare.business.repositories;
 
 import com.example.PawsiCare.business.domain.Doctor;
 
