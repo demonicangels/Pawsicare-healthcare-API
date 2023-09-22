@@ -29,7 +29,7 @@ public class PetManagerImplTest {
                 .pets(sut.getPets(1))
                 .build();
         //Assert
-        assertThat(sutResponse.getPets().size() == 2);
+        assertThat(sutResponse.getPets().size()).isEqualTo(2);
     }
 
 

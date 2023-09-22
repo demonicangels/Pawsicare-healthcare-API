@@ -1,6 +1,5 @@
 package com.example.PawsiCare.business.impl;
 
-import com.example.PawsiCare.business.DoctorManager;
 import com.example.PawsiCare.business.domain.Doctor;
 import com.example.PawsiCare.business.repositories.DoctorRepository;
 import com.example.PawsiCare.business.responses.CreateDoctorResponse;
@@ -9,23 +8,23 @@ import com.example.PawsiCare.business.responses.UpdateDoctorResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 
 public class DoctorManagerImplTest {
     /**
      * @verifies return a filled in doctor object when the doctor is created
-     * @see DoctorManagerImpl#createDoctor(com.example.PawsiCare.business.domain.Doctor)
+     * @see DoctorManagerImpl#createDoctor(Doctor)
      */
     @Test
     public void createDoctor_shouldReturnAFilledInDoctorObjectWhenTheDoctorIsCreated() throws Exception {
         //Arrange
         DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
         Doctor doctor = Doctor.builder()
+                .id(1)
                 .name("Amara")
                 .age(22)
                 .field("cardiology")
@@ -43,8 +42,8 @@ public class DoctorManagerImplTest {
                 .build();
         //Assert
         Assertions.assertNotNull(sutResponse.getDoctor());
-        assertThat(sutResponse.getDoctor().getName() == "Amara");
-        assertThat(sutResponse.getDoctor().getId()!= 0);
+        assertThat(sutResponse.getDoctor().getName()).isEqualTo("Amara");
+        assertThat(sutResponse.getDoctor().getId()).isNotEqualTo(0);
 
     }
 
@@ -72,8 +71,8 @@ public class DoctorManagerImplTest {
                 .build();
         //Assert
         Assertions.assertEquals(updateDoctor,sutResponse.getUpdatedDoctor());
-        assertThat(updateDoctor.getId() == sutResponse.getUpdatedDoctor().getId());
-        assertThat(updateDoctor.getName() == sutResponse.getUpdatedDoctor().getName());
+        assertThat(updateDoctor.getId()).isEqualTo(sutResponse.getUpdatedDoctor().getId());
+        assertThat(updateDoctor.getName()).isEqualTo(sutResponse.getUpdatedDoctor().getName());
 
     }
 
@@ -94,9 +93,8 @@ public class DoctorManagerImplTest {
                 .build();
         //Assert
         Assertions.assertNotNull(sutResponse.getDoctors());
-        assertThat(sutResponse.getDoctors().size() == 2);
+        assertThat(sutResponse.getDoctors().size()).isEqualTo(2);
     }
-
 
     /**
      * @verifies return an empty list when no doctors are present
