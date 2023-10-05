@@ -12,26 +12,26 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class DoctorManagerImpl implements DoctorManager {
+
     private final DoctorRepository doctorRepository;
 
     /**
-     *
      * @param doctor
      * @return doctor when created
      * @should return a filled in doctor object when the doctor is created
-     * @return updated doctor when updated
-     * @should return a doctor object with updated fields
-     * @return doctors when asked for doctors
-     * @should return a list with all doctors when doctors are present
-     * @should return an empty list when no doctors are present
-     *
      */
-
     @Override
     public Doctor createDoctor(Doctor doctor) {
         return doctorRepository.createDoctor(doctor);
     }
 
+
+    /**
+     * @param id
+     * @param doctor
+     * @return updated doctor when updated
+     * @should return a doctor object with updated fields
+     */
     @Override
     public Doctor updateDoctor(long id, Doctor doctor) {
         return doctorRepository.updateDoctor(id, doctor);
@@ -42,6 +42,12 @@ public class DoctorManagerImpl implements DoctorManager {
          return doctorRepository.getDoctor(id);
     }
 
+
+    /**
+     * @return doctors when asked for doctors
+     * @should return a list with all doctors when doctors are present
+     * @should return an empty list when no doctors are present
+     */
     @Override
     public List<Doctor> getDoctors() {
         List<Doctor> returnedDoctors = new ArrayList<>();

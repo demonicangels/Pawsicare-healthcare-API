@@ -12,15 +12,8 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 public class PetManagerImpl implements PetManager {
-    private final PetRepository petRepository;
 
-     /**
-       *
-       *
-       * @return pets with the wanted ownerId
-        * @should return a response with list containing all pets with the specified ownerId when such pets are present
-        * @should return a response with an empty list when there are no pets with the specified ownerId present
-        */
+    private final PetRepository petRepository;
 
     @Override
     public Pet createPet(Pet pet) {
@@ -37,10 +30,12 @@ public class PetManagerImpl implements PetManager {
         return petRepository.getPet(id);
     }
 
-    @Override
-    public void deletePet(long id) {
-        petRepository.deletePet(id);
-    }
+    /**
+     * @param ownerId
+     * @return pets when asked for pets
+     * @should return a response with list containing all pets with the specified ownerId when such pets are present
+     * @should return a response with an empty list when there are no pets with the specified ownerId present
+     */
     @Override
     public List<Pet> getPets(long ownerId) {
         List<Pet> pets = new ArrayList<>();
@@ -50,6 +45,11 @@ public class PetManagerImpl implements PetManager {
 
         }
         return pets;
+    }
+
+    @Override
+    public void deletePet(long id) {
+        petRepository.deletePet(id);
     }
 
 //    private PetDTO ToDTO(Pet pet){

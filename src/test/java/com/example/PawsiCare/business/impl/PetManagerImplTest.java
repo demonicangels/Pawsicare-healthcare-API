@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 public class PetManagerImplTest {
     /**
      * @verifies return a response with list containing all pets with the specified ownerId when such pets are present
-     * @see PetManagerImpl#createPet(com.example.PawsiCare.business.domain.Pet)
+     * @see PetManagerImpl#getPets(long)(com.example.PawsiCare.business.domain.Pet)
      */
     @Test
     public void createPet_shouldReturnAResponseWithListContainingAllPetsWithTheSpecifiedOwnerIdWhenSuchPetsArePresent() throws Exception {
@@ -35,7 +35,7 @@ public class PetManagerImplTest {
 
     /**
      * @verifies return a response with an empty list when there are no pets with the specified ownerId present
-     * @see PetManagerImpl#createPet(com.example.PawsiCare.business.domain.Pet)
+     * @see PetManagerImpl#getPets(long)(com.example.PawsiCare.business.domain.Pet)
      */
     @Test
     public void createPet_shouldReturnAResponseWithAnEmptyListWhenThereAreNoPetsWithTheSpecifiedOwnerIdPresent() throws Exception {
