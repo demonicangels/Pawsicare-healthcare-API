@@ -7,6 +7,5 @@ import lombok.Data;
 @Data
 @Builder
 public class CreateDoctorResponse {
-    //private long id;
     Doctor doctor;
 }

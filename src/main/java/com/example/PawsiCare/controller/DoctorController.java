@@ -19,8 +19,6 @@ public class DoctorController {
 
     private final DoctorManager doctorManager;
 
-
-
     @GetMapping(params = "id")
     public ResponseEntity<GetDoctorResponse> getDoctorById(@RequestParam(name = "id", required = false) long id){
         Optional<Doctor> doctor = Optional.ofNullable(doctorManager.getDoctor(id));
