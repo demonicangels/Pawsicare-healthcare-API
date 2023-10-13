@@ -9,7 +9,7 @@ import lombok.NonNull;
 @Data
 @Builder
 public class UpdatePetRequest {
-    @NonNull
+
     private long ownerId;
     @Size(min = 3)
     @NotBlank

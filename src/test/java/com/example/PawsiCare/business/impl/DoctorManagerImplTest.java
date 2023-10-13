@@ -84,7 +84,26 @@ public class DoctorManagerImplTest {
     public void getDoctor_shouldReturnAListWithAllDoctorsWhenDoctorsArePresent() throws Exception {
         //Arrange
         DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
-        when(doctorRepositoryMock.getDoctors()).thenReturn(Arrays.asList(new Doctor(1, "Zara", 35, "123", "ne znam", "neurology", "maia@gmail.com", "+1234567"), new Doctor(2, "Maia", 35, "123", "ne znam", "neurology", "maia@gmail.com", "+1234567")));
+        when(doctorRepositoryMock.getDoctors()).thenReturn(Arrays.asList(Doctor.builder()
+                .id(1L)
+                .name("Zara")
+                .age(25)
+                .password("123")
+                .description("ne znam")
+                .field("neurology")
+                .email("maia@gmail.com")
+                .phoneNumber("+1234567").build(),
+
+                Doctor.builder()
+                        .id(2)
+                        .name("Maia")
+                        .age(35)
+                        .password("123")
+                        .email("maia@gmail.com")
+                        .phoneNumber("+1234567")
+                        .field("neurology")
+                        .build()));
+
         DoctorManagerImpl sut = new DoctorManagerImpl(doctorRepositoryMock);
 
         //Act

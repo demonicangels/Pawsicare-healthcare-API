@@ -1,21 +1,17 @@
 package com.example.PawsiCare.business.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import java.util.*;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Client {
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+public class Client extends User {
     private long id;
-    private String name;
-    private String email;
-    private String password;
-    private String phoneNumber;
+
     //private List<Pet> petList;
 
 
