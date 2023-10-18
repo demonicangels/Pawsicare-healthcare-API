@@ -1,10 +1,9 @@
 package com.example.PawsiCare.persistence;
 
-import com.example.PawsiCare.business.domain.Doctor;
-import com.example.PawsiCare.business.domain.Role;
-import com.example.PawsiCare.business.domain.User;
+import com.example.PawsiCare.domain.Doctor;
+import com.example.PawsiCare.domain.Role;
 import org.springframework.stereotype.Repository;
-import com.example.PawsiCare.business.repositories.DoctorRepository;
+import com.example.PawsiCare.domain.repositoryInterfaces.DoctorRepository;
 
 import java.util.ArrayList;
 import java.util.List;

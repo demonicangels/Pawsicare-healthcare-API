@@ -1,7 +1,5 @@
-package com.example.PawsiCare.business.domain;
+package com.example.PawsiCare.domain;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

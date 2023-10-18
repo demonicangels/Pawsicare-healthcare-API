@@ -1,7 +1,7 @@
 package com.example.PawsiCare.persistence;
 
-import com.example.PawsiCare.business.domain.Appointment;
-import com.example.PawsiCare.business.repositories.AppointmentRepository;
+import com.example.PawsiCare.domain.Appointment;
+import com.example.PawsiCare.domain.repositoryInterfaces.AppointmentRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

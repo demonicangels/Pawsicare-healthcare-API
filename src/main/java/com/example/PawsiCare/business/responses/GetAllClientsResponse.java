@@ -1,6 +1,6 @@
 package com.example.PawsiCare.business.responses;
 
-import com.example.PawsiCare.business.domain.Client;
+import com.example.PawsiCare.domain.Client;
 import lombok.Builder;
 import lombok.Data;
 import java.util.*;

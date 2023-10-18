@@ -1,10 +1,10 @@
 package com.example.PawsiCare.business.impl;
 
-import com.example.PawsiCare.business.domain.Pet;
-import com.example.PawsiCare.business.PetManager;
+import com.example.PawsiCare.domain.Pet;
+import com.example.PawsiCare.domain.managerInterfaces.PetManager;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.example.PawsiCare.business.repositories.PetRepository;
+import com.example.PawsiCare.domain.repositoryInterfaces.PetRepository;
 
 import java.util.*;
 

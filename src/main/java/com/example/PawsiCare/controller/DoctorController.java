@@ -1,7 +1,7 @@
 package com.example.PawsiCare.controller;
 
-import com.example.PawsiCare.business.domain.Doctor;
-import com.example.PawsiCare.business.DoctorManager;
+import com.example.PawsiCare.domain.Doctor;
+import com.example.PawsiCare.domain.managerInterfaces.DoctorManager;
 import com.example.PawsiCare.business.requests.CreateDoctorRequest;
 import com.example.PawsiCare.business.requests.UpdateDoctorRequest;
 import com.example.PawsiCare.business.responses.*;

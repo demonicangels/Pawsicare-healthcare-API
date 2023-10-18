@@ -1,9 +1,8 @@
 package com.example.PawsiCare.business.impl;
 
-import com.example.PawsiCare.business.domain.Pet;
-import com.example.PawsiCare.business.repositories.PetRepository;
+import com.example.PawsiCare.domain.Pet;
+import com.example.PawsiCare.domain.repositoryInterfaces.PetRepository;
 import com.example.PawsiCare.business.responses.GetAllPetsResponse;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -15,7 +14,7 @@ import static org.mockito.Mockito.when;
 public class PetManagerImplTest {
     /**
      * @verifies return a response with list containing all pets with the specified ownerId when such pets are present
-     * @see PetManagerImpl#getPets(long)(com.example.PawsiCare.business.domain.Pet)
+     * @see PetManagerImpl#getPets(long)( Pet )
      */
     @Test
     public void createPet_shouldReturnAResponseWithListContainingAllPetsWithTheSpecifiedOwnerIdWhenSuchPetsArePresent() throws Exception {
@@ -35,7 +34,7 @@ public class PetManagerImplTest {
 
     /**
      * @verifies return a response with an empty list when there are no pets with the specified ownerId present
-     * @see PetManagerImpl#getPets(long)(com.example.PawsiCare.business.domain.Pet)
+     * @see PetManagerImpl#getPets(long)( Pet )
      */
     @Test
     public void createPet_shouldReturnAResponseWithAnEmptyListWhenThereAreNoPetsWithTheSpecifiedOwnerIdPresent() throws Exception {

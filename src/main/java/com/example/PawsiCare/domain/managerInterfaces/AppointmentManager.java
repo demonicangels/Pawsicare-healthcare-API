@@ -1,7 +1,6 @@
-package com.example.PawsiCare.business;
+package com.example.PawsiCare.domain.managerInterfaces;
 
-import com.example.PawsiCare.business.domain.Appointment;
-import com.example.PawsiCare.business.domain.Doctor;
+import com.example.PawsiCare.domain.Appointment;
 
 import java.util.List;
 

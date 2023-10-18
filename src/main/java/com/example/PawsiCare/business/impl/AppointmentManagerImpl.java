@@ -1,9 +1,8 @@
 package com.example.PawsiCare.business.impl;
 
-import com.example.PawsiCare.business.AppointmentManager;
-import com.example.PawsiCare.business.domain.Appointment;
-import com.example.PawsiCare.business.domain.Doctor;
-import com.example.PawsiCare.business.repositories.AppointmentRepository;
+import com.example.PawsiCare.domain.managerInterfaces.AppointmentManager;
+import com.example.PawsiCare.domain.Appointment;
+import com.example.PawsiCare.domain.repositoryInterfaces.AppointmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

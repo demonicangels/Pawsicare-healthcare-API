@@ -1,6 +1,6 @@
-package com.example.PawsiCare.business.repositories;
+package com.example.PawsiCare.domain.repositoryInterfaces;
 
-import com.example.PawsiCare.business.domain.Appointment;
+import com.example.PawsiCare.domain.Appointment;
 
 import java.util.List;
 

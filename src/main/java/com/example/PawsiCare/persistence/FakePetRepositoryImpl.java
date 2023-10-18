@@ -1,7 +1,7 @@
 package com.example.PawsiCare.persistence;
 
-import com.example.PawsiCare.business.domain.Pet;
-import com.example.PawsiCare.business.repositories.PetRepository;
+import com.example.PawsiCare.domain.Pet;
+import com.example.PawsiCare.domain.repositoryInterfaces.PetRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;

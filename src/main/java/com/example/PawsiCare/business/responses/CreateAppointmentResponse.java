@@ -1,6 +1,6 @@
 package com.example.PawsiCare.business.responses;
 
-import com.example.PawsiCare.business.domain.Appointment;
+import com.example.PawsiCare.domain.Appointment;
 import lombok.Builder;
 import lombok.Data;
 

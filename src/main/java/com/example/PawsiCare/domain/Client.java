@@ -1,4 +1,4 @@
-package com.example.PawsiCare.business.domain;
+package com.example.PawsiCare.domain;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;

@@ -1,16 +1,6 @@
 package com.example.PawsiCare;
 
-import com.example.PawsiCare.business.DoctorManager;
-import com.example.PawsiCare.business.PetManager;
-import com.example.PawsiCare.business.domain.Doctor;
-import com.example.PawsiCare.business.domain.Pet;
-import com.example.PawsiCare.business.repositories.DoctorRepository;
-import com.example.PawsiCare.business.repositories.PetRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import java.util.*;
 
 
 @SpringBootTest

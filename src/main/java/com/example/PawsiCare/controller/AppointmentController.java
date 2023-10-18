@@ -1,14 +1,13 @@
 package com.example.PawsiCare.controller;
 
-import com.example.PawsiCare.business.AppointmentManager;
-import com.example.PawsiCare.business.domain.Appointment;
+import com.example.PawsiCare.domain.managerInterfaces.AppointmentManager;
+import com.example.PawsiCare.domain.Appointment;
 import com.example.PawsiCare.business.requests.CreateAppointmentRequest;
 import com.example.PawsiCare.business.requests.UpdateAppointmentRequest;
 import com.example.PawsiCare.business.responses.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

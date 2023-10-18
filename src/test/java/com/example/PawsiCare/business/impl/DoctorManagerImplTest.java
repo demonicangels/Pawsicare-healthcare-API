@@ -1,7 +1,7 @@
 package com.example.PawsiCare.business.impl;
 
-import com.example.PawsiCare.business.domain.Doctor;
-import com.example.PawsiCare.business.repositories.DoctorRepository;
+import com.example.PawsiCare.domain.Doctor;
+import com.example.PawsiCare.domain.repositoryInterfaces.DoctorRepository;
 import com.example.PawsiCare.business.responses.CreateDoctorResponse;
 import com.example.PawsiCare.business.responses.GetAllDoctorsResponse;
 import com.example.PawsiCare.business.responses.UpdateDoctorResponse;
@@ -49,7 +49,7 @@ public class DoctorManagerImplTest {
 
     /**
      * @verifies return a doctor object with updated fields
-     * @see DoctorManagerImpl#updateDoctor(long, Doctor)(com.example.PawsiCare.business.domain.Doctor)
+     * @see DoctorManagerImpl#updateDoctor(long, Doctor)( Doctor )
      */
     @Test
     public void updateDoctor_shouldReturnADoctorObjectWithUpdatedFields() throws Exception {
@@ -78,7 +78,7 @@ public class DoctorManagerImplTest {
 
     /**
      * @verifies return a list with all doctors when doctors are present
-     * @see DoctorManagerImpl#getDoctors()(com.example.PawsiCare.business.domain.Doctor)
+     * @see DoctorManagerImpl#getDoctors()( Doctor )
      */
     @Test
     public void getDoctor_shouldReturnAListWithAllDoctorsWhenDoctorsArePresent() throws Exception {
@@ -117,7 +117,7 @@ public class DoctorManagerImplTest {
 
     /**
      * @verifies return an empty list when no doctors are present
-     * @see DoctorManagerImpl#getDoctors()(com.example.PawsiCare.business.domain.Doctor)
+     * @see DoctorManagerImpl#getDoctors()( Doctor )
      */
     @Test
     public void getDoctor_shouldReturnAnEmptyListWhenNoDoctorsArePresent() throws Exception {
