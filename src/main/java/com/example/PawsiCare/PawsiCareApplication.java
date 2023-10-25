@@ -12,16 +12,4 @@ public class PawsiCareApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PawsiCareApplication.class, args);
 	}
-	@Bean
-	public WebMvcConfigurer corsconfigurer(){
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry corsRegistry){
-				corsRegistry.addMapping("/doctors").allowedOrigins("http://localhost:5173");
-				corsRegistry.addMapping("/login").allowedOrigins("http://localhost:5173");
-			}
-		};
-
-	}
-
 }

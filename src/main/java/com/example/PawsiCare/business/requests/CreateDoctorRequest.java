@@ -20,6 +20,5 @@ public class CreateDoctorRequest {
     private String field;
     @NotBlank
     private String email;
-    @NotBlank
     private String phoneNumber;
 }

@@ -10,6 +10,7 @@ import com.example.PawsiCare.business.responses.GetClientResponse;
 import com.example.PawsiCare.business.responses.UpdateClientResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.*;
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/clients")
 @AllArgsConstructor
 public class ClientController {
@@ -54,7 +56,7 @@ public class ClientController {
     }
 
     @PostMapping()
-    public ResponseEntity<CreateClientResponse> registerClient(@RequestBody @Valid CreateClientRequest request){
+    public ResponseEntity<CreateClientResponse> registerClient(@RequestBody @Valid @NotNull CreateClientRequest request){
 
         Client client = Client.builder()
                 .name(request.getName())

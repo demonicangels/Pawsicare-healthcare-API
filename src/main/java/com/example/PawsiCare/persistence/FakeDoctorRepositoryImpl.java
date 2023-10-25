@@ -15,12 +15,14 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
     private final List<Doctor> doctors;
     private int doctorId = 3;
 
+    static String birthday = "1-1-1999";
+
     public FakeDoctorRepositoryImpl(){
         this.doctors = new ArrayList<>() {{
             add(Doctor.builder()
                     .id(1)
                     .name("Maia")
-                    .birthday("1-1-1999")
+                    .birthday(birthday)
                     .password("123")
                     .image("https://media.istockphoto.com/id/916855812/photo/smiling-veterinarian-with-dog-and-digital-tablet.jpg?s=612x612&w=0&k=20&c=5i3S8AaEEqDuNvos2sFabaep7BeLwcHGwW_thNpyszE=")
                     .email("maia@gmail.com")
@@ -32,7 +34,7 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
             add(Doctor.builder()
                     .id(2)
                     .name("Nia")
-                    .birthday("1-1-1999")
+                    .birthday(birthday)
                     .password("123")
                     .image("https://media.istockphoto.com/id/1386206447/photo/brown-border-collie-dog-during-visit-in-vet.jpg?s=612x612&w=0&k=20&c=xVRfoZh1CLbKRoGYOIucSSO6nobJSQVmUw9a5Cpo3UA=")
                     .email("nia@gmail.com")
@@ -43,13 +45,13 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
             add(Doctor.builder()
                     .id(3)
                     .name("Ana")
-                    .birthday("1-1-1999")
+                    .birthday(birthday)
                     .password("123")
                     .image("https://img1.wsimg.com/isteam/stock/88197")
                     .email("nia@gmail.com")
                     .phoneNumber("+157897")
                     .role(Role.Doctor)
-                    .field("neurology")
+                    .field("cardiology")
                     .build());
         }};
     }

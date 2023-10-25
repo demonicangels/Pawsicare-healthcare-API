@@ -5,12 +5,15 @@ import com.example.PawsiCare.domain.Doctor;
 import com.example.PawsiCare.domain.Role;
 import com.example.PawsiCare.domain.User;
 import com.example.PawsiCare.domain.repositoryInterfaces.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 @Repository
+@AllArgsConstructor
 public class FakeUserRepositoryImpl implements UserRepository {
+
 
     List<User> users = new ArrayList<>() {{
         add(Doctor.builder()
@@ -34,6 +37,8 @@ public class FakeUserRepositoryImpl implements UserRepository {
                 .role(Role.Client)
                 .build());
     }};
+
+
     @Override
     public Optional<User> loginUser(String email, String password) {
 

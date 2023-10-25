@@ -16,10 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/login")
 @AllArgsConstructor
+@CrossOrigin(origins = {"http://localhost:5173"}, methods = {RequestMethod.GET, RequestMethod.POST})
 public class UserController {
 
     private final UserRepository userRepository;
@@ -31,7 +31,6 @@ public class UserController {
         try {
             if (optionalUser.isPresent()) {
                 Role role = optionalUser.get().getRole();
-                User user1 = optionalUser.get();
                 if (role == Role.Doctor) {
                     Doctor doc = (Doctor) optionalUser.get();
 
