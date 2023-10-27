@@ -112,7 +112,7 @@ import static org.mockito.Mockito.*;
                 .build();
         //Assert
         Assertions.assertNotNull(sutResponse.getDoctors());
-        assertThat(sutResponse.getDoctors().size()).isEqualTo(2);
+        assertThat(sutResponse.getDoctors()).hasSize(2);
     }
 
     /**

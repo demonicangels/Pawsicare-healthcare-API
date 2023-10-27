@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
                 .pets(sut.getPets(1))
                 .build();
         //Assert
-        assertThat(sutResponse.getPets().size()).isEqualTo(2);
+        assertThat(sutResponse.getPets()).hasSize(2);
     }
 
 
