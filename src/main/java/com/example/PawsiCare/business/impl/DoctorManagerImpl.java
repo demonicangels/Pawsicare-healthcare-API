@@ -74,30 +74,4 @@ public class DoctorManagerImpl implements DoctorManager {
 
         return fieldDoctors;
     }
-
-//    private DoctorDTO ToDTO(Doctor doctor){
-//        DoctorDTO d = new DoctorDTO();
-//        d.setId(doctor.getId());
-//        d.setName(doctor.getName());
-//        d.setField(doctor.getField());
-//        d.setEmail(doctor.getEmail());
-//        d.setAge(doctor.getAge());
-//        d.setDescription(doctor.getDescription());
-//        d.setPassword(doctor.getPassword());
-//        d.setPhoneNumber(doctor.getPhoneNumber());
-//        return d;
-//    }
-
-//    private Doctor FromDTO(DoctorDTO doctorDTO){
-//        Doctor d = new Doctor();
-//        d.setId(doctorDTO.getId());
-//        d.setName(doctorDTO.getName());
-//        d.setField(doctorDTO.getField());
-//        d.setEmail(doctorDTO.getEmail());
-//        d.setAge(doctorDTO.getAge());
-//        d.setDescription(doctorDTO.getDescription());
-//        d.setPassword(doctorDTO.getPassword());
-//        d.setPhoneNumber(doctorDTO.getPhoneNumber());
-//        return d;
-//    }
 }

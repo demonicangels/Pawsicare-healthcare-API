@@ -39,7 +39,8 @@ dependencies {
 	testImplementation "org.mockito:mockito-core:3.+"
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	testRuntimeOnly 'com.h2database:h2'
+	testImplementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.4'
+	testImplementation 'com.playtika.testcontainers:embedded-mysql:3.0.0-RC9'
 
 	implementation 'mysql:mysql-connector-java:8.0.33'
 

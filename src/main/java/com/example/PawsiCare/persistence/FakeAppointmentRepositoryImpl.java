@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class AppointmentRepositoryImpl implements AppointmentRepository {
+public class FakeAppointmentRepositoryImpl implements AppointmentRepository {
     @Override
     public Appointment createAppointment(Appointment appointment) {
         return null;

@@ -1,19 +1,19 @@
 package com.example.PawsiCare.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Entity
 @DiscriminatorValue("1")
-@Data
-@Builder
-@NoArgsConstructor
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class DoctorEntity extends UserEntity {
     private String description;
     private String field;

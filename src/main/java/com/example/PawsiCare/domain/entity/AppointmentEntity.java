@@ -1,15 +1,11 @@
 package com.example.PawsiCare.domain.entity;
 
-import com.example.PawsiCare.domain.Client;
-import com.example.PawsiCare.domain.Doctor;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
 
@@ -41,12 +37,5 @@ public class AppointmentEntity {
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private DoctorEntity doctor;
-
-
-
-
-
-
-
 
 }

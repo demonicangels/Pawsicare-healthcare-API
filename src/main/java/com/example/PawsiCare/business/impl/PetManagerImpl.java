@@ -52,25 +52,4 @@ public class PetManagerImpl implements PetManager {
         petRepository.deletePet(id);
     }
 
-//    private PetDTO ToDTO(Pet pet){
-//        PetDTO p = new PetDTO();
-//        p.setId(pet.getId());
-//        p.setName(pet.getName());
-//        p.setAge(pet.getAge());
-//        p.setBirthday(pet.getBirthday());
-//        p.setInformation(pet.getInformation());
-//        p.setOwnerId(pet.getOwnerId());
-//        return p;
-//    }
-
-//    private Pet FromDTO(PetDTO pet){
-//        Pet p = new Pet();
-//        p.setId(pet.getId());
-//        p.setName(pet.getName());
-//        p.setAge(pet.getAge());
-//        p.setBirthday(pet.getBirthday());
-//        p.setInformation(pet.getInformation());
-//        p.setOwnerId(pet.getOwnerId());
-//        return p;
-//    }
 }

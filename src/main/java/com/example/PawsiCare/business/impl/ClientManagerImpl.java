@@ -43,27 +43,4 @@ public class ClientManagerImpl implements ClientManager {
         clientRepository.deleteClient(id);
     }
 
-
-//    private ClientDTO ToDTO(Client client){
-//        ClientDTO c = new ClientDTO();
-//        c.setId(client.getId());
-//        c.setEmail(client.getEmail());
-//        c.setName(client.getName());
-//        c.setPassword(client.getPassword());
-//        c.setPhoneNumber(client.getPhoneNumber());
-//
-//        return c;
-//    }
-
-//    private Client FromDTO(ClientDTO client){
-//        Client c = new Client();
-//        c.setId(client.getId());
-//        c.setEmail(client.getEmail());
-//        c.setName(client.getName());
-//        c.setPassword(client.getPassword());
-//        c.setPhoneNumber(client.getPhoneNumber());
-//
-//        return c;
-//    }
-
 }
