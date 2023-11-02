@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
         //Arrange
         DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
         Doctor doctor = Doctor.builder()
-                .id(1)
+                .id(1L)
                 .name("Amara")
                 .age(22)
                 .field("cardiology")
@@ -62,12 +62,12 @@ import static org.mockito.Mockito.*;
                         .email("nia@mail.com")
                         .build();
 
-        when(doctorRepositoryMock.updateDoctor(1, updateDoctor)).thenReturn(updateDoctor);
+        when(doctorRepositoryMock.updateDoctor(1L, updateDoctor)).thenReturn(updateDoctor);
         DoctorManagerImpl sut = new DoctorManagerImpl(doctorRepositoryMock);
 
         //Act
         UpdateDoctorResponse sutResponse = UpdateDoctorResponse.builder()
-                .updatedDoctor(sut.updateDoctor(1,updateDoctor))
+                .updatedDoctor(sut.updateDoctor(1L,updateDoctor))
                 .build();
         //Assert
         Assertions.assertEquals(updateDoctor,sutResponse.getUpdatedDoctor());
@@ -95,7 +95,7 @@ import static org.mockito.Mockito.*;
                 .phoneNumber("+1234567").build(),
 
                 Doctor.builder()
-                        .id(2)
+                        .id(2L)
                         .name("Maia")
                         .age(35)
                         .password("123")
