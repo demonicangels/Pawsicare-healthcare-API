@@ -1,5 +1,7 @@
 package com.example.PawsiCare.controller;
 
+import com.example.PawsiCare.business.DTOs.DoctorDTO;
+import com.example.PawsiCare.business.impl.DoctorConverter;
 import com.example.PawsiCare.domain.Doctor;
 import com.example.PawsiCare.domain.managerInterfaces.DoctorManager;
 import com.example.PawsiCare.business.requests.CreateDoctorRequest;
@@ -19,10 +21,11 @@ import java.util.*;
 public class DoctorController {
 
     private final DoctorManager doctorManager;
+    private final DoctorConverter converter;
 
     @GetMapping(params = "id")
     public ResponseEntity<GetDoctorResponse> getDoctorById(@RequestParam(name = "id", required = false) long id){
-        Optional<Doctor> doctor = Optional.ofNullable(doctorManager.getDoctor(id));
+        Optional<DoctorDTO> doctor = Optional.ofNullable(converter.toDTO(doctorManager.getDoctor(id)));
 
         if(doctor.isPresent()){
             GetDoctorResponse doctorResponse = GetDoctorResponse.builder()
@@ -36,7 +39,9 @@ public class DoctorController {
 
     @GetMapping(params = "field")
     public ResponseEntity<GetAllDoctorsResponse> getDoctorsByField(@RequestParam(name = "field", required = false) String field){
-        Optional<List<Doctor>> doctorsByField = Optional.ofNullable(doctorManager.getDoctorsByField(field));
+        Optional<List<DoctorDTO>> doctorsByField = Optional.ofNullable(doctorManager.getDoctorsByField(field).stream()
+                .map(converter :: toDTO)
+                .toList());
         if(doctorsByField.isPresent()){
 
             GetAllDoctorsResponse doctorsResponse = GetAllDoctorsResponse.builder()
@@ -50,7 +55,9 @@ public class DoctorController {
 
     @GetMapping()
     public ResponseEntity<GetAllDoctorsResponse> getDoctors(){
-        Optional<List<Doctor>> doctors = Optional.ofNullable(doctorManager.getDoctors());
+        Optional<List<DoctorDTO>> doctors = Optional.ofNullable(doctorManager.getDoctors().stream()
+                .map(converter :: toDTO)
+                .toList());
         if(doctors.isPresent()){
             GetAllDoctorsResponse doctorsResponse = GetAllDoctorsResponse.builder()
                     .doctors(doctors.get())
@@ -62,7 +69,7 @@ public class DoctorController {
 
     @PostMapping()
     public ResponseEntity<CreateDoctorResponse> registerDoctor(@RequestBody @Valid CreateDoctorRequest request){
-        Doctor doctor = Doctor.builder()
+        DoctorDTO doctorDTO = DoctorDTO.builder()
                 .name(request.getName())
                 .password(request.getPassword())
                 .description(request.getDescription())
@@ -71,10 +78,10 @@ public class DoctorController {
                 .field(request.getField())
                 .build();
 
-        Optional<Doctor> doc = Optional.ofNullable(doctorManager.createDoctor(doctor));
+        Optional<DoctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.createDoctor(converter.fromDTO(doctorDTO))));
         if(doc.isPresent()){
             CreateDoctorResponse doctorResponse = CreateDoctorResponse.builder()
-                    .doctor(doctor)
+                    .doctor(doctorDTO)
                     .build();
 
             return ResponseEntity.status(HttpStatus.CREATED).body(doctorResponse);
@@ -84,7 +91,7 @@ public class DoctorController {
 
     @PutMapping()
     public ResponseEntity<UpdateDoctorResponse> updateDoctor(@RequestParam(name = "id") long id, @RequestBody @Valid UpdateDoctorRequest request){
-        Doctor doctor = Doctor.builder()
+        DoctorDTO doctorDTO = DoctorDTO.builder()
                 .name(request.getName())
                 .password(request.getPassword())
                 .description(request.getDescription())
@@ -93,12 +100,12 @@ public class DoctorController {
                 .field(request.getField())
                 .build();
 
-        Optional<Doctor> doc = Optional.ofNullable(doctorManager.updateDoctor(id, doctor));
+        Optional<DoctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.updateDoctor(id, converter.fromDTO(doctorDTO))));
 
         if(doc.isPresent()){
 
             UpdateDoctorResponse doctorResponse = UpdateDoctorResponse.builder()
-                    .updatedDoctor(doctor)
+                    .updatedDoctor(doctorDTO)
                     .build();
 
             return ResponseEntity.status(HttpStatus.OK).body(doctorResponse);

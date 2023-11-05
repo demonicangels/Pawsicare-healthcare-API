@@ -4,7 +4,7 @@ import com.example.PawsiCare.domain.Doctor;
 import com.example.PawsiCare.domain.managerInterfaces.DoctorManager;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.example.PawsiCare.domain.fakeRepositoryInterfaces.DoctorRepository;
+import com.example.PawsiCare.persistence.fakeRepositoryInterfaces.DoctorRepository;
 
 import java.util.ArrayList;
 import java.util.List;

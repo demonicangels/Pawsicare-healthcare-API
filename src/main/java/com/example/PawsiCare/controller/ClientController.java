@@ -1,5 +1,7 @@
 package com.example.PawsiCare.controller;
 
+import com.example.PawsiCare.business.DTOs.ClientDTO;
+import com.example.PawsiCare.business.impl.ClientConverter;
 import com.example.PawsiCare.domain.Client;
 import com.example.PawsiCare.domain.managerInterfaces.ClientManager;
 import com.example.PawsiCare.business.requests.CreateClientRequest;
@@ -25,11 +27,12 @@ import java.util.*;
 public class ClientController {
 
     private final ClientManager clientManager;
+    private final ClientConverter converter;
 
 
     @GetMapping(params = "id")
     public ResponseEntity<GetClientResponse> getClient(@RequestParam(name = "id") long id){
-        Optional<Client> client = Optional.ofNullable(clientManager.getClient(id));
+        Optional<ClientDTO> client = Optional.ofNullable(converter.toDTO(clientManager.getClient(id)));
         if(client.isPresent()){
 
             GetClientResponse clientResponse = GetClientResponse.builder()
@@ -43,7 +46,9 @@ public class ClientController {
 
     @GetMapping()
     public ResponseEntity<GetAllClientsResponse> getClients(){
-        Optional<List<Client>> allClients = Optional.ofNullable(clientManager.getClients());
+        Optional<List<ClientDTO>> allClients = Optional.ofNullable(clientManager.getClients().stream()
+                .map(converter :: toDTO)
+                .toList());
         if(allClients.isPresent()){
 
             GetAllClientsResponse clientsResponse = GetAllClientsResponse.builder()
@@ -58,14 +63,14 @@ public class ClientController {
     @PostMapping()
     public ResponseEntity<CreateClientResponse> registerClient(@RequestBody @Valid @NotNull CreateClientRequest request){
 
-        Client client = Client.builder()
+        ClientDTO client = ClientDTO.builder()
                 .name(request.getName())
                 .password(request.getPassword())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
                 .build();
 
-        Optional<Client> optCreatedClient = Optional.ofNullable(clientManager.createClient(client));
+        Optional<ClientDTO> optCreatedClient = Optional.ofNullable(converter.toDTO(clientManager.createClient(converter.fromDTO(client))));
         if(optCreatedClient.isPresent()){
 
             CreateClientResponse response = CreateClientResponse.builder()
@@ -79,14 +84,14 @@ public class ClientController {
 
     @PutMapping()
     public ResponseEntity<UpdateClientResponse> updateClient(@RequestParam(name = "id") long id, @RequestBody @Valid UpdateClientRequest request){
-        Client client = Client.builder()
+        ClientDTO client = ClientDTO.builder()
                 .name(request.getName())
                 .phoneNumber(request.getPhoneNumber())
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .build();
 
-        Optional<Client> client1 = Optional.ofNullable(clientManager.updateClient(id,client));
+        Optional<ClientDTO> client1 = Optional.ofNullable(converter.toDTO(clientManager.updateClient(id,converter.fromDTO(client))));
 
         if(client1.isPresent()){
             UpdateClientResponse clientResponse = UpdateClientResponse.builder()

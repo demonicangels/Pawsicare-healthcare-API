@@ -1,6 +1,6 @@
 package com.example.PawsiCare.business.responses;
 
-import com.example.PawsiCare.domain.Client;
+import com.example.PawsiCare.business.DTOs.ClientDTO;
 import lombok.Builder;
 import lombok.Data;
 import java.util.*;
@@ -8,5 +8,5 @@ import java.util.*;
 @Data
 @Builder
 public class GetAllClientsResponse {
-    private List<Client> clients;
+    private List<ClientDTO> clients;
 }

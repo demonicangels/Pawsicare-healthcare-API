@@ -1,5 +1,7 @@
 package com.example.PawsiCare.controller;
 
+import com.example.PawsiCare.business.DTOs.AppointmentDTO;
+import com.example.PawsiCare.business.impl.AppointmentConverter;
 import com.example.PawsiCare.domain.managerInterfaces.AppointmentManager;
 import com.example.PawsiCare.domain.Appointment;
 import com.example.PawsiCare.business.requests.CreateAppointmentRequest;
@@ -19,10 +21,13 @@ import java.util.*;
 public class AppointmentController {
 
     private final AppointmentManager appointmentManager;
+    private final AppointmentConverter converter;
 
     @GetMapping(params = "userId")
     public ResponseEntity<GetAppointmentsResponse> getUsersAppointments(@Valid @RequestParam(name = "userId")long userId){
-        Optional<List<Appointment>> app = Optional.ofNullable(appointmentManager.getUsersAppointments(userId));
+        Optional<List<AppointmentDTO>> app = Optional.ofNullable(appointmentManager.getUsersAppointments(userId).stream()
+                .map(converter :: toDTO)
+                .toList());
         if(app.isPresent()){
 
             GetAppointmentsResponse appointmentsResponse = GetAppointmentsResponse.builder()
@@ -35,7 +40,7 @@ public class AppointmentController {
     }
     @PostMapping
     public ResponseEntity<CreateAppointmentResponse> createAppointment(@RequestBody @Valid CreateAppointmentRequest appointmentRequest){
-        Appointment appointment = Appointment.builder()
+        AppointmentDTO appointment = AppointmentDTO.builder()
                 .date(appointmentRequest.getDate())
                 .time(appointmentRequest.getTime())
                 .clientId(appointmentRequest.getClientId())
@@ -43,7 +48,7 @@ public class AppointmentController {
                 .petId(appointmentRequest.getPetId())
                 .build();
 
-        Optional<Appointment> app = Optional.ofNullable(appointmentManager.createAppointment(appointment));
+        Optional<AppointmentDTO> app = Optional.ofNullable(converter.toDTO(appointmentManager.createAppointment(converter.fromDTO((appointment)))));
 
         if(app.isPresent()){
             CreateAppointmentResponse appointmentResponse = CreateAppointmentResponse.builder()
@@ -57,12 +62,12 @@ public class AppointmentController {
 
     @PutMapping(params = "id")
     public ResponseEntity<UpdateAppointmentResponse> rescheduleAppointment (@Valid @RequestParam(name = "id") long id, @RequestBody @Valid UpdateAppointmentRequest appointmentRequest){
-        Appointment appointment = Appointment.builder()
+        AppointmentDTO appointment = AppointmentDTO.builder()
                 .date(appointmentRequest.getDate())
                 .time(appointmentRequest.getTime())
                 .build();
 
-        Optional<Appointment> api = Optional.ofNullable(appointmentManager.rescheduleAppointment(id, appointment));
+        Optional<AppointmentDTO> api = Optional.ofNullable(converter.toDTO(appointmentManager.rescheduleAppointment(id, converter.fromDTO(appointment))));
         if(api.isPresent()){
             UpdateAppointmentResponse updateAppointmentResponse = UpdateAppointmentResponse.builder()
                     .updatedAppointment(api.get())

@@ -1,4 +1,4 @@
-package com.example.PawsiCare.domain.entity;
+package com.example.PawsiCare.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

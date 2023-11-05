@@ -2,7 +2,7 @@ package com.example.PawsiCare.business.impl;
 
 import com.example.PawsiCare.domain.managerInterfaces.AppointmentManager;
 import com.example.PawsiCare.domain.Appointment;
-import com.example.PawsiCare.domain.fakeRepositoryInterfaces.AppointmentRepository;
+import com.example.PawsiCare.persistence.fakeRepositoryInterfaces.AppointmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package com.example.PawsiCare.business.impl;
 
 import com.example.PawsiCare.domain.Pet;
-import com.example.PawsiCare.domain.fakeRepositoryInterfaces.PetRepository;
+import com.example.PawsiCare.persistence.fakeRepositoryInterfaces.PetRepository;
 import com.example.PawsiCare.business.responses.GetAllPetsResponse;
 import org.junit.jupiter.api.Test;
 

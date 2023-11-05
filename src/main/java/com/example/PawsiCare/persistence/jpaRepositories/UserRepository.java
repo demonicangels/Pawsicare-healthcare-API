@@ -1,6 +1,6 @@
-package com.example.PawsiCare.domain.jpaRepositories;
+package com.example.PawsiCare.persistence.jpaRepositories;
 
-import com.example.PawsiCare.domain.entity.UserEntity;
+import com.example.PawsiCare.persistence.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {

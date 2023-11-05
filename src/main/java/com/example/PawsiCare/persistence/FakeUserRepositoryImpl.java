@@ -4,7 +4,7 @@ import com.example.PawsiCare.domain.Client;
 import com.example.PawsiCare.domain.Doctor;
 import com.example.PawsiCare.domain.Role;
 import com.example.PawsiCare.domain.User;
-import com.example.PawsiCare.domain.fakeRepositoryInterfaces.UserRepository;
+import com.example.PawsiCare.persistence.fakeRepositoryInterfaces.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 

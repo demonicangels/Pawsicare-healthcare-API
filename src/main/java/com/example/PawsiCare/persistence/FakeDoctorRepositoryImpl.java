@@ -3,7 +3,7 @@ package com.example.PawsiCare.persistence;
 import com.example.PawsiCare.domain.Doctor;
 import com.example.PawsiCare.domain.Role;
 import org.springframework.stereotype.Repository;
-import com.example.PawsiCare.domain.fakeRepositoryInterfaces.DoctorRepository;
+import com.example.PawsiCare.persistence.fakeRepositoryInterfaces.DoctorRepository;
 
 import java.util.ArrayList;
 import java.util.List;

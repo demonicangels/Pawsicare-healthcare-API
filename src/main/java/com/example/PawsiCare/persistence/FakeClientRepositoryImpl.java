@@ -2,7 +2,7 @@ package com.example.PawsiCare.persistence;
 
 import com.example.PawsiCare.domain.Client;
 import org.springframework.stereotype.Repository;
-import com.example.PawsiCare.domain.fakeRepositoryInterfaces.ClientRepository;
+import com.example.PawsiCare.persistence.fakeRepositoryInterfaces.ClientRepository;
 
 import java.util.*;
 

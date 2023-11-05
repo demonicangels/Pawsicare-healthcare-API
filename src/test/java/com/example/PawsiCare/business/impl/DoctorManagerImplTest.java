@@ -1,7 +1,7 @@
 package com.example.PawsiCare.business.impl;
 
 import com.example.PawsiCare.domain.Doctor;
-import com.example.PawsiCare.domain.fakeRepositoryInterfaces.DoctorRepository;
+import com.example.PawsiCare.persistence.fakeRepositoryInterfaces.DoctorRepository;
 import com.example.PawsiCare.business.responses.CreateDoctorResponse;
 import com.example.PawsiCare.business.responses.GetAllDoctorsResponse;
 import com.example.PawsiCare.business.responses.UpdateDoctorResponse;

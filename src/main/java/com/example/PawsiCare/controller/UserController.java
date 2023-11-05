@@ -4,7 +4,7 @@ import com.example.PawsiCare.domain.Client;
 import com.example.PawsiCare.domain.Doctor;
 import com.example.PawsiCare.domain.Role;
 import com.example.PawsiCare.domain.User;
-import com.example.PawsiCare.domain.fakeRepositoryInterfaces.UserRepository;
+import com.example.PawsiCare.persistence.fakeRepositoryInterfaces.UserRepository;
 import com.example.PawsiCare.business.requests.LoginUserRequest;
 import com.example.PawsiCare.business.responses.GetUserResponse;
 import com.example.PawsiCare.business.DTOs.ClientDTO;

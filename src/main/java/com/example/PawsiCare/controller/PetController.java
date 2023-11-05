@@ -1,5 +1,7 @@
 package com.example.PawsiCare.controller;
 
+import com.example.PawsiCare.business.DTOs.PetDTO;
+import com.example.PawsiCare.business.impl.PetConverter;
 import com.example.PawsiCare.domain.Pet;
 import com.example.PawsiCare.domain.managerInterfaces.PetManager;
 import com.example.PawsiCare.business.requests.CreatePetRequest;
@@ -22,10 +24,12 @@ public class PetController {
 
     private final PetManager petManager;
 
+    private final PetConverter converter;
+
 
     @PostMapping()
     public ResponseEntity<CreatePetResponse> createPet(@RequestBody @Valid CreatePetRequest request){
-        Pet pet = Pet.builder()
+        PetDTO pet = PetDTO.builder()
                 .ownerId(request.getOwnerId())
                 .name(request.getName())
                 .information(request.getInformation())
@@ -33,7 +37,7 @@ public class PetController {
                 .birthday(request.getBirthday())
                 .build();
 
-        Optional<Pet> peti = Optional.ofNullable(petManager.createPet(pet));
+        Optional<PetDTO> peti = Optional.ofNullable(converter.toDTO(petManager.createPet(converter.fromDTO(pet))));
 
         if(peti.isPresent()){
 
@@ -48,7 +52,9 @@ public class PetController {
 
     @GetMapping(params = "ownerId")
     public ResponseEntity<GetAllPetsResponse> getPetsByOwnerId(@RequestParam(name = "ownerId", required = false) long ownerId){
-        Optional<List<Pet>> pets = Optional.ofNullable(petManager.getPets(ownerId));
+        Optional<List<PetDTO>> pets = Optional.ofNullable(petManager.getPets(ownerId).stream()
+                .map(converter :: toDTO)
+                .toList());
         if(pets.isPresent()){
 
             GetAllPetsResponse allPets = GetAllPetsResponse.builder()
@@ -62,7 +68,7 @@ public class PetController {
 
     @GetMapping(params = "id")
     public ResponseEntity<GetPetResponse> getPetById(@RequestParam(name = "id") long petId){
-        Optional<Pet> pet = Optional.ofNullable(petManager.getPet(petId));
+        Optional<PetDTO> pet = Optional.ofNullable(converter.toDTO(petManager.getPet(petId)));
         if(pet.isPresent()){
 
             GetPetResponse petResponse = GetPetResponse.builder()
@@ -76,13 +82,13 @@ public class PetController {
 
     @PutMapping(params = "id")
     public ResponseEntity<UpdatePetResponse> updatePet(@RequestParam(name = "id") long id, @RequestBody @Valid UpdatePetRequest request){
-        Pet pet = Pet.builder()
+        PetDTO pet = PetDTO.builder()
                 .ownerId(request.getOwnerId())
                 .name(request.getName())
                 .information(request.getInformation())
                 .build();
 
-        Optional<Pet> peti = Optional.ofNullable(petManager.updatePet(id,pet));
+        Optional<PetDTO> peti = Optional.ofNullable(converter.toDTO(petManager.updatePet(id,converter.fromDTO(pet))));
 
         if(peti.isPresent()){
 

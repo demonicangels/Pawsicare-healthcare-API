@@ -1,6 +1,6 @@
-package com.example.PawsiCare.domain.jpaRepositories;
+package com.example.PawsiCare.persistence.jpaRepositories;
 
-import com.example.PawsiCare.domain.entity.PetEntity;
+import com.example.PawsiCare.persistence.entity.PetEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PetRepository extends JpaRepository<PetEntity,Long> {

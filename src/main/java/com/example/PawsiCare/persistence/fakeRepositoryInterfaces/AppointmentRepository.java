@@ -1,4 +1,4 @@
-package com.example.PawsiCare.domain.fakeRepositoryInterfaces;
+package com.example.PawsiCare.persistence.fakeRepositoryInterfaces;
 
 import com.example.PawsiCare.domain.Appointment;
 
