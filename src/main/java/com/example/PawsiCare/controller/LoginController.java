@@ -1,5 +1,6 @@
 package com.example.PawsiCare.controller;
 
+import com.example.PawsiCare.business.impl.LoginService;
 import com.example.PawsiCare.domain.Client;
 import com.example.PawsiCare.domain.Doctor;
 import com.example.PawsiCare.domain.Role;
@@ -20,21 +21,21 @@ import java.util.Optional;
 @RequestMapping("/login")
 @AllArgsConstructor
 @CrossOrigin(origins = {"http://localhost:5173"}, methods = {RequestMethod.GET, RequestMethod.POST})
-public class UserController {
+public class LoginController {
 
-    private final UserRepository userRepository;
+    private final LoginService loginService;
     @PostMapping
     public ResponseEntity<GetUserResponse> userLogin(@RequestBody @Valid LoginUserRequest loginUserRequest) {
 
-        Optional<User> optionalUser = userRepository.loginUser(loginUserRequest.getEmail(), loginUserRequest.getPassword());
+        Optional<User> loggedInUser = Optional.of(loginService.userLogin(loginUserRequest.getEmail(), loginUserRequest.getPassword()));
 
         try {
-            if (optionalUser.isPresent()) {
-                Role role = optionalUser.get().getRole();
+            if (loggedInUser.isPresent()) {
+                Role role = loggedInUser.get().getRole();
                 if (role == Role.Doctor) {
-                    Doctor doc = (Doctor) optionalUser.get();
+                    Doctor doc = (Doctor) loggedInUser.get();
 
-                    Optional<DoctorDTO> doctorDTO = Optional.ofNullable(DoctorDTO.builder()
+                    Optional<DoctorDTO> doctorDTO = Optional.of(DoctorDTO.builder()
                             .name(doc.getName())
                             .birthday(doc.getBirthday())
                             .email(doc.getEmail())
@@ -49,9 +50,9 @@ public class UserController {
 
                     return ResponseEntity.status(HttpStatus.OK).body(getUserResponse);
                 } else if (role == Role.Client) {
-                    Client cli = (Client) optionalUser.get();
+                    Client cli = (Client) loggedInUser.get();
 
-                    Optional<ClientDTO> clientDTO = Optional.ofNullable(ClientDTO.builder()
+                    Optional<ClientDTO> clientDTO = Optional.of(ClientDTO.builder()
                             .name(cli.getName())
                             .birthday(cli.getBirthday())
                             .email(cli.getEmail())

@@ -1,10 +1,14 @@
 package com.example.PawsiCare.business.impl;
 
 import com.example.PawsiCare.domain.Doctor;
+import com.example.PawsiCare.domain.User;
 import com.example.PawsiCare.domain.managerInterfaces.DoctorManager;
+import com.example.PawsiCare.persistence.UserEntityConverter;
+import com.example.PawsiCare.persistence.entity.DoctorEntity;
+import com.example.PawsiCare.persistence.jpaRepositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.example.PawsiCare.persistence.fakeRepositoryInterfaces.DoctorRepository;
+import com.example.PawsiCare.persistence.jpaRepositories.DoctorRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 public class DoctorManagerImpl implements DoctorManager {
 
+    private UserEntityConverter converter;
+    private final UserRepository userRepository;
     private final DoctorRepository doctorRepository;
 
     /**
@@ -22,9 +28,8 @@ public class DoctorManagerImpl implements DoctorManager {
      */
     @Override
     public Doctor createDoctor(Doctor doctor) {
-        return doctorRepository.createDoctor(doctor);
+        return converter.fromDoctorEntity(userRepository.save(converter.toDoctorEntity(doctor)));
     }
-
 
     /**
      * @param id
@@ -34,12 +39,12 @@ public class DoctorManagerImpl implements DoctorManager {
      */
     @Override
     public Doctor updateDoctor(long id, Doctor doctor) {
-        return doctorRepository.updateDoctor(id, doctor);
+        return converter.fromDoctorEntity((DoctorEntity) userRepository.save(converter.toUserEntity(doctor)));
     }
 
     @Override
     public Doctor getDoctor(long id) {
-         return doctorRepository.getDoctor(id);
+         return converter.fromDoctorEntity((DoctorEntity)userRepository.getUserEntityById(id).get());
     }
 
 
@@ -51,26 +56,28 @@ public class DoctorManagerImpl implements DoctorManager {
     @Override
     public List<Doctor> getDoctors() {
         List<Doctor> returnedDoctors = new ArrayList<>();
-        doctorRepository.getDoctors().forEach(
-            returnedDoctors::add
-        );
+
+        List<User> doctorEntities = userRepository.findByRole(1).stream().map( converter :: fromUserEntity).toList();
+
+        doctorEntities.forEach(d -> returnedDoctors.add((Doctor) d));
+
         return returnedDoctors;
     }
 
     @Override
     public void deleteDoctor(long id) {
-        doctorRepository.deleteDoctor(id);
+        userRepository.deleteById(id);
     }
 
     @Override
     public List<Doctor> getDoctorsByField(String field) {
         List<Doctor> fieldDoctors = new ArrayList<>();
 
-        for (Doctor d : doctorRepository.getDoctors()) {
-            if (d.getField().equals(field)) {
-                fieldDoctors.add(d);
-            }
-        }
+        doctorRepository.getDoctorEntitiesByField(field).stream().map(
+                converter :: fromDoctorEntity
+        ).forEach(
+                fieldDoctors :: add
+        );
 
         return fieldDoctors;
     }

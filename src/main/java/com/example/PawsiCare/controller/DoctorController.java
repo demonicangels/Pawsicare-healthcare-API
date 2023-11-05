@@ -55,7 +55,7 @@ public class DoctorController {
 
     @GetMapping()
     public ResponseEntity<GetAllDoctorsResponse> getDoctors(){
-        Optional<List<DoctorDTO>> doctors = Optional.ofNullable(doctorManager.getDoctors().stream()
+        Optional<List<DoctorDTO>> doctors = Optional.of(doctorManager.getDoctors().stream()
                 .map(converter :: toDTO)
                 .toList());
         if(doctors.isPresent()){

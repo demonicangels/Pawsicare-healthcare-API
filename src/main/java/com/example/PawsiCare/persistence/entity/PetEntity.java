@@ -34,6 +34,6 @@ public class PetEntity {
     private String information;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner")
     private ClientEntity client;
 }

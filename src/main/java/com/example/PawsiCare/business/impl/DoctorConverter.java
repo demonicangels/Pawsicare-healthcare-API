@@ -19,6 +19,7 @@ public class DoctorConverter {
                 .phoneNumber(doctor.getPhoneNumber())
                 .description(doctor.getDescription())
                 .field(doctor.getField())
+                .image(doctor.getImage())
                 .build();
     }
 
@@ -33,6 +34,7 @@ public class DoctorConverter {
                 .phoneNumber(doctorDTO.getPhoneNumber())
                 .description(doctorDTO.getDescription())
                 .field(doctorDTO.getField())
+                .image(doctorDTO.getImage())
                 .build();
     }
 }

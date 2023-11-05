@@ -31,11 +31,11 @@ public class AppointmentEntity {
     private Integer time;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client")
     private ClientEntity client;
 
     @ManyToOne
-    @JoinColumn(name = "doctor_id")
+    @JoinColumn(name = "doctor")
     private DoctorEntity doctor;
 
 }
