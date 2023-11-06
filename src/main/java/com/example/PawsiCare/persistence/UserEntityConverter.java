@@ -2,7 +2,6 @@ package com.example.PawsiCare.persistence;
 
 import com.example.PawsiCare.domain.Client;
 import com.example.PawsiCare.domain.Doctor;
-import com.example.PawsiCare.domain.Role;
 import com.example.PawsiCare.domain.User;
 import com.example.PawsiCare.persistence.entity.ClientEntity;
 import com.example.PawsiCare.persistence.entity.DoctorEntity;
@@ -72,14 +71,17 @@ public class UserEntityConverter {
 
     public DoctorEntity toDoctorEntity (Doctor doctor){
 
-        return DoctorEntity.builder()
+        DoctorEntity entity = DoctorEntity.builder()
                 .id(doctor.getId())
                 .name(doctor.getName())
                 .birthday(doctor.getBirthday())
                 .password(doctor.getPassword())
                 .email(doctor.getEmail())
+                .field(doctor.getField())
                 .phoneNumber(doctor.getPhoneNumber())
                 .image(doctor.getImage())
                 .build();
+
+        return entity;
     }
 }

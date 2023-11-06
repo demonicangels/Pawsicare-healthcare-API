@@ -1,26 +1,31 @@
 package com.example.PawsiCare.persistence;
 
 import com.example.PawsiCare.domain.Pet;
+import com.example.PawsiCare.persistence.entity.ClientEntity;
 import com.example.PawsiCare.persistence.entity.PetEntity;
+import com.example.PawsiCare.persistence.jpaRepositories.UserRepository;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public class PetEntityConverter {
+
+    private final UserRepository userRepository;
 
     public Pet fromEntity (PetEntity pet){
         return Pet.builder()
                 .id(pet.getId())
-                .ownerId(pet.getClient().getId())
                 .name(pet.getName())
+                .ownerId(pet.getClient().getId())
                 .birthday(pet.getBirthday())
                 .information(pet.getInformation())
                 .build();
     }
 
     public PetEntity toEntity (Pet pet){
-        //TODO: find a solution for the client it's ownerId in domain and dto and client class in entity
         return PetEntity.builder()
                 .id(pet.getId())
-                //.client(pet.getOwnerId())
                 .name(pet.getName())
+                .client((ClientEntity)userRepository.getUserEntityById(pet.getOwnerId()).get())
                 .birthday(pet.getBirthday())
                 .information(pet.getInformation())
                 .build();

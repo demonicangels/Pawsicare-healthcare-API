@@ -5,8 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.validator.constraints.UniqueElements;
 
-    @Entity
+@Entity
     @Table(name = "pawsicare_users")
     @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
     @DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.INTEGER)
@@ -26,4 +27,5 @@ import lombok.experimental.SuperBuilder;
 
         @Column(name = "role", insertable = false, updatable = false)
         private Integer role;
+
     }
