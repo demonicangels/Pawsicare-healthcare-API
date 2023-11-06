@@ -7,7 +7,7 @@ import java.util.List;
 public interface DoctorManager {
 
     Doctor createDoctor(Doctor doctor);
-    Doctor updateDoctor(long id, Doctor doctor);
+    Doctor updateDoctor(Doctor doctor);
 
     Doctor getDoctor(long id);
 

@@ -5,7 +5,9 @@ import com.example.PawsiCare.persistence.entity.ClientEntity;
 import com.example.PawsiCare.persistence.entity.PetEntity;
 import com.example.PawsiCare.persistence.jpaRepositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @AllArgsConstructor
 public class PetEntityConverter {
 

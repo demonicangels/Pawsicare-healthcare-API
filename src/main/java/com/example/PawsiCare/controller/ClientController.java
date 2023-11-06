@@ -91,7 +91,7 @@ public class ClientController {
                 .password(request.getPassword())
                 .build();
 
-        Optional<ClientDTO> client1 = Optional.ofNullable(converter.toDTO(clientManager.updateClient(id,converter.fromDTO(client))));
+        Optional<ClientDTO> client1 = Optional.ofNullable(converter.toDTO(clientManager.updateClient(converter.fromDTO(client))));
 
         if(client1.isPresent()){
             UpdateClientResponse clientResponse = UpdateClientResponse.builder()

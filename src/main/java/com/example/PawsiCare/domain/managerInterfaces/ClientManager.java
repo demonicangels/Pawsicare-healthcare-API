@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ClientManager {
     Client createClient(Client client);
-    Client updateClient(long id, Client client);
+    Client updateClient(Client client);
 
     Client getClient(long id);
 

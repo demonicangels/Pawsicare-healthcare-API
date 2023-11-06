@@ -27,7 +27,7 @@ public class DoctorController {
     public ResponseEntity<GetDoctorResponse> getDoctorById(@RequestParam(name = "id", required = false) long id){
         Optional<DoctorDTO> doctor = Optional.ofNullable(converter.toDTO(doctorManager.getDoctor(id)));
 
-        if(doctor.isPresent()){
+        if(!doctor.isEmpty()){
             GetDoctorResponse doctorResponse = GetDoctorResponse.builder()
                     .doctor(doctor.get())
                     .build();
@@ -58,7 +58,7 @@ public class DoctorController {
         Optional<List<DoctorDTO>> doctors = Optional.of(doctorManager.getDoctors().stream()
                 .map(converter :: toDTO)
                 .toList());
-        if(doctors.isPresent()){
+        if(!doctors.isEmpty()){
             GetAllDoctorsResponse doctorsResponse = GetAllDoctorsResponse.builder()
                     .doctors(doctors.get())
                     .build();
@@ -79,7 +79,7 @@ public class DoctorController {
                 .build();
 
         Optional<DoctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.createDoctor(converter.fromDTO(doctorDTO))));
-        if(doc.isPresent()){
+        if(!doc.isEmpty()){
             CreateDoctorResponse doctorResponse = CreateDoctorResponse.builder()
                     .doctor(doctorDTO)
                     .build();
@@ -100,9 +100,9 @@ public class DoctorController {
                 .field(request.getField())
                 .build();
 
-        Optional<DoctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.updateDoctor(id, converter.fromDTO(doctorDTO))));
+        Optional<DoctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.updateDoctor(converter.fromDTO(doctorDTO))));
 
-        if(doc.isPresent()){
+        if(!doc.isEmpty()){
 
             UpdateDoctorResponse doctorResponse = UpdateDoctorResponse.builder()
                     .updatedDoctor(doctorDTO)

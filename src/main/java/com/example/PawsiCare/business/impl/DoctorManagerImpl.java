@@ -38,7 +38,7 @@ public class DoctorManagerImpl implements DoctorManager {
      * @should return a doctor object with updated fields
      */
     @Override
-    public Doctor updateDoctor(long id, Doctor doctor) {
+    public Doctor updateDoctor(Doctor doctor) {
         return converter.fromDoctorEntity((DoctorEntity) userRepository.save(converter.toUserEntity(doctor)));
     }
 
