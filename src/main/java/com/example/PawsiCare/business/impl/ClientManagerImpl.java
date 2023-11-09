@@ -7,7 +7,6 @@ import com.example.PawsiCare.persistence.entity.ClientEntity;
 import com.example.PawsiCare.persistence.jpaRepositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.example.PawsiCare.persistence.fakeRepositoryInterfaces.ClientRepository;
 
 import java.util.*;
 

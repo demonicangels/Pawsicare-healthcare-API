@@ -35,12 +35,6 @@ public class AppointmentManagerImpl implements AppointmentManager {
     }
 
     @Override
-    public Optional<List<Appointment>> getDoctorsAppointments(long doctorId) {
-        return null;
-    }
-
-
-    @Override
     public void cancelAppointment(long id) {
         appointmentRepository.deleteById(id);
     }

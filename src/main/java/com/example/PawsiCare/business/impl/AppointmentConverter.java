@@ -3,7 +3,6 @@ package com.example.PawsiCare.business.impl;
 import com.example.PawsiCare.business.DTOs.AppointmentDTO;
 import com.example.PawsiCare.domain.Appointment;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 @Service
