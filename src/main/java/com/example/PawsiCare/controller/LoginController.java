@@ -31,11 +31,12 @@ public class LoginController {
 
         try {
             if (loggedInUser.isPresent()) {
-                Role role = loggedInUser.get().getRole();
-                if (role == Role.Doctor) {
+                if (loggedInUser.get() instanceof Doctor) {
+
                     Doctor doc = (Doctor) loggedInUser.get();
 
                     Optional<DoctorDTO> doctorDTO = Optional.of(DoctorDTO.builder()
+                            .id(doc.getId())
                             .name(doc.getName())
                             .birthday(doc.getBirthday())
                             .email(doc.getEmail())
@@ -49,10 +50,11 @@ public class LoginController {
                             .build();
 
                     return ResponseEntity.status(HttpStatus.OK).body(getUserResponse);
-                } else if (role == Role.Client) {
+                } else if (loggedInUser.get() instanceof Client) {
                     Client cli = (Client) loggedInUser.get();
 
                     Optional<ClientDTO> clientDTO = Optional.of(ClientDTO.builder()
+                            .id(cli.getId())
                             .name(cli.getName())
                             .birthday(cli.getBirthday())
                             .email(cli.getEmail())

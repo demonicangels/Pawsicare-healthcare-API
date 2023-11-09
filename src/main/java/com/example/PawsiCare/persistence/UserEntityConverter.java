@@ -2,6 +2,7 @@ package com.example.PawsiCare.persistence;
 
 import com.example.PawsiCare.domain.Client;
 import com.example.PawsiCare.domain.Doctor;
+import com.example.PawsiCare.domain.Role;
 import com.example.PawsiCare.domain.User;
 import com.example.PawsiCare.persistence.entity.ClientEntity;
 import com.example.PawsiCare.persistence.entity.DoctorEntity;
@@ -66,6 +67,7 @@ public class UserEntityConverter {
                 .description(doctor.getDescription())
                 .field(doctor.getField())
                 .image(doctor.getImage())
+                //.role(toRole(doctor))
                 .build();
     }
 
@@ -80,8 +82,18 @@ public class UserEntityConverter {
                 .field(doctor.getField())
                 .phoneNumber(doctor.getPhoneNumber())
                 .image(doctor.getImage())
+                //.role(doctor.getRole().ordinal())
                 .build();
 
         return entity;
+    }
+
+    public Role toRole( UserEntity entity){
+
+        return switch (entity.getRole()){
+            case 0 ->  Role.Client;
+            case 1 ->  Role.Doctor;
+            default -> throw new IllegalArgumentException("Role not recognized");
+        };
     }
 }

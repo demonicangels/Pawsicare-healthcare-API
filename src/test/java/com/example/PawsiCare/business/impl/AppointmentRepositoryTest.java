@@ -14,6 +14,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -53,8 +55,8 @@ public class AppointmentRepositoryTest {
 
 
         AppointmentEntity appointment = AppointmentEntity.builder()
-                .date(LocalDate.now())
-                .time(12)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
                 .client(client)
                 .doctor(doctor)
                 .build();
@@ -67,8 +69,8 @@ public class AppointmentRepositoryTest {
 
         AppointmentEntity expectedAppointment = AppointmentEntity.builder()
                 .id(savedAppointment.getId())
-                .date(savedAppointment.getDate())
-                .time(savedAppointment.getTime())
+                .dateAndStart(savedAppointment.getDateAndStart())
+                .dateAndEnd(savedAppointment.getDateAndEnd())
                 .client(savedAppointment.getClient())
                 .doctor(savedAppointment.getDoctor())
                 .build();
@@ -100,8 +102,8 @@ public class AppointmentRepositoryTest {
         entityManager.persist(doctor2);
 
         AppointmentEntity appointment = AppointmentEntity.builder()
-                .date(LocalDate.now())
-                .time(12)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
                 .client(null)
                 .doctor(doctor)
                 .build();
@@ -109,8 +111,8 @@ public class AppointmentRepositoryTest {
         entityManager.persist(appointment);
 
         AppointmentEntity appointment2 = AppointmentEntity.builder()
-                .date(LocalDate.now())
-                .time(12)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
                 .client(null)
                 .doctor(doctor)
                 .build();
@@ -118,8 +120,8 @@ public class AppointmentRepositoryTest {
         entityManager.persist(appointment2);
 
         AppointmentEntity appointment3 = AppointmentEntity.builder()
-                .date(LocalDate.now())
-                .time(12)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
                 .client(null)
                 .doctor(doctor2)
                 .build();
@@ -127,8 +129,8 @@ public class AppointmentRepositoryTest {
         entityManager.persist(appointment3);
 
         AppointmentEntity appointment4 = AppointmentEntity.builder()
-                .date(LocalDate.now())
-                .time(12)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
                 .client(null)
                 .doctor(null)
                 .build();

@@ -3,6 +3,8 @@ package com.example.PawsiCare.domain;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
@@ -10,9 +12,9 @@ import java.time.LocalDate;
 @Builder
 public class Appointment {
     private long id;
-    private LocalDate date;
-    private int time;
-    private long clientId;
-    private long doctorId;
-    private long petId;
+    private LocalDateTime dateAndStart;
+    private LocalDateTime dateAndEnd;
+    private Client client;
+    private Doctor doctor;
+    private Pet pet;
 }

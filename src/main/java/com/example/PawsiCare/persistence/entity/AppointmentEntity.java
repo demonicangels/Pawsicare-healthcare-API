@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "appointments")
@@ -23,12 +25,13 @@ public class AppointmentEntity {
     private Long id;
 
     @NotNull
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(name = "dateAndStartTime")
+    private LocalDateTime dateAndStart;
+
 
     @NotNull
-    @Column(name = "time")
-    private Integer time;
+    @Column(name = "dateAndEndTime")
+    private LocalDateTime dateAndEnd;
 
     @ManyToOne
     @JoinColumn(name = "client")
@@ -37,5 +40,9 @@ public class AppointmentEntity {
     @ManyToOne
     @JoinColumn(name = "doctor")
     private DoctorEntity doctor;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="pet")
+    private PetEntity pet;
 
 }

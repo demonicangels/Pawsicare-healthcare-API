@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @Data
@@ -13,6 +15,6 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateAppointmentRequest {
-    private LocalDate date;
-    private int time;
+    private LocalDateTime dateAndStart;
+    private LocalDateTime dateAndEnd;
 }

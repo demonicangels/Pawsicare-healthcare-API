@@ -25,7 +25,6 @@ public class PetEntityConverter {
 
     public PetEntity toEntity (Pet pet){
         return PetEntity.builder()
-                .id(pet.getId())
                 .name(pet.getName())
                 .client((ClientEntity)userRepository.getUserEntityById(pet.getOwnerId()).get())
                 .birthday(pet.getBirthday())

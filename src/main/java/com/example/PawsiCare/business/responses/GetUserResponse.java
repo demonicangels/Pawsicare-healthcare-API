@@ -10,6 +10,7 @@ import java.util.Optional;
 @Data
 @Builder
 public class GetUserResponse {
+    private long id;
     private Optional<DoctorDTO> loggedInDoctor;
     private Optional<ClientDTO> loggedInClient;
 }
