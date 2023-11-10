@@ -73,18 +73,24 @@ dependencies {
 jacoco {
 	toolVersion = "0.8.9"
 	reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
-
 }
 
 jacocoTestReport {
 	dependsOn test
-		reports {
-			xml.required =  true
-			html.required = true
-			csv.required = false
-			html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-		}
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		html.required = true
+		csv.required = false
+		html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
 	}
+	sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+	classDirectories = files(sourceSets.main.output)
+	executionData = files("$buildDir/jacoco/test.exec")
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
