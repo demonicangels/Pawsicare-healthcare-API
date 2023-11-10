@@ -1,6 +1,6 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.domain.Doctor;
+import com.example.pawsicare.domain.doctor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DoctorManagerImplTest {
     /**
      * @verifies return a filled in doctor object when the doctor is created
-     * @see DoctorManagerImpl#createDoctor(Doctor)
+     * @see doctorManagerImpl#createDoctor(doctor)
      */
 //    @Test
 //     void createDoctor_shouldReturnAFilledInDoctorObjectWhenTheDoctorIsCreated() throws Exception {

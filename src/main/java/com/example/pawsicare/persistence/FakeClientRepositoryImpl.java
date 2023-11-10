@@ -1,6 +1,6 @@
 package com.example.pawsicare.persistence;
 
-import com.example.pawsicare.domain.Client;
+import com.example.pawsicare.domain.client;
 import org.springframework.stereotype.Repository;
 import com.example.pawsicare.persistence.fakeRepositoryInterfaces.ClientRepository;
 
@@ -8,14 +8,14 @@ import java.util.*;
 
 @Repository
 public class FakeClientRepositoryImpl implements ClientRepository {
-    private final List<Client> clients;
+    private final List<client> clients;
     Long fakeID = 1L;
 
     public FakeClientRepositoryImpl(){
         this.clients = new ArrayList<>();
     }
     @Override
-    public Client createClient(Client client) {
+    public client createClient(client client) {
         client.setId(fakeID);
         fakeID++;
 
@@ -24,12 +24,12 @@ public class FakeClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public Client updateClient(long id, Client client) {
-        Optional<Client> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
+    public client updateClient(long id, client client) {
+        Optional<com.example.pawsicare.domain.client> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
         if(cli.isPresent()){
             int index = clients.indexOf(cli.get());
 
-            Client c = cli.get();
+            com.example.pawsicare.domain.client c = cli.get();
             c.setName(client.getName());
             c.setEmail(client.getEmail());
             c.setPhoneNumber(client.getPhoneNumber());
@@ -43,8 +43,8 @@ public class FakeClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public Client getClient(long id) {
-        Optional<Client> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
+    public client getClient(long id) {
+        Optional<client> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
         if(cli.isPresent()){
 
             return cli.get();
@@ -53,7 +53,7 @@ public class FakeClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public List<Client> getClients() {
+    public List<client> getClients() {
         return clients;
     }
 
