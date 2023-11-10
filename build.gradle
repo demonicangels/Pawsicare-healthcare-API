@@ -14,9 +14,8 @@ sonar {
 		property "sonar.projectKey", "I482269_pawsicarebe-s3_AYu4pdKx0upfW3vBJKqZ"
 		property "sonar.token", "sqp_f3c5e46ff4cc403abc12bf97716df8b47a755fa9"
 		property "sonar.host.url", "http://localhost:9002/"
-		property "sonar.projectName", "PawsiCareBE S3 "
+		property "sonar.projectName", "PawsiCareBE S3"
 		property "sonar.qualitygate.wait", true
-
 	}
 }
 
