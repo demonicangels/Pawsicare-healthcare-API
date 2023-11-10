@@ -36,10 +36,10 @@ if (applicationPropertiesFile.exists()) {
 	}
 
 	flyway {
-		url = 'jdbc:mysql://127.0.0.1:3306/pawsicare'
+		url = properties.getProperty('spring.datasource.url')
 		driver = 'com.mysql.cj.jdbc.Driver'
-		user = 'nikol'
-		password = 'Ior7dh8Nrr'
+		user = properties.getProperty('spring.datasource.username')
+		password = properties.getProperty('spring.datasource.password')
 		baselineOnMigrate = true
 	}
 } else {
