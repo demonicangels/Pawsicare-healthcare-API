@@ -10,9 +10,9 @@ plugins {
 sonar {
 	properties {
 		property "sonar.java.coveragePlugin", "jacoco"
-		property "sonar.projectKey", "I482269_pawsicarebe-s3_AYtn5_EZKzuteiab4LHy"
-		property "sonar.token", "sqp_b954a45b35e4b306b7744ae7e415645f97688a7e"
-		property "sonar.host.url", "http://localhost:9000/"
+		property "sonar.projectKey", "I482269_pawsicarebe-s3_AYu4pdKx0upfW3vBJKqZ"
+		property "sonar.token", "sqp_b487eb924eafad3fd242e962b254d92f82d0bb34"
+		property "sonar.host.url", "http://localhost:9002/"
 		property "sonar.projectName", "PawsiCareBE S3 "
 		property "sonar.qualitygate.wait", true
 
