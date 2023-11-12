@@ -40,6 +40,7 @@ public class doctorController {
         Optional<List<doctorDTO>> doctorsByField = Optional.ofNullable(doctorManager.getDoctorsByField(field).stream()
                 .map(converter :: toDTO)
                 .toList());
+
         if(doctorsByField.isPresent()){
 
             getAllDoctorsResponse doctorsResponse = getAllDoctorsResponse.builder()
