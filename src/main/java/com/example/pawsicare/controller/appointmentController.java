@@ -1,6 +1,6 @@
 package com.example.pawsicare.controller;
 
-import com.example.pawsicare.business.DTOs.appointmentDTO;
+import com.example.pawsicare.business.DTOs.AppointmentDTO;
 import com.example.pawsicare.business.impl.appointmentConverter;
 import com.example.pawsicare.business.requests.createAppointmentRequest;
 import com.example.pawsicare.business.requests.updateAppointmentRequest;
@@ -29,7 +29,7 @@ public class appointmentController {
     private final com.example.pawsicare.business.impl.petConverter petConverter;
     @GetMapping(params = "userId")
     public ResponseEntity<getAppointmentsResponse> getUsersAppointments(@Valid @RequestParam(name = "userId")long userId){
-        Optional<List<appointmentDTO>> app = appointmentManager.getUsersAppointments(userId)
+        Optional<List<AppointmentDTO>> app = appointmentManager.getUsersAppointments(userId)
                         .map(appointments -> appointments.stream()
                                 .map(converter::toDTO)
                                 .toList())
@@ -48,7 +48,7 @@ public class appointmentController {
     }
     @PostMapping
     public ResponseEntity<createAppointmentResponse> createAppointment(@RequestBody @Valid createAppointmentRequest appointmentRequest){
-        appointmentDTO appointment = appointmentDTO.builder()
+        AppointmentDTO appointment = AppointmentDTO.builder()
                 .dateAndStart(appointmentRequest.getDateAndStart())
                 .dateAndEnd(appointmentRequest.getDateAndEnd())
                 .client(clientConverter.toDTO(clientManager.getClient(appointmentRequest.getClientId())))
@@ -56,7 +56,7 @@ public class appointmentController {
                 .pet(petConverter.toDTO(petManager.getPet(appointmentRequest.getPetId())))
                 .build();
 
-        Optional<appointmentDTO> app = Optional.ofNullable(appointmentManager.createAppointment(converter.fromDTO(appointment))
+        Optional<AppointmentDTO> app = Optional.ofNullable(appointmentManager.createAppointment(converter.fromDTO(appointment))
                 .map(appointmentValue -> converter.toDTO(appointmentValue))
                 .orElse(null));
 
@@ -72,12 +72,12 @@ public class appointmentController {
 
     @PutMapping(params = "id")
     public ResponseEntity<updateAppointmentResponse> rescheduleAppointment (@Valid @RequestParam(name = "id") long id, @RequestBody @Valid updateAppointmentRequest appointmentRequest){
-        appointmentDTO appointment = appointmentDTO.builder()
+        AppointmentDTO appointment = AppointmentDTO.builder()
                 .dateAndStart(appointmentRequest.getDateAndStart())
                 .dateAndEnd(appointmentRequest.getDateAndEnd())
                 .build();
 
-        Optional<appointmentDTO> api = Optional.ofNullable(appointmentManager.rescheduleAppointment(id, converter.fromDTO(appointment)).map(app -> converter.toDTO(app)).orElse(null));
+        Optional<AppointmentDTO> api = Optional.ofNullable(appointmentManager.rescheduleAppointment(id, converter.fromDTO(appointment)).map(app -> converter.toDTO(app)).orElse(null));
 
         if(api.isPresent()){
             updateAppointmentResponse updateAppointmentResponse = com.example.pawsicare.business.responses.updateAppointmentResponse.builder()

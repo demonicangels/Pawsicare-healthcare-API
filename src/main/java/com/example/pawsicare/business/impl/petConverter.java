@@ -1,14 +1,14 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.DTOs.petDTO;
-import com.example.pawsicare.domain.pet;
+import com.example.pawsicare.business.DTOs.PetDTO;
+import com.example.pawsicare.domain.Pet;
 import org.springframework.stereotype.Service;
 
 @Service
 public class petConverter {
-    public pet fromDTO(petDTO petDTO){
+    public Pet fromDTO(PetDTO petDTO){
 
-        return pet.builder()
+        return Pet.builder()
                 .id(petDTO.getId())
                 .ownerId(petDTO.getOwnerId())
                 .name(petDTO.getName())
@@ -18,9 +18,9 @@ public class petConverter {
                 .build();
     }
 
-    public petDTO toDTO (pet pet){
+    public PetDTO toDTO (Pet pet){
 
-        return petDTO.builder()
+        return PetDTO.builder()
                 .id(pet.getId())
                 .ownerId(pet.getOwnerId())
                 .name(pet.getName())

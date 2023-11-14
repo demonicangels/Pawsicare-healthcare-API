@@ -1,6 +1,6 @@
 package com.example.pawsicare.persistence;
 
-import com.example.pawsicare.domain.client;
+import com.example.pawsicare.domain.Client;
 import org.springframework.stereotype.Repository;
 import com.example.pawsicare.persistence.fakeRepositoryInterfaces.ClientRepository;
 
@@ -8,34 +8,34 @@ import java.util.*;
 
 @Repository
 public class FakeClientRepositoryImpl implements ClientRepository {
-    private final List<client> clients;
+    private final List<Client> Clients;
     Long fakeID = 1L;
 
     public FakeClientRepositoryImpl(){
-        this.clients = new ArrayList<>();
+        this.Clients = new ArrayList<>();
     }
     @Override
-    public client createClient(client client) {
+    public Client createClient(Client client) {
         client.setId(fakeID);
         fakeID++;
 
-        clients.add(client);
+        Clients.add(client);
         return client;
     }
 
     @Override
-    public client updateClient(long id, client client) {
-        Optional<com.example.pawsicare.domain.client> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
+    public Client updateClient(long id, Client client) {
+        Optional<Client> cli = Clients.stream().filter(c -> c.getId() == id).findFirst();
         if(cli.isPresent()){
-            int index = clients.indexOf(cli.get());
+            int index = Clients.indexOf(cli.get());
 
-            com.example.pawsicare.domain.client c = cli.get();
+            Client c = cli.get();
             c.setName(client.getName());
             c.setEmail(client.getEmail());
             c.setPhoneNumber(client.getPhoneNumber());
             c.setPassword(client.getPassword());
 
-            clients.set(index, c);
+            Clients.set(index, c);
 
             return c;
         }
@@ -43,8 +43,8 @@ public class FakeClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public client getClient(long id) {
-        Optional<client> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
+    public Client getClient(long id) {
+        Optional<Client> cli = Clients.stream().filter(c -> c.getId() == id).findFirst();
         if(cli.isPresent()){
 
             return cli.get();
@@ -53,12 +53,12 @@ public class FakeClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public List<client> getClients() {
-        return clients;
+    public List<Client> getClients() {
+        return Clients;
     }
 
     @Override
     public void deleteClient(long id) {
-        clients.removeIf(c -> c.getId() == id);
+        Clients.removeIf(c -> c.getId() == id);
     }
 }

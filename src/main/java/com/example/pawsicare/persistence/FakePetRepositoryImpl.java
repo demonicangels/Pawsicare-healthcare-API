@@ -1,6 +1,6 @@
 package com.example.pawsicare.persistence;
 
-import com.example.pawsicare.domain.pet;
+import com.example.pawsicare.domain.Pet;
 import com.example.pawsicare.persistence.fakeRepositoryInterfaces.PetRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +9,7 @@ import java.util.*;
 
 @Repository
 public class FakePetRepositoryImpl implements PetRepository {
-    private final List<pet> pets;
+    private final List<Pet> pets;
     private int fakeId = 1;
 
     public FakePetRepositoryImpl(){
@@ -17,7 +17,7 @@ public class FakePetRepositoryImpl implements PetRepository {
     }
 
     @Override
-    public pet createPet(pet pet) {
+    public Pet createPet(Pet pet) {
         pet.setId(fakeId);
         fakeId++;
 
@@ -26,12 +26,12 @@ public class FakePetRepositoryImpl implements PetRepository {
     }
 
     @Override
-    public pet updatePet(long id, pet pet) {
-        Optional<com.example.pawsicare.domain.pet> petOptional = pets.stream().filter(p -> p.getId() == id).findFirst();
+    public Pet updatePet(long id, Pet pet) {
+        Optional<Pet> petOptional = pets.stream().filter(p -> p.getId() == id).findFirst();
         if(petOptional.isPresent()){
             int index = pets.indexOf(petOptional.get());
 
-            com.example.pawsicare.domain.pet peti = petOptional.get();
+            Pet peti = petOptional.get();
             peti.setAge(pet.getAge());
             peti.setName(pet.getName());
             peti.setBirthday(pet.getBirthday());
@@ -45,8 +45,8 @@ public class FakePetRepositoryImpl implements PetRepository {
     }
 
     @Override
-    public pet getPet(long id) {
-        Optional<pet> petOptional = pets.stream().filter(p -> p.getId() == id).findFirst();
+    public Pet getPet(long id) {
+        Optional<Pet> petOptional = pets.stream().filter(p -> p.getId() == id).findFirst();
         if(petOptional.isPresent()){
             return petOptional.get();
         }
@@ -59,7 +59,7 @@ public class FakePetRepositoryImpl implements PetRepository {
     }
 
     @Override
-    public List<pet> getPets(long ownerId) {
+    public List<Pet> getPets(long ownerId) {
         return pets.stream().filter(p-> p.getOwnerId() == ownerId).toList();
     }
 }

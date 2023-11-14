@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class appointmentDTO {
+public class AppointmentDTO {
     private Long id;
     private LocalDateTime dateAndStart;
     private LocalDateTime dateAndEnd;
-    private clientDTO client;
-    private doctorDTO doctor;
-    private petDTO pet;
+    private ClientDTO client;
+    private DoctorDTO doctor;
+    private PetDTO pet;
 }

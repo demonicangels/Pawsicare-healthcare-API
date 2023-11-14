@@ -14,11 +14,11 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class doctorEntity extends userEntity {
+public class DoctorEntity extends UserEntity {
     private String description;
     private String field;
     private String image;
 
     @ManyToMany(mappedBy = "doctors")
-    private List<clientEntity> clients;
+    private List<ClientEntity> clients;
 }

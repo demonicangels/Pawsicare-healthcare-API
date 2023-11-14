@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
-    public class mailConfig {
+    public class MailConfig {
         private final static String ACCESS_TOKEN = "iefo zuqn emag suia";
         public JavaMailSender JavaMailSender() {
             JavaMailSenderImpl mailSender = new JavaMailSenderImpl();

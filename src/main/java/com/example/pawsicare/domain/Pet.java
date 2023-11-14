@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class pet {
+public class Pet {
 
     private long id;
     private long ownerId;

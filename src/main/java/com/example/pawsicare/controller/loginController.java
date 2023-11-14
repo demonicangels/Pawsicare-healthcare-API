@@ -1,12 +1,12 @@
 package com.example.pawsicare.controller;
 
-import com.example.pawsicare.domain.client;
-import com.example.pawsicare.domain.doctor;
-import com.example.pawsicare.domain.user;
+import com.example.pawsicare.domain.Client;
+import com.example.pawsicare.domain.Doctor;
+import com.example.pawsicare.domain.User;
 import com.example.pawsicare.business.requests.loginUserRequest;
 import com.example.pawsicare.business.responses.getUserResponse;
-import com.example.pawsicare.business.DTOs.clientDTO;
-import com.example.pawsicare.business.DTOs.doctorDTO;
+import com.example.pawsicare.business.DTOs.ClientDTO;
+import com.example.pawsicare.business.DTOs.DoctorDTO;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,14 +25,14 @@ public class loginController {
     @PostMapping
     public ResponseEntity<getUserResponse> userLogin(@RequestBody @Valid loginUserRequest loginUserRequest) {
 
-        Optional<user> loggedInUser = Optional.of(loginService.userLogin(loginUserRequest.getEmail(), loginUserRequest.getPassword()));
+        Optional<User> loggedInUser = Optional.of(loginService.userLogin(loginUserRequest.getEmail(), loginUserRequest.getPassword()));
 
         try {
-                if (loggedInUser.get() instanceof doctor doc) {
+                if (loggedInUser.get() instanceof Doctor doc) {
 
-                    doc = (doctor) loggedInUser.get();
+                    doc = (Doctor) loggedInUser.get();
 
-                    Optional<doctorDTO> doctorDTO = Optional.of(com.example.pawsicare.business.DTOs.doctorDTO.builder()
+                    Optional<DoctorDTO> doctorDTO = Optional.of(DoctorDTO.builder()
                             .id(doc.getId())
                             .name(doc.getName())
                             .birthday(doc.getBirthday())
@@ -47,10 +47,10 @@ public class loginController {
                             .build();
 
                     return ResponseEntity.status(HttpStatus.OK).body(getUserResponse);
-                } else if (loggedInUser.get() instanceof client client) {
-                     client = (com.example.pawsicare.domain.client) loggedInUser.get();
+                } else if (loggedInUser.get() instanceof Client client) {
+                     client = (Client) loggedInUser.get();
 
-                    Optional<clientDTO> clientDTO = Optional.of(com.example.pawsicare.business.DTOs.clientDTO.builder()
+                    Optional<ClientDTO> clientDTO = Optional.of(ClientDTO.builder()
                             .id(client.getId())
                             .name(client.getName())
                             .birthday(client.getBirthday())

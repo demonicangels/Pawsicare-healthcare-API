@@ -1,6 +1,6 @@
 package com.example.pawsicare.domain;
 
-public enum role {
+public enum Role {
     Client ,
     Doctor
 }

@@ -1,6 +1,6 @@
 package com.example.pawsicare.controller;
 
-import com.example.pawsicare.business.DTOs.doctorDTO;
+import com.example.pawsicare.business.DTOs.DoctorDTO;
 import com.example.pawsicare.business.impl.doctorConverter;
 import com.example.pawsicare.business.requests.createDoctorRequest;
 import com.example.pawsicare.business.requests.updateDoctorRequest;
@@ -23,7 +23,7 @@ public class doctorController {
 
     @GetMapping(params = "id")
     public ResponseEntity<getDoctorResponse> getDoctorById(@RequestParam(name = "id", required = false) long id){
-        Optional<doctorDTO> doctor = Optional.ofNullable(converter.toDTO(doctorManager.getDoctor(id)));
+        Optional<DoctorDTO> doctor = Optional.ofNullable(converter.toDTO(doctorManager.getDoctor(id)));
 
         if(!doctor.isEmpty()){
             getDoctorResponse doctorResponse = getDoctorResponse.builder()
@@ -37,7 +37,7 @@ public class doctorController {
 
     @GetMapping(params = "field")
     public ResponseEntity<getAllDoctorsResponse> getDoctorsByField(@RequestParam(name = "field", required = false) String field){
-        Optional<List<doctorDTO>> doctorsByField = Optional.ofNullable(doctorManager.getDoctorsByField(field).stream()
+        Optional<List<DoctorDTO>> doctorsByField = Optional.ofNullable(doctorManager.getDoctorsByField(field).stream()
                 .map(converter :: toDTO)
                 .toList());
 
@@ -54,7 +54,7 @@ public class doctorController {
 
     @GetMapping()
     public ResponseEntity<getAllDoctorsResponse> getDoctors(){
-        Optional<List<doctorDTO>> doctors = Optional.of(doctorManager.getDoctors().stream()
+        Optional<List<DoctorDTO>> doctors = Optional.of(doctorManager.getDoctors().stream()
                 .map(converter :: toDTO)
                 .toList());
 
@@ -69,7 +69,7 @@ public class doctorController {
 
     @PostMapping()
     public ResponseEntity<createDoctorResponse> registerDoctor(@RequestBody @Valid createDoctorRequest request){
-        doctorDTO doctorDTO = com.example.pawsicare.business.DTOs.doctorDTO.builder()
+        DoctorDTO doctorDTO = DoctorDTO.builder()
                 .name(request.getName())
                 .password(request.getPassword())
                 .description(request.getDescription())
@@ -78,7 +78,7 @@ public class doctorController {
                 .field(request.getField())
                 .build();
 
-        Optional<com.example.pawsicare.business.DTOs.doctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.createDoctor(converter.fromDTO(doctorDTO))));
+        Optional<DoctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.createDoctor(converter.fromDTO(doctorDTO))));
         if(!doc.isEmpty()){
             createDoctorResponse doctorResponse = createDoctorResponse.builder()
                     .doctor(doctorDTO)
@@ -91,7 +91,7 @@ public class doctorController {
 
     @PutMapping()
     public ResponseEntity<updateDoctorResponse> updateDoctor(@RequestParam(name = "id") long id, @RequestBody @Valid updateDoctorRequest request){
-        doctorDTO doctorDTO = com.example.pawsicare.business.DTOs.doctorDTO.builder()
+        DoctorDTO doctorDTO = DoctorDTO.builder()
                 .name(request.getName())
                 .password(request.getPassword())
                 .description(request.getDescription())
@@ -100,7 +100,7 @@ public class doctorController {
                 .field(request.getField())
                 .build();
 
-        Optional<com.example.pawsicare.business.DTOs.doctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.updateDoctor(converter.fromDTO(doctorDTO))));
+        Optional<DoctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.updateDoctor(converter.fromDTO(doctorDTO))));
 
         if(!doc.isEmpty()){
 

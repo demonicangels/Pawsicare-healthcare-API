@@ -1,23 +1,25 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.domain.doctor;
-import com.example.pawsicare.domain.user;
+import com.example.pawsicare.domain.Doctor;
+import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.doctorManager;
 import com.example.pawsicare.persistence.userEntityConverter;
-import com.example.pawsicare.persistence.entity.doctorEntity;
-import lombok.AllArgsConstructor;
+import com.example.pawsicare.persistence.entity.DoctorEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.example.pawsicare.persistence.jpaRepositories.userRepository;
+import com.example.pawsicare.persistence.jpaRepositories.doctorRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class doctorManagerImpl implements doctorManager {
 
-    private userEntityConverter converter;
-    private final com.example.pawsicare.persistence.jpaRepositories.userRepository userRepository;
-    private final com.example.pawsicare.persistence.jpaRepositories.doctorRepository doctorRepository;
+    private final userRepository userRepository;
+    private final userEntityConverter converter;
+    private final  doctorRepository doctorRepository;
 
     /**
      * @param doctor
@@ -25,24 +27,23 @@ public class doctorManagerImpl implements doctorManager {
      * @should return a filled in doctor object when the doctor is created
      */
     @Override
-    public doctor createDoctor(doctor doctor) {
+    public Doctor createDoctor(Doctor doctor) {
         return converter.fromDoctorEntity(userRepository.save(converter.toDoctorEntity(doctor)));
     }
 
     /**
-     * @param id
      * @param doctor
      * @return updated doctor when updated
      * @should return a doctor object with updated fields
      */
     @Override
-    public doctor updateDoctor(doctor doctor) {
-        return converter.fromDoctorEntity((doctorEntity) userRepository.save(converter.toUserEntity(doctor)));
+    public Doctor updateDoctor(Doctor doctor) {
+        return converter.fromDoctorEntity((DoctorEntity) userRepository.save(converter.toUserEntity(doctor)));
     }
 
     @Override
-    public doctor getDoctor(long id) {
-         return converter.fromDoctorEntity(userRepository.getUserEntityById(id).map(doctorEntity.class :: cast).orElse(null));
+    public Doctor getDoctor(long id) {
+         return converter.fromDoctorEntity(userRepository.getUserEntityById(id).map(DoctorEntity.class :: cast).orElse(null));
     }
 
     /**
@@ -51,12 +52,12 @@ public class doctorManagerImpl implements doctorManager {
      * @should return an empty list when no doctors are present
      */
     @Override
-    public List<doctor> getDoctors() {
-        List<doctor> returnedDoctors = new ArrayList<>();
+    public List<Doctor> getDoctors() {
+        List<Doctor> returnedDoctors = new ArrayList<>();
 
-        List<user> doctorEntities = userRepository.findByRole(1).stream().map( converter :: fromUserEntity).toList();
+        List<User> doctorEntities = userRepository.findByRole(1).stream().map( converter :: fromUserEntity).toList();
 
-        doctorEntities.forEach(d -> returnedDoctors.add((doctor) d));
+        doctorEntities.forEach(d -> returnedDoctors.add((Doctor) d));
 
         return returnedDoctors;
     }
@@ -67,8 +68,8 @@ public class doctorManagerImpl implements doctorManager {
     }
 
     @Override
-    public List<doctor> getDoctorsByField(String field) {
-        List<doctor> fieldDoctors = new ArrayList<>();
+    public List<Doctor> getDoctorsByField(String field) {
+        List<Doctor> fieldDoctors = new ArrayList<>();
 
         doctorRepository.getDoctorEntitiesByField(field).stream().map(
                 converter :: fromDoctorEntity

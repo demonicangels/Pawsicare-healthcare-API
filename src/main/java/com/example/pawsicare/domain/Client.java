@@ -8,5 +8,5 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class client extends user {
+public class Client extends User {
 }

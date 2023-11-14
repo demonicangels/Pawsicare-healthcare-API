@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class appointment {
+public class Appointment {
     private long id;
     private LocalDateTime dateAndStart;
     private LocalDateTime dateAndEnd;
-    private com.example.pawsicare.domain.client client;
-    private com.example.pawsicare.domain.doctor doctor;
-    private com.example.pawsicare.domain.pet pet;
+    private Client client;
+    private Doctor doctor;
+    private Pet pet;
 }

@@ -1,8 +1,8 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.persistence.entity.appointmentEntity;
-import com.example.pawsicare.persistence.entity.clientEntity;
-import com.example.pawsicare.persistence.entity.doctorEntity;
+import com.example.pawsicare.persistence.entity.AppointmentEntity;
+import com.example.pawsicare.persistence.entity.ClientEntity;
+import com.example.pawsicare.persistence.entity.DoctorEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class appointmentRepositoryTest {
+public class AppointmentRepositoryTest {
 
     @Autowired
     EntityManager entityManager;
@@ -35,7 +35,7 @@ public class appointmentRepositoryTest {
 
     @Test
     void save_shouldSaveAppointmentWithAllFields(){
-      clientEntity client = clientEntity.builder()
+      ClientEntity client = ClientEntity.builder()
               .name("Maria")
               .email("maria@gmail.com")
               .password("123")
@@ -43,7 +43,7 @@ public class appointmentRepositoryTest {
 
       entityManager.persist(client);
 
-      doctorEntity doctor = doctorEntity.builder()
+      DoctorEntity doctor = DoctorEntity.builder()
               .name("Maria")
               .email("maria@gmail.com")
               .password("123")
@@ -53,20 +53,20 @@ public class appointmentRepositoryTest {
       entityManager.persist(doctor);
 
 
-        appointmentEntity appointment = appointmentEntity.builder()
+        AppointmentEntity appointment = AppointmentEntity.builder()
                 .dateAndStart(LocalDateTime.now())
                 .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
                 .client(client)
                 .doctor(doctor)
                 .build();
 
-        appointmentEntity savedAppointment = appointmentRepository.save(appointment);
+        AppointmentEntity savedAppointment = appointmentRepository.save(appointment);
 
         assertNotNull(savedAppointment.getId());
 
-        savedAppointment = entityManager.find(appointmentEntity.class,savedAppointment.getId());
+        savedAppointment = entityManager.find(AppointmentEntity.class,savedAppointment.getId());
 
-        appointmentEntity expectedAppointment = appointmentEntity.builder()
+        AppointmentEntity expectedAppointment = AppointmentEntity.builder()
                 .id(savedAppointment.getId())
                 .dateAndStart(savedAppointment.getDateAndStart())
                 .dateAndEnd(savedAppointment.getDateAndEnd())
@@ -80,7 +80,7 @@ public class appointmentRepositoryTest {
     @Test
     void find_findAllAppointmentsOfADoctor(){
 
-        doctorEntity doctor = doctorEntity.builder()
+        DoctorEntity doctor = DoctorEntity.builder()
                 .name("Maria")
                 .email("maria@gmail.com")
                 .password("123")
@@ -91,7 +91,7 @@ public class appointmentRepositoryTest {
 
         Long docId = doctor.getId();
 
-        doctorEntity doctor2 = doctorEntity.builder()
+        DoctorEntity doctor2 = DoctorEntity.builder()
                 .name("Maria")
                 .email("maria@gmail.com")
                 .password("123")
@@ -100,7 +100,7 @@ public class appointmentRepositoryTest {
 
         entityManager.persist(doctor2);
 
-        appointmentEntity appointment = appointmentEntity.builder()
+        AppointmentEntity appointment = AppointmentEntity.builder()
                 .dateAndStart(LocalDateTime.now())
                 .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
                 .client(null)
@@ -109,7 +109,7 @@ public class appointmentRepositoryTest {
 
         entityManager.persist(appointment);
 
-        appointmentEntity appointment2 = appointmentEntity.builder()
+        AppointmentEntity appointment2 = AppointmentEntity.builder()
                 .dateAndStart(LocalDateTime.now())
                 .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
                 .client(null)
@@ -118,7 +118,7 @@ public class appointmentRepositoryTest {
 
         entityManager.persist(appointment2);
 
-        appointmentEntity appointment3 = appointmentEntity.builder()
+        AppointmentEntity appointment3 = AppointmentEntity.builder()
                 .dateAndStart(LocalDateTime.now())
                 .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
                 .client(null)
@@ -127,7 +127,7 @@ public class appointmentRepositoryTest {
 
         entityManager.persist(appointment3);
 
-        appointmentEntity appointment4 = appointmentEntity.builder()
+        AppointmentEntity appointment4 = AppointmentEntity.builder()
                 .dateAndStart(LocalDateTime.now())
                 .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
                 .client(null)
@@ -136,13 +136,13 @@ public class appointmentRepositoryTest {
 
         entityManager.persist(appointment4);
 
-        String jpql = "SELECT a FROM appointmentEntity a WHERE a.doctor.id = :doctorId";
+        String jpql = "SELECT a FROM AppointmentEntity a WHERE a.doctor.id = :doctorId";
 
-        Query query = entityManager.createQuery(jpql, appointmentEntity.class);
+        Query query = entityManager.createQuery(jpql, AppointmentEntity.class);
 
         query.setParameter("doctorId", docId);
 
-        List<appointmentEntity> doctorsAppointments = query.getResultList();
+        List<AppointmentEntity> doctorsAppointments = query.getResultList();
 
         assertNotNull(doctorsAppointments);
         assertThat(doctorsAppointments).hasSize(2);

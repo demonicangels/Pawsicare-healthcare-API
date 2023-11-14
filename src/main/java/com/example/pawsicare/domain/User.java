@@ -6,22 +6,22 @@ import lombok.experimental.SuperBuilder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "role", defaultImpl = client.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "role", defaultImpl = Client.class)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = doctor.class, name = "Doctor"),
-        @JsonSubTypes.Type(value = client.class, name = "Client")
+        @JsonSubTypes.Type(value = Doctor.class, name = "Doctor"),
+        @JsonSubTypes.Type(value = Client.class, name = "Client")
 })
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @Getter
 @Setter
-public abstract class user {
+public abstract class User {
     private Long id;
     private String name;
     private String birthday;
     private String password;
     private String email;
     private String phoneNumber;
-    private com.example.pawsicare.domain.role role;
+    private Role role;
 }

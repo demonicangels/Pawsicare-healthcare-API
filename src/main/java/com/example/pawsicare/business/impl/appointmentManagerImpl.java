@@ -1,7 +1,7 @@
 package com.example.pawsicare.business.impl;
 
 import com.example.pawsicare.domain.managerinterfaces.appointmentManager;
-import com.example.pawsicare.domain.appointment;
+import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.persistence.appointmentEntityConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,19 +17,19 @@ public class appointmentManagerImpl implements appointmentManager {
     private final appointmentEntityConverter converter;
 
     @Override
-    public Optional<appointment> createAppointment(appointment appointment) {
+    public Optional<Appointment> createAppointment(Appointment appointment) {
         return Optional.of(converter.fromEntity(appointmentRepository.save(converter.toEntity(appointment))));
     }
 
     @Override
-    public Optional<appointment> rescheduleAppointment(long id, appointment appointment) {
+    public Optional<Appointment> rescheduleAppointment(long id, Appointment appointment) {
         return Optional.of(converter.fromEntity(appointmentRepository.save(converter.toEntity(appointment))));
     }
 
     @Override
-    public Optional<List<appointment>> getUsersAppointments(long userId) {
+    public Optional<List<Appointment>> getUsersAppointments(long userId) {
         //TODO fix this method the repository returns null
-        Optional<List<appointment>> appointments = Optional.of(appointmentRepository.findAppointmentEntitiesByClient_IdOrDoctor_Id(userId,userId).stream().map(converter :: fromEntity).toList());
+        Optional<List<Appointment>> appointments = Optional.of(appointmentRepository.findAppointmentEntitiesByClient_IdOrDoctor_Id(userId,userId).stream().map(converter :: fromEntity).toList());
         return appointments;
     }
 

@@ -1,9 +1,9 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.domain.client;
+import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.managerinterfaces.clientManager;
 import com.example.pawsicare.persistence.userEntityConverter;
-import com.example.pawsicare.persistence.entity.clientEntity;
+import com.example.pawsicare.persistence.entity.ClientEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,24 +16,24 @@ public class clientManagerImpl implements clientManager {
     private userEntityConverter converter;
 
     @Override
-    public client createClient(client client) {
+    public Client createClient(Client client) {
         return converter.fromClientEntity(userRepository.save(converter.toClientEntity(client)));
     }
 
     @Override
-    public client updateClient(client client) {
+    public Client updateClient(Client client) {
         return converter.fromClientEntity(userRepository.save(converter.toClientEntity(client)));
     }
 
     @Override
-    public client getClient(long id) {
-        return converter.fromClientEntity( userRepository.getUserEntityById(id).map(clientEntity.class :: cast).orElse(null));
+    public Client getClient(long id) {
+        return converter.fromClientEntity( userRepository.getUserEntityById(id).map(ClientEntity.class :: cast).orElse(null));
     }
 
     @Override
-    public List<client> getClients() {
-        List<client> returnedClients = new ArrayList<>();
-        userRepository.findAll().stream().map(converter :: fromUserEntity).map(u -> (client) u).forEach(
+    public List<Client> getClients() {
+        List<Client> returnedClients = new ArrayList<>();
+        userRepository.findAll().stream().map(converter :: fromUserEntity).map(u -> (Client) u).forEach(
                 returnedClients :: add
         );
         return returnedClients;

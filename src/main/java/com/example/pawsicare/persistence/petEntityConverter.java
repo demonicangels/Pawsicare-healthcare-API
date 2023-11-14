@@ -1,8 +1,8 @@
 package com.example.pawsicare.persistence;
 
-import com.example.pawsicare.domain.pet;
-import com.example.pawsicare.persistence.entity.clientEntity;
-import com.example.pawsicare.persistence.entity.petEntity;
+import com.example.pawsicare.domain.Pet;
+import com.example.pawsicare.persistence.entity.ClientEntity;
+import com.example.pawsicare.persistence.entity.PetEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +12,8 @@ public class petEntityConverter {
 
     private final com.example.pawsicare.persistence.jpaRepositories.userRepository userRepository;
 
-    public pet fromEntity (petEntity pet){
-        return com.example.pawsicare.domain.pet.builder()
+    public Pet fromEntity (PetEntity pet){
+        return Pet.builder()
                 .id(pet.getId())
                 .name(pet.getName())
                 .ownerId(pet.getClient().getId())
@@ -22,10 +22,10 @@ public class petEntityConverter {
                 .build();
     }
 
-    public petEntity toEntity (pet pet){
-        return petEntity.builder()
+    public PetEntity toEntity (Pet pet){
+        return PetEntity.builder()
                 .name(pet.getName())
-                .client(userRepository.getUserEntityById(pet.getOwnerId()).map(clientEntity.class :: cast).orElse(null))
+                .client(userRepository.getUserEntityById(pet.getOwnerId()).map(ClientEntity.class :: cast).orElse(null))
                 .birthday(pet.getBirthday())
                 .information(pet.getInformation())
                 .build();

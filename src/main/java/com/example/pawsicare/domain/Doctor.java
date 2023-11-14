@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
-public class doctor extends user {
+public class Doctor extends User {
     //private String medicalCode;
     private Integer age;
     private String description;

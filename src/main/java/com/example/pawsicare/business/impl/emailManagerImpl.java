@@ -1,7 +1,7 @@
 package com.example.pawsicare.business.impl;
 
 import com.example.pawsicare.business.requests.sendEmailRequest;
-import com.example.pawsicare.domain.mailConfig;
+import com.example.pawsicare.domain.MailConfig;
 import com.example.pawsicare.domain.managerinterfaces.emailManager;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,7 +15,7 @@ public class emailManagerImpl implements emailManager {
 
         JavaMailSender javaMailSender;
 
-        mailConfig getJavaMailSender = new mailConfig();
+        MailConfig getJavaMailSender = new MailConfig();
         javaMailSender = getJavaMailSender.JavaMailSender();
 
         try{

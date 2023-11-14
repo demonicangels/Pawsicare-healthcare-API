@@ -1,17 +1,17 @@
 package com.example.pawsicare.domain.managerinterfaces;
 
-import com.example.pawsicare.domain.doctor;
+import com.example.pawsicare.domain.Doctor;
 
 import java.util.List;
 
 public interface doctorManager {
 
-    doctor createDoctor(doctor doctor);
-    doctor updateDoctor(doctor doctor);
+    Doctor createDoctor(Doctor doctor);
+    Doctor updateDoctor(Doctor doctor);
 
-    doctor getDoctor(long id);
+    Doctor getDoctor(long id);
 
-    List<doctor> getDoctors();
-    List<doctor> getDoctorsByField(String field);
+    List<Doctor> getDoctors();
+    List<Doctor> getDoctorsByField(String field);
     void deleteDoctor(long id);
 }

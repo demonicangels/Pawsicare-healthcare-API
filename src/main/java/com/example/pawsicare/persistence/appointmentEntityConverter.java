@@ -1,7 +1,7 @@
 package com.example.pawsicare.persistence;
 
-import com.example.pawsicare.domain.appointment;
-import com.example.pawsicare.persistence.entity.appointmentEntity;
+import com.example.pawsicare.domain.Appointment;
+import com.example.pawsicare.persistence.entity.AppointmentEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +14,8 @@ public class appointmentEntityConverter {
     private final com.example.pawsicare.persistence.petEntityConverter petEntityConverter;
 
 
-    public appointment fromEntity(appointmentEntity appointment){
-        return com.example.pawsicare.domain.appointment.builder()
+    public Appointment fromEntity(AppointmentEntity appointment){
+        return Appointment.builder()
                 .id(appointment.getId())
                 .dateAndStart(appointment.getDateAndStart())
                 .dateAndEnd(appointment.getDateAndEnd())
@@ -25,8 +25,8 @@ public class appointmentEntityConverter {
                 .build();
     }
 
-    public appointmentEntity toEntity (appointment appointment){
-        return appointmentEntity.builder()
+    public AppointmentEntity toEntity (Appointment appointment){
+        return AppointmentEntity.builder()
                 //.id(appointment.getId())
                 .dateAndStart(appointment.getDateAndStart())
                 .dateAndEnd(appointment.getDateAndEnd())

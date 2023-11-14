@@ -1,16 +1,16 @@
 package com.example.pawsicare.domain.managerinterfaces;
 
-import com.example.pawsicare.domain.client;
+import com.example.pawsicare.domain.Client;
 
 import java.util.List;
 
 public interface clientManager {
-    client createClient(client client);
-    client updateClient(client client);
+    Client createClient(Client client);
+    Client updateClient(Client client);
 
-    client getClient(long id);
+    Client getClient(long id);
 
-    List<client> getClients();
+    List<Client> getClients();
     void deleteClient(long id);
 
 }

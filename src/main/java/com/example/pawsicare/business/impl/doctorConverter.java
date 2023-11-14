@@ -1,14 +1,14 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.DTOs.doctorDTO;
-import com.example.pawsicare.domain.doctor;
+import com.example.pawsicare.business.DTOs.DoctorDTO;
+import com.example.pawsicare.domain.Doctor;
 import org.springframework.stereotype.Service;
 
 @Service
 public class doctorConverter {
-    public doctorDTO toDTO (doctor doctor){
+    public DoctorDTO toDTO (Doctor doctor){
 
-        return doctorDTO.builder()
+        return DoctorDTO.builder()
                 .id(doctor.getId())
                 .name(doctor.getName())
                 .birthday(doctor.getBirthday())
@@ -21,9 +21,9 @@ public class doctorConverter {
                 .build();
     }
 
-    public doctor fromDTO (doctorDTO doctorDTO){
+    public Doctor fromDTO (DoctorDTO doctorDTO){
 
-        return doctor.builder()
+        return Doctor.builder()
                 .id(doctorDTO.getId())
                 .name(doctorDTO.getName())
                 .birthday(doctorDTO.getBirthday())

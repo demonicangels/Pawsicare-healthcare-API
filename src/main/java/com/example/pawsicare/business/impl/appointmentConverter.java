@@ -1,7 +1,7 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.DTOs.appointmentDTO;
-import com.example.pawsicare.domain.appointment;
+import com.example.pawsicare.business.DTOs.AppointmentDTO;
+import com.example.pawsicare.domain.Appointment;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +14,8 @@ public class appointmentConverter {
     private final com.example.pawsicare.business.impl.petConverter petConverter;
 
 
-    public appointmentDTO toDTO (appointment appointment){
-        return appointmentDTO.builder()
+    public AppointmentDTO toDTO (Appointment appointment){
+        return AppointmentDTO.builder()
                 .id(appointment.getId())
                 .dateAndStart(appointment.getDateAndStart())
                 .dateAndEnd(appointment.getDateAndEnd())
@@ -26,8 +26,8 @@ public class appointmentConverter {
     }
 
 
-    public appointment fromDTO (appointmentDTO appointmentDTO){
-        return appointment.builder()
+    public Appointment fromDTO (AppointmentDTO appointmentDTO){
+        return Appointment.builder()
                 //.id(appointmentDTO.getId())
                 .dateAndStart(appointmentDTO.getDateAndStart())
                 .dateAndEnd(appointmentDTO.getDateAndEnd())

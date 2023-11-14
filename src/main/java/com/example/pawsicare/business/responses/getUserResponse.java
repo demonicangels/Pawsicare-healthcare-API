@@ -1,7 +1,7 @@
 package com.example.pawsicare.business.responses;
 
-import com.example.pawsicare.business.DTOs.clientDTO;
-import com.example.pawsicare.business.DTOs.doctorDTO;
+import com.example.pawsicare.business.DTOs.ClientDTO;
+import com.example.pawsicare.business.DTOs.DoctorDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,6 +11,6 @@ import java.util.Optional;
 @Builder
 public class getUserResponse {
     private long id;
-    private Optional<doctorDTO> loggedInDoctor;
-    private Optional<clientDTO> loggedInClient;
+    private Optional<DoctorDTO> loggedInDoctor;
+    private Optional<ClientDTO> loggedInClient;
 }

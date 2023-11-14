@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class appointmentEntity {
+public class AppointmentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,14 +33,14 @@ public class appointmentEntity {
 
     @ManyToOne
     @JoinColumn(name = "client")
-    private clientEntity client;
+    private ClientEntity client;
 
     @ManyToOne
     @JoinColumn(name = "doctor")
-    private doctorEntity doctor;
+    private DoctorEntity doctor;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="pet")
-    private petEntity pet;
+    private PetEntity pet;
 
 }

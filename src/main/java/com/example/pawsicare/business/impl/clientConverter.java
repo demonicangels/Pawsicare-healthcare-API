@@ -1,15 +1,15 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.DTOs.clientDTO;
-import com.example.pawsicare.domain.client;
+import com.example.pawsicare.business.DTOs.ClientDTO;
+import com.example.pawsicare.domain.Client;
 import org.springframework.stereotype.Service;
 
 @Service
 public class clientConverter {
 
-    public clientDTO toDTO (client client){
+    public ClientDTO toDTO (Client client){
 
-        return clientDTO.builder()
+        return ClientDTO.builder()
                 .id(client.getId())
                 .name(client.getName())
                 .birthday(client.getBirthday())
@@ -19,9 +19,9 @@ public class clientConverter {
                 .build();
     }
 
-    public client fromDTO (clientDTO clientDTO){
+    public Client fromDTO (ClientDTO clientDTO){
 
-        return client.builder()
+        return Client.builder()
                 .id(clientDTO.getId())
                 .name(clientDTO.getName())
                 .birthday(clientDTO.getBirthday())

@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class petEntity {
+public class PetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -35,5 +35,5 @@ public class petEntity {
 
     @ManyToOne
     @JoinColumn(name = "owner")
-    private clientEntity client;
+    private ClientEntity client;
 }

@@ -1,7 +1,5 @@
 package com.example.pawsicare.business.DTOs;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Builder
@@ -9,16 +7,15 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class clientDTO {
+public class DoctorDTO {
     private Long id;
-    @NotBlank
-    @Size(min = 3)
     private String name;
     private String birthday;
-    @NotBlank
-    @Size(min = 3)
+    private Integer age;
+    private String description;
     private String password;
-    @NotBlank
+    private String field;
     private String email;
     private String phoneNumber;
+    private String image;
 }

@@ -14,10 +14,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class clientEntity extends userEntity {
+public class ClientEntity extends UserEntity {
 
     @OneToMany(mappedBy = "client")
-    private List<petEntity> pets;
+    private List<PetEntity> pets;
 
     @ManyToMany
     @JoinTable(
@@ -25,7 +25,7 @@ public class clientEntity extends userEntity {
             joinColumns = @JoinColumn(name = "client_id"),
             inverseJoinColumns = @JoinColumn(name = "doctor_id")
     )
-    private List<doctorEntity> doctors;
+    private List<DoctorEntity> doctors;
 
 
 }

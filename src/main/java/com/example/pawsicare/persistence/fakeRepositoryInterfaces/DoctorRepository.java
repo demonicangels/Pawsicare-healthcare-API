@@ -1,16 +1,16 @@
 package com.example.pawsicare.persistence.fakeRepositoryInterfaces;
 
-import com.example.pawsicare.domain.doctor;
+import com.example.pawsicare.domain.Doctor;
 
 
 import java.util.List;
 
 public interface DoctorRepository {
-    doctor createDoctor(doctor doctor);
-    doctor updateDoctor(long id, doctor doctor);
+    Doctor createDoctor(Doctor doctor);
+    Doctor updateDoctor(long id, Doctor doctor);
 
-    doctor getDoctor(long id);
+    Doctor getDoctor(long id);
 
-    List<doctor> getDoctors();
+    List<Doctor> getDoctors();
     void deleteDoctor(long id);
 }

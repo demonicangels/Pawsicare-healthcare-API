@@ -1,40 +1,40 @@
 package com.example.pawsicare.persistence;
 
-import com.example.pawsicare.domain.client;
-import com.example.pawsicare.domain.doctor;
-import com.example.pawsicare.domain.role;
-import com.example.pawsicare.domain.user;
-import com.example.pawsicare.persistence.entity.clientEntity;
-import com.example.pawsicare.persistence.entity.doctorEntity;
-import com.example.pawsicare.persistence.entity.userEntity;
+import com.example.pawsicare.domain.Client;
+import com.example.pawsicare.domain.Doctor;
+import com.example.pawsicare.domain.Role;
+import com.example.pawsicare.domain.User;
+import com.example.pawsicare.persistence.entity.ClientEntity;
+import com.example.pawsicare.persistence.entity.DoctorEntity;
+import com.example.pawsicare.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class userEntityConverter {
 
-    public user fromUserEntity (userEntity entity){
+    public User fromUserEntity (UserEntity entity){
         if (entity.getRole().equals(0)) {
-            return fromClientEntity((clientEntity) entity);
+            return fromClientEntity((ClientEntity) entity);
         } else if (entity.getRole().equals(1)) {
-            return fromDoctorEntity((doctorEntity) entity);
+            return fromDoctorEntity((DoctorEntity) entity);
         } else {
             throw new IllegalArgumentException("Unsupported entity type.");
         }
     }
-    public userEntity toUserEntity (user user){
+    public UserEntity toUserEntity (User user){
 
         if (user.getRole().equals(0)) {
-            return toClientEntity((client) user);
+            return toClientEntity((Client) user);
         } else if (user.getRole().equals(1)) {
-            return toDoctorEntity((doctor) user);
+            return toDoctorEntity((Doctor) user);
         } else {
             throw new IllegalArgumentException("Unsupported user type.");
         }
     }
 
-    public client fromClientEntity (clientEntity client){
+    public Client fromClientEntity (ClientEntity client){
 
-         return com.example.pawsicare.domain.client.builder()
+         return Client.builder()
                 .id(client.getId())
                 .name(client.getName())
                 .birthday(client.getBirthday())
@@ -44,9 +44,9 @@ public class userEntityConverter {
                 .build();
     }
 
-    public clientEntity toClientEntity (client client){
+    public ClientEntity toClientEntity (Client client){
 
-        return clientEntity.builder()
+        return ClientEntity.builder()
                 .id(client.getId())
                 .name(client.getName())
                 .birthday(client.getBirthday())
@@ -56,8 +56,8 @@ public class userEntityConverter {
                 .build();
     }
 
-    public doctor fromDoctorEntity (doctorEntity doctor){
-        return com.example.pawsicare.domain.doctor.builder()
+    public Doctor fromDoctorEntity (DoctorEntity doctor){
+        return Doctor.builder()
                 .id(doctor.getId())
                 .name(doctor.getName())
                 .birthday(doctor.getBirthday())
@@ -71,9 +71,9 @@ public class userEntityConverter {
                 .build();
     }
 
-    public doctorEntity toDoctorEntity (doctor doctor){
+    public DoctorEntity toDoctorEntity (Doctor doctor){
 
-        doctorEntity entity = doctorEntity.builder()
+        DoctorEntity entity = DoctorEntity.builder()
                 .id(doctor.getId())
                 .name(doctor.getName())
                 .birthday(doctor.getBirthday())
@@ -88,11 +88,11 @@ public class userEntityConverter {
         return entity;
     }
 
-    public role toRole(userEntity entity){
+    public Role toRole(UserEntity entity){
 
         return switch (entity.getRole()){
-            case 0 ->  role.Client;
-            case 1 ->  role.Doctor;
+            case 0 ->  Role.Client;
+            case 1 ->  Role.Doctor;
             default -> throw new IllegalArgumentException("Role not recognized");
         };
     }

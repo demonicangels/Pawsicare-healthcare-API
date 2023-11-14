@@ -1,6 +1,6 @@
 package com.example.pawsicare.controller;
 
-import com.example.pawsicare.business.DTOs.clientDTO;
+import com.example.pawsicare.business.DTOs.ClientDTO;
 import com.example.pawsicare.business.impl.clientConverter;
 import com.example.pawsicare.business.requests.createClientRequest;
 import com.example.pawsicare.business.requests.updateClientRequest;
@@ -30,7 +30,7 @@ public class clientController {
 
     @GetMapping(params = "id")
     public ResponseEntity<getClientResponse> getClient(@RequestParam(name = "id") long id){
-        Optional<clientDTO> client = Optional.ofNullable(converter.toDTO(clientManager.getClient(id)));
+        Optional<ClientDTO> client = Optional.ofNullable(converter.toDTO(clientManager.getClient(id)));
         if(client.isPresent()){
 
             getClientResponse clientResponse = getClientResponse.builder()
@@ -44,7 +44,7 @@ public class clientController {
 
     @GetMapping()
     public ResponseEntity<getAllClientsResponse> getClients(){
-        Optional<List<clientDTO>> allClients = Optional.ofNullable(clientManager.getClients().stream()
+        Optional<List<ClientDTO>> allClients = Optional.ofNullable(clientManager.getClients().stream()
                 .map(converter :: toDTO)
                 .toList());
         if(allClients.isPresent()){
@@ -61,14 +61,14 @@ public class clientController {
     @PostMapping()
     public ResponseEntity<createClientResponse> registerClient(@RequestBody @Valid @NotNull createClientRequest request){
 
-        clientDTO client = clientDTO.builder()
+        ClientDTO client = ClientDTO.builder()
                 .name(request.getName())
                 .password(request.getPassword())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
                 .build();
 
-        Optional<clientDTO> optCreatedClient = Optional.ofNullable(converter.toDTO(clientManager.createClient(converter.fromDTO(client))));
+        Optional<ClientDTO> optCreatedClient = Optional.ofNullable(converter.toDTO(clientManager.createClient(converter.fromDTO(client))));
         if(optCreatedClient.isPresent()){
 
             createClientResponse response = createClientResponse.builder()
@@ -82,14 +82,14 @@ public class clientController {
 
     @PutMapping()
     public ResponseEntity<updateClientResponse> updateClient(@RequestParam(name = "id") long id, @RequestBody @Valid updateClientRequest request){
-        clientDTO client = clientDTO.builder()
+        ClientDTO client = ClientDTO.builder()
                 .name(request.getName())
                 .phoneNumber(request.getPhoneNumber())
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .build();
 
-        Optional<clientDTO> client1 = Optional.ofNullable(converter.toDTO(clientManager.updateClient(converter.fromDTO(client))));
+        Optional<ClientDTO> client1 = Optional.ofNullable(converter.toDTO(clientManager.updateClient(converter.fromDTO(client))));
 
         if(client1.isPresent()){
             updateClientResponse clientResponse = updateClientResponse.builder()

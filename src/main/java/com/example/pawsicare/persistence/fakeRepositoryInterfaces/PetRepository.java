@@ -1,12 +1,12 @@
 package com.example.pawsicare.persistence.fakeRepositoryInterfaces;
-import com.example.pawsicare.domain.pet;
+import com.example.pawsicare.domain.Pet;
 import java.util.*;
 
 public interface PetRepository {
-    pet createPet(pet pet);
-    pet updatePet(long id, pet pet);
-    pet getPet(long id);
+    Pet createPet(Pet pet);
+    Pet updatePet(long id, Pet pet);
+    Pet getPet(long id);
     void deletePet(long id);
-    List<pet> getPets(long ownerId);
+    List<Pet> getPets(long ownerId);
 
 }

@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
     @SuperBuilder
     @Getter
     @Setter
-    public class userEntity {
+    public class UserEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;

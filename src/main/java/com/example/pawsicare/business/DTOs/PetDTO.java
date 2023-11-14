@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class petDTO {
+public class PetDTO {
 
     private long id;
     @NotNull

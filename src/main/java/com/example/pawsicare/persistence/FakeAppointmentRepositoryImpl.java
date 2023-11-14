@@ -1,6 +1,6 @@
 package com.example.pawsicare.persistence;
 
-import com.example.pawsicare.domain.appointment;
+import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.persistence.fakeRepositoryInterfaces.AppointmentRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,17 +9,17 @@ import java.util.List;
 @Repository
 public class FakeAppointmentRepositoryImpl implements AppointmentRepository {
     @Override
-    public appointment createAppointment(appointment appointment) {
+    public Appointment createAppointment(Appointment appointment) {
         return null;
     }
 
     @Override
-    public appointment updateAppointment(long id, appointment appointment) {
+    public Appointment updateAppointment(long id, Appointment appointment) {
         return null;
     }
 
     @Override
-    public List<appointment> getUsersAppointments(long userId) {
+    public List<Appointment> getUsersAppointments(long userId) {
         return null;
     }
 
