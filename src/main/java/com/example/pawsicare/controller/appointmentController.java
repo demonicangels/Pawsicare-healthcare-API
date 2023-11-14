@@ -5,6 +5,7 @@ import com.example.pawsicare.business.impl.appointmentConverter;
 import com.example.pawsicare.business.requests.createAppointmentRequest;
 import com.example.pawsicare.business.requests.updateAppointmentRequest;
 import com.example.pawsicare.business.responses.*;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,8 @@ public class appointmentController {
     private final com.example.pawsicare.business.impl.clientConverter clientConverter;
     private final com.example.pawsicare.business.impl.doctorConverter doctorConverter;
     private final com.example.pawsicare.business.impl.petConverter petConverter;
+
+    @RolesAllowed({"Doctor", "Client"})
     @GetMapping(params = "userId")
     public ResponseEntity<getAppointmentsResponse> getUsersAppointments(@Valid @RequestParam(name = "userId")long userId){
         Optional<List<appointmentDTO>> app = appointmentManager.getUsersAppointments(userId)
@@ -46,6 +49,8 @@ public class appointmentController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @RolesAllowed({"Client"})
     @PostMapping
     public ResponseEntity<createAppointmentResponse> createAppointment(@RequestBody @Valid createAppointmentRequest appointmentRequest){
         appointmentDTO appointment = appointmentDTO.builder()
@@ -70,6 +75,7 @@ public class appointmentController {
 
     }
 
+    @RolesAllowed({"Doctor","Client"})
     @PutMapping(params = "id")
     public ResponseEntity<updateAppointmentResponse> rescheduleAppointment (@Valid @RequestParam(name = "id") long id, @RequestBody @Valid updateAppointmentRequest appointmentRequest){
         appointmentDTO appointment = appointmentDTO.builder()
@@ -88,6 +94,7 @@ public class appointmentController {
         }
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
+    @RolesAllowed({"Doctor","Client"})
     @DeleteMapping(params = "id")
     public ResponseEntity<Void> cancelAppointment(@RequestParam(name = "id")long id){
         appointmentManager.cancelAppointment(id);

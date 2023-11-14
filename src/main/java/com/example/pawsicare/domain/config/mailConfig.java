@@ -1,4 +1,4 @@
-package com.example.pawsicare.domain;
+package com.example.pawsicare.domain.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;

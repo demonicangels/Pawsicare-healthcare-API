@@ -8,12 +8,14 @@ import com.example.pawsicare.business.responses.createClientResponse;
 import com.example.pawsicare.business.responses.getAllClientsResponse;
 import com.example.pawsicare.business.responses.getClientResponse;
 import com.example.pawsicare.business.responses.updateClientResponse;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.pawsicare.domain.managerinterfaces.clientManager;
 
 import java.util.*;
 
@@ -24,10 +26,10 @@ import java.util.*;
 @AllArgsConstructor
 public class clientController {
 
-    private final com.example.pawsicare.domain.managerinterfaces.clientManager clientManager;
+    private final  clientManager clientManager;
     private final clientConverter converter;
 
-
+    @RolesAllowed({"Doctor","Client"})
     @GetMapping(params = "id")
     public ResponseEntity<getClientResponse> getClient(@RequestParam(name = "id") long id){
         Optional<clientDTO> client = Optional.ofNullable(converter.toDTO(clientManager.getClient(id)));
@@ -42,11 +44,13 @@ public class clientController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    // @RolesAllowed({"Client"})
     @GetMapping()
     public ResponseEntity<getAllClientsResponse> getClients(){
         Optional<List<clientDTO>> allClients = Optional.ofNullable(clientManager.getClients().stream()
                 .map(converter :: toDTO)
                 .toList());
+
         if(allClients.isPresent()){
 
             getAllClientsResponse clientsResponse = getAllClientsResponse.builder()
@@ -58,6 +62,7 @@ public class clientController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @RolesAllowed({"Client"})
     @PostMapping()
     public ResponseEntity<createClientResponse> registerClient(@RequestBody @Valid @NotNull createClientRequest request){
 
@@ -79,7 +84,7 @@ public class clientController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-
+    @RolesAllowed({"Client"})
     @PutMapping()
     public ResponseEntity<updateClientResponse> updateClient(@RequestParam(name = "id") long id, @RequestBody @Valid updateClientRequest request){
         clientDTO client = clientDTO.builder()
@@ -101,6 +106,7 @@ public class clientController {
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
+    @RolesAllowed({"Client"})
     @DeleteMapping()
     public ResponseEntity<Void> deleteClient(@RequestParam(name = "id") long id){
         clientManager.deleteClient(id);

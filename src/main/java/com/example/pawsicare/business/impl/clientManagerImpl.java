@@ -4,7 +4,9 @@ import com.example.pawsicare.domain.client;
 import com.example.pawsicare.domain.managerinterfaces.clientManager;
 import com.example.pawsicare.persistence.userEntityConverter;
 import com.example.pawsicare.persistence.entity.clientEntity;
+import com.example.pawsicare.persistence.jpaRepositories.userRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -12,11 +14,14 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 public class clientManagerImpl implements clientManager {
-    private final com.example.pawsicare.persistence.jpaRepositories.userRepository userRepository;
-    private userEntityConverter converter;
+    private final  userRepository userRepository;
+    private final userEntityConverter converter;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public client createClient(client client) {
+        String encodedPass = passwordEncoder.encode(client.getPassword());
+        client.setPassword(encodedPass);
         return converter.fromClientEntity(userRepository.save(converter.toClientEntity(client)));
     }
 

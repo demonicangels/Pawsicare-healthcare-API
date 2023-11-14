@@ -5,6 +5,7 @@ import com.example.pawsicare.business.impl.doctorConverter;
 import com.example.pawsicare.business.requests.createDoctorRequest;
 import com.example.pawsicare.business.requests.updateDoctorRequest;
 import com.example.pawsicare.business.responses.*;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class doctorController {
     private final com.example.pawsicare.domain.managerinterfaces.doctorManager doctorManager;
     private final doctorConverter converter;
 
+    @RolesAllowed({"Client"})
     @GetMapping(params = "id")
     public ResponseEntity<getDoctorResponse> getDoctorById(@RequestParam(name = "id", required = false) long id){
         Optional<doctorDTO> doctor = Optional.ofNullable(converter.toDTO(doctorManager.getDoctor(id)));
@@ -34,7 +36,7 @@ public class doctorController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-
+    @RolesAllowed({"Client"})
     @GetMapping(params = "field")
     public ResponseEntity<getAllDoctorsResponse> getDoctorsByField(@RequestParam(name = "field", required = false) String field){
         Optional<List<doctorDTO>> doctorsByField = Optional.ofNullable(doctorManager.getDoctorsByField(field).stream()
@@ -52,6 +54,7 @@ public class doctorController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @RolesAllowed({"Client"})
     @GetMapping()
     public ResponseEntity<getAllDoctorsResponse> getDoctors(){
         Optional<List<doctorDTO>> doctors = Optional.of(doctorManager.getDoctors().stream()
@@ -66,7 +69,7 @@ public class doctorController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-
+    @RolesAllowed({"Doctor"})
     @PostMapping()
     public ResponseEntity<createDoctorResponse> registerDoctor(@RequestBody @Valid createDoctorRequest request){
         doctorDTO doctorDTO = com.example.pawsicare.business.DTOs.doctorDTO.builder()
@@ -88,7 +91,7 @@ public class doctorController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-
+    @RolesAllowed({"Doctor"})
     @PutMapping()
     public ResponseEntity<updateDoctorResponse> updateDoctor(@RequestParam(name = "id") long id, @RequestBody @Valid updateDoctorRequest request){
         doctorDTO doctorDTO = com.example.pawsicare.business.DTOs.doctorDTO.builder()
@@ -112,7 +115,7 @@ public class doctorController {
         }
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
-
+    @RolesAllowed({"Doctor"})
     @DeleteMapping()
     public ResponseEntity<Void> deleteDoctor(@RequestParam(name = "id") long id){
         doctorManager.deleteDoctor(id);

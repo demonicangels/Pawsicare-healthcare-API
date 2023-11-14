@@ -3,7 +3,9 @@ package com.example.pawsicare.business.impl;
 import com.example.pawsicare.domain.user;
 import com.example.pawsicare.persistence.userEntityConverter;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.example.pawsicare.persistence.jpaRepositories.userRepository;
 
 import java.util.Optional;
 
@@ -11,11 +13,14 @@ import java.util.Optional;
 @AllArgsConstructor
 public class loginService {
 
-    private final com.example.pawsicare.persistence.jpaRepositories.userRepository userRepository;
+    private final userRepository userRepository;
     private final userEntityConverter converter;
-    public user userLogin(String email, String password){
+    private final PasswordEncoder passwordEncoder;
+    public user userLogin(String email, String rawPassword){
 
-        Optional<user> loggedInUser = Optional.ofNullable(userRepository.findUserEntityByEmailAndPassword(email,password).map(converter :: fromUserEntity).orElse(null));
+        Optional<user> loggedInUser = Optional.ofNullable(userRepository.findUserEntityByEmail(email).map(converter :: fromUserEntity).orElse(null));
+        String encodedPass = passwordEncoder.encode(rawPassword);
+        passwordEncoder.matches(loggedInUser.get().getPassword(), encodedPass);
 
         if(!loggedInUser.isEmpty()){
             return loggedInUser.get();

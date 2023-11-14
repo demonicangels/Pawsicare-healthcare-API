@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface userRepository extends JpaRepository<userEntity, Long> {
-    Optional<userEntity> findUserEntityByEmailAndPassword(String email, String password);
+    Optional<userEntity> findUserEntityByEmail(String email);
     Optional<userEntity> getUserEntityById(long id);
     void deleteById(long id);
     List<userEntity> findByRole(Integer role);
