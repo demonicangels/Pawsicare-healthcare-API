@@ -41,6 +41,7 @@ public class userEntityConverter {
                 .password(client.getPassword())
                 .email(client.getEmail())
                 .phoneNumber(client.getPhoneNumber())
+                 .role(toRole(client))
                 .build();
     }
 
@@ -53,6 +54,7 @@ public class userEntityConverter {
                 .password(client.getPassword())
                 .email(client.getEmail())
                 .phoneNumber(client.getPhoneNumber())
+                .role(client.getRole().ordinal())
                 .build();
     }
 
@@ -67,7 +69,7 @@ public class userEntityConverter {
                 .description(doctor.getDescription())
                 .field(doctor.getField())
                 .image(doctor.getImage())
-                //.role(toRole(doctor))
+                .role(toRole(doctor))
                 .build();
     }
 
@@ -82,7 +84,7 @@ public class userEntityConverter {
                 .field(doctor.getField())
                 .phoneNumber(doctor.getPhoneNumber())
                 .image(doctor.getImage())
-                //.role(doctor.getRole().ordinal())
+                .role(doctor.getRole().ordinal())
                 .build();
 
         return entity;

@@ -25,7 +25,6 @@ public class WebSecurityConfig {
                                            AuthenticationRequestFilter authenticationRequestFilter) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(configurer ->
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(registry ->

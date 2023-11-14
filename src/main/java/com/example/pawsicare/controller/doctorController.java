@@ -69,7 +69,6 @@ public class doctorController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-    @RolesAllowed({"Doctor"})
     @PostMapping()
     public ResponseEntity<createDoctorResponse> registerDoctor(@RequestBody @Valid createDoctorRequest request){
         doctorDTO doctorDTO = com.example.pawsicare.business.DTOs.doctorDTO.builder()

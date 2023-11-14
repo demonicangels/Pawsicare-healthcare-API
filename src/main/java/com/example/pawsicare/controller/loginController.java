@@ -1,5 +1,6 @@
 package com.example.pawsicare.controller;
 
+import com.example.pawsicare.business.impl.loginServiceimpl;
 import com.example.pawsicare.domain.client;
 import com.example.pawsicare.domain.doctor;
 import com.example.pawsicare.domain.user;
@@ -12,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.pawsicare.domain.managerinterfaces.loginService;
 
 import java.util.Optional;
 
@@ -21,11 +23,11 @@ import java.util.Optional;
 @CrossOrigin(origins = {"http://localhost:5173"}, methods = {RequestMethod.GET, RequestMethod.POST})
 public class loginController {
 
-    private final com.example.pawsicare.business.impl.loginService loginService;
+    private final loginService loginService;
     @PostMapping
     public ResponseEntity<getUserResponse> userLogin(@RequestBody @Valid loginUserRequest loginUserRequest) {
 
-        Optional<user> loggedInUser = Optional.of(loginService.userLogin(loginUserRequest.getEmail(), loginUserRequest.getPassword()));
+        Optional<user> loggedInUser = Optional.of(loginService.userLogin(loginUserRequest));
 
         try {
                 if (loggedInUser.get() instanceof doctor doc) {

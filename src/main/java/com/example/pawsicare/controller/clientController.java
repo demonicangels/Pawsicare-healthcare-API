@@ -21,7 +21,7 @@ import java.util.*;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173", methods = {RequestMethod.GET, RequestMethod.POST})
 @RequestMapping("/clients")
 @AllArgsConstructor
 public class clientController {
@@ -29,7 +29,7 @@ public class clientController {
     private final  clientManager clientManager;
     private final clientConverter converter;
 
-    @RolesAllowed({"Doctor","Client"})
+    //@RolesAllowed({"Doctor","Client"})
     @GetMapping(params = "id")
     public ResponseEntity<getClientResponse> getClient(@RequestParam(name = "id") long id){
         Optional<clientDTO> client = Optional.ofNullable(converter.toDTO(clientManager.getClient(id)));
@@ -62,7 +62,6 @@ public class clientController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @RolesAllowed({"Client"})
     @PostMapping()
     public ResponseEntity<createClientResponse> registerClient(@RequestBody @Valid @NotNull createClientRequest request){
 
