@@ -2,6 +2,7 @@ package com.example.pawsicare.business.impl;
 
 import com.example.pawsicare.domain.client;
 import com.example.pawsicare.domain.managerinterfaces.clientManager;
+import com.example.pawsicare.domain.role;
 import com.example.pawsicare.persistence.userEntityConverter;
 import com.example.pawsicare.persistence.entity.clientEntity;
 import com.example.pawsicare.persistence.jpaRepositories.userRepository;

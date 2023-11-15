@@ -54,7 +54,6 @@ public class doctorController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @RolesAllowed({"Client"})
     @GetMapping()
     public ResponseEntity<getAllDoctorsResponse> getDoctors(){
         Optional<List<doctorDTO>> doctors = Optional.of(doctorManager.getDoctors().stream()

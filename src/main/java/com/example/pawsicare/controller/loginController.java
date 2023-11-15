@@ -1,19 +1,18 @@
 package com.example.pawsicare.controller;
 
-import com.example.pawsicare.business.impl.loginServiceimpl;
-import com.example.pawsicare.domain.client;
-import com.example.pawsicare.domain.doctor;
-import com.example.pawsicare.domain.user;
-import com.example.pawsicare.business.requests.loginUserRequest;
-import com.example.pawsicare.business.responses.getUserResponse;
 import com.example.pawsicare.business.DTOs.clientDTO;
 import com.example.pawsicare.business.DTOs.doctorDTO;
+import com.example.pawsicare.business.requests.loginUserRequest;
+import com.example.pawsicare.business.responses.getUserResponse;
+import com.example.pawsicare.domain.client;
+import com.example.pawsicare.domain.doctor;
+import com.example.pawsicare.domain.managerinterfaces.loginService;
+import com.example.pawsicare.domain.user;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.pawsicare.domain.managerinterfaces.loginService;
 
 import java.util.Optional;
 

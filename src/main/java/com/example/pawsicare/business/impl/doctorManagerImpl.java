@@ -1,11 +1,13 @@
 package com.example.pawsicare.business.impl;
 
 import com.example.pawsicare.domain.doctor;
+import com.example.pawsicare.domain.role;
 import com.example.pawsicare.domain.user;
 import com.example.pawsicare.domain.managerinterfaces.doctorManager;
 import com.example.pawsicare.persistence.userEntityConverter;
 import com.example.pawsicare.persistence.entity.doctorEntity;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 public class doctorManagerImpl implements doctorManager {
 
     private userEntityConverter converter;
+    private final PasswordEncoder passwordEncoder;
     private final com.example.pawsicare.persistence.jpaRepositories.userRepository userRepository;
     private final com.example.pawsicare.persistence.jpaRepositories.doctorRepository doctorRepository;
 
@@ -26,11 +29,12 @@ public class doctorManagerImpl implements doctorManager {
      */
     @Override
     public doctor createDoctor(doctor doctor) {
+        String encodedPass = passwordEncoder.encode(doctor.getPassword());
+        doctor.setPassword(encodedPass);
         return converter.fromDoctorEntity(userRepository.save(converter.toDoctorEntity(doctor)));
     }
 
     /**
-     * @param id
      * @param doctor
      * @return updated doctor when updated
      * @should return a doctor object with updated fields

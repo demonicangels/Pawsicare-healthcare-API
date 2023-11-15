@@ -23,9 +23,9 @@ public class userEntityConverter {
     }
     public userEntity toUserEntity (user user){
 
-        if (user.getRole().equals(0)) {
+        if (user instanceof client) {
             return toClientEntity((client) user);
-        } else if (user.getRole().equals(1)) {
+        } else if (user instanceof doctor) {
             return toDoctorEntity((doctor) user);
         } else {
             throw new IllegalArgumentException("Unsupported user type.");
@@ -54,7 +54,7 @@ public class userEntityConverter {
                 .password(client.getPassword())
                 .email(client.getEmail())
                 .phoneNumber(client.getPhoneNumber())
-                .role(client.getRole().ordinal())
+                .role(role.Client.ordinal())
                 .build();
     }
 
@@ -84,7 +84,7 @@ public class userEntityConverter {
                 .field(doctor.getField())
                 .phoneNumber(doctor.getPhoneNumber())
                 .image(doctor.getImage())
-                .role(doctor.getRole().ordinal())
+                .role(role.Doctor.ordinal())
                 .build();
 
         return entity;

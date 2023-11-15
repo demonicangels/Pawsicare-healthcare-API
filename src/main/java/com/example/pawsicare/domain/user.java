@@ -23,5 +23,5 @@ public abstract class user {
     private String password;
     private String email;
     private String phoneNumber;
-    private com.example.pawsicare.domain.role role;
+    private role role;
 }
