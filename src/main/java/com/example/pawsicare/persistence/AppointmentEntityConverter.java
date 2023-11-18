@@ -4,13 +4,11 @@ import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.persistence.entity.AppointmentEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.example.pawsicare.persistence.jpaRepositories.UserRepository;
 
 @Service
 @AllArgsConstructor
 public class AppointmentEntityConverter {
 
-    private final UserRepository userRepository;
     private final UserEntityConverter converter;
     private final PetEntityConverter petEntityConverter;
 
@@ -28,7 +26,6 @@ public class AppointmentEntityConverter {
 
     public AppointmentEntity toEntity (Appointment appointment){
         return AppointmentEntity.builder()
-                //.id(appointment.getId())
                 .dateAndStart(appointment.getDateAndStart())
                 .dateAndEnd(appointment.getDateAndEnd())
                 .client(converter.toClientEntity(appointment.getClient()))
