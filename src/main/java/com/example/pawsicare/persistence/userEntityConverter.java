@@ -10,7 +10,7 @@ import com.example.pawsicare.persistence.entity.UserEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class userEntityConverter {
+public class UserEntityConverter {
 
     public User fromUserEntity (UserEntity entity){
         if (entity.getRole().equals(0)) {
@@ -41,6 +41,7 @@ public class userEntityConverter {
                 .password(client.getPassword())
                 .email(client.getEmail())
                 .phoneNumber(client.getPhoneNumber())
+                 .role(toRole(client))
                 .build();
     }
 
@@ -53,6 +54,7 @@ public class userEntityConverter {
                 .password(client.getPassword())
                 .email(client.getEmail())
                 .phoneNumber(client.getPhoneNumber())
+                .role(Role.Client.ordinal())
                 .build();
     }
 
@@ -67,7 +69,7 @@ public class userEntityConverter {
                 .description(doctor.getDescription())
                 .field(doctor.getField())
                 .image(doctor.getImage())
-                //.role(toRole(doctor))
+                .role(toRole(doctor))
                 .build();
     }
 
@@ -82,7 +84,7 @@ public class userEntityConverter {
                 .field(doctor.getField())
                 .phoneNumber(doctor.getPhoneNumber())
                 .image(doctor.getImage())
-                //.role(doctor.getRole().ordinal())
+                .role(Role.Doctor.ordinal())
                 .build();
 
         return entity;

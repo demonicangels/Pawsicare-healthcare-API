@@ -1,17 +1,17 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.requests.sendEmailRequest;
-import com.example.pawsicare.domain.MailConfig;
-import com.example.pawsicare.domain.managerinterfaces.emailManager;
+import com.example.pawsicare.business.requests.SendEmailRequest;
+import com.example.pawsicare.domain.config.MailConfig;
+import com.example.pawsicare.domain.managerinterfaces.EmailManager;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-public class emailManagerImpl implements emailManager {
+public class EmailManagerImpl implements EmailManager {
     private String recipient = "nikolgeova@gmail.com";
     @Override
-    public String sendEmail(sendEmailRequest details) {
+    public String sendEmail(SendEmailRequest details) {
 
         JavaMailSender javaMailSender;
 

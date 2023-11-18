@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface userRepository extends JpaRepository<UserEntity, Long> {
-    Optional<UserEntity> findUserEntityByEmailAndPassword(String email, String password);
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+    Optional<UserEntity> findUserEntityByEmail(String email);
     Optional<UserEntity> getUserEntityById(long id);
     void deleteById(long id);
     List<UserEntity> findByRole(Integer role);

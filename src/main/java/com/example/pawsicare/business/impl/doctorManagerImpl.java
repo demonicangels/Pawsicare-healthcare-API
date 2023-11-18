@@ -2,24 +2,28 @@ package com.example.pawsicare.business.impl;
 
 import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.User;
-import com.example.pawsicare.domain.managerinterfaces.doctorManager;
-import com.example.pawsicare.persistence.userEntityConverter;
+import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
+import com.example.pawsicare.persistence.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.DoctorEntity;
+import com.example.pawsicare.persistence.jpaRepositories.DoctorRepository;
+import com.example.pawsicare.persistence.jpaRepositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
-import com.example.pawsicare.persistence.jpaRepositories.userRepository;
-import com.example.pawsicare.persistence.jpaRepositories.doctorRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class doctorManagerImpl implements doctorManager {
+public class DoctorManagerImpl implements DoctorManager {
 
-    private final userRepository userRepository;
-    private final userEntityConverter converter;
-    private final  doctorRepository doctorRepository;
+
+    private final UserEntityConverter converter;
+    private final UserRepository userRepository;
+    private final DoctorRepository doctorRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * @param doctor
@@ -28,6 +32,9 @@ public class doctorManagerImpl implements doctorManager {
      */
     @Override
     public Doctor createDoctor(Doctor doctor) {
+        String encodedPass = passwordEncoder.encode(doctor.getPassword());
+        doctor.setPassword(encodedPass);
+
         return converter.fromDoctorEntity(userRepository.save(converter.toDoctorEntity(doctor)));
     }
 

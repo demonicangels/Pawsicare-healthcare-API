@@ -1,19 +1,19 @@
 package com.example.pawsicare.business.impl;
 
 import com.example.pawsicare.business.DTOs.DoctorDTO;
-import com.example.pawsicare.business.responses.createDoctorResponse;
-import com.example.pawsicare.business.responses.getAllDoctorsResponse;
-import com.example.pawsicare.business.responses.updateDoctorResponse;
+import com.example.pawsicare.business.responses.CreateDoctorResponse;
+import com.example.pawsicare.business.responses.GetAllDoctorsResponse;
+import com.example.pawsicare.business.responses.UpdateDoctorResponse;
 import com.example.pawsicare.domain.Doctor;
-import com.example.pawsicare.domain.User;
 import com.example.pawsicare.persistence.entity.DoctorEntity;
 import com.example.pawsicare.persistence.entity.UserEntity;
-import com.example.pawsicare.persistence.jpaRepositories.doctorRepository;
-import com.example.pawsicare.persistence.jpaRepositories.userRepository;
-import com.example.pawsicare.persistence.userEntityConverter;
+import com.example.pawsicare.persistence.jpaRepositories.DoctorRepository;
+import com.example.pawsicare.persistence.jpaRepositories.UserRepository;
+import com.example.pawsicare.persistence.UserEntityConverter;
 import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,15 +26,16 @@ import static org.mockito.Mockito.*;
 class DoctorManagerImplTest {
     /**
      * @verifies return a filled in doctor object when the doctor is created
-     * @see doctorManagerImpl#createDoctor(Doctor)
+     * @see DoctorManagerImpl#createDoctor(Doctor)
      */
     @Test
      void createDoctor_shouldReturnAFilledInDoctorObjectWhenTheDoctorIsCreated() throws Exception {
         //Arrange
-        userRepository userRepositoryMock = mock(userRepository.class);
-        doctorRepository doctorRepositoryMock = mock(doctorRepository.class);
-        userEntityConverter userEntityConverterMock = mock(userEntityConverter.class);
-        doctorConverter doctorConverterMock = mock(doctorConverter.class);
+        UserRepository userRepositoryMock = mock(UserRepository.class);
+        DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
+        UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+        DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
+        PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
 
 
         DoctorEntity doctor = DoctorEntity.builder()
@@ -68,11 +69,12 @@ class DoctorManagerImplTest {
         when(userEntityConverterMock.fromDoctorEntity(doctor)).thenReturn(doctor2);
         when(userEntityConverterMock.toDoctorEntity(doctor2)).thenReturn(doctor);
         when(doctorConverterMock.toDTO(doctor2)).thenReturn(doctor3);
+        when(passwordEncoderMock.encode("123")).thenReturn("123");
 
         //Act
 
-        doctorManagerImpl sut = new doctorManagerImpl(userRepositoryMock,userEntityConverterMock,doctorRepositoryMock);
-        createDoctorResponse sutResponse = createDoctorResponse.builder()
+        DoctorManagerImpl sut = new DoctorManagerImpl(userEntityConverterMock,userRepositoryMock,doctorRepositoryMock,passwordEncoderMock);
+        CreateDoctorResponse sutResponse = CreateDoctorResponse.builder()
                 .doctor(doctorConverterMock.toDTO(sut.createDoctor(userEntityConverterMock.fromDoctorEntity(doctor))))
                 .build();
 
@@ -90,16 +92,17 @@ class DoctorManagerImplTest {
 
     /**
      * @verifies return a doctor object with updated fields
-     * @see doctorManagerImpl #updateDoctor()( Doctor )
+     * @see DoctorManagerImpl #updateDoctor()( Doctor )
      */
     @Test
      void updateDoctor_shouldReturnADoctorObjectWithUpdatedFields() throws Exception {
        //Arrange
 
-       userRepository userRepositoryMock = mock(userRepository.class);
-       doctorRepository doctorRepositoryMock = mock(doctorRepository.class);
-       userEntityConverter userEntityConverterMock = mock(userEntityConverter.class);
-       doctorConverter doctorConverterMock = mock(doctorConverter.class);
+       UserRepository userRepositoryMock = mock(UserRepository.class);
+       DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
+       UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+       DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
+       PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
 
        DoctorEntity updateDoctor = DoctorEntity.builder()
                         .name("Nia")
@@ -125,13 +128,14 @@ class DoctorManagerImplTest {
        when(userEntityConverterMock.toDoctorEntity(doctor)).thenReturn(updateDoctor);
        when(doctorConverterMock.toDTO(doctor)).thenReturn(doctorDTO);
        when(doctorConverterMock.fromDTO(doctorDTO)).thenReturn(doctor);
+       when(passwordEncoderMock.encode("123")).thenReturn("123");
 
 
-        doctorManagerImpl sut = new doctorManagerImpl(userRepositoryMock,userEntityConverterMock,doctorRepositoryMock);
+        DoctorManagerImpl sut = new DoctorManagerImpl(userEntityConverterMock,userRepositoryMock,doctorRepositoryMock,passwordEncoderMock);
 
         //Act
 
-        updateDoctorResponse sutResponse = updateDoctorResponse.builder()
+        UpdateDoctorResponse sutResponse = UpdateDoctorResponse.builder()
                 .updatedDoctor(doctorConverterMock.toDTO(sut.updateDoctor(userEntityConverterMock.fromDoctorEntity(updateDoctor))))
                 .build();
 
@@ -144,15 +148,16 @@ class DoctorManagerImplTest {
 
     /**
      * @verifies return a list with all doctors when doctors are present
-     * @see doctorManagerImpl #getDoctors()( Doctor )
+     * @see DoctorManagerImpl #getDoctors()( Doctor )
      */
     @Test
      void getDoctor_shouldReturnAListWithAllDoctorsWhenDoctorsArePresent() throws Exception {
         //Arrange
-       userRepository userRepositoryMock = mock(userRepository.class);
-       doctorRepository doctorRepositoryMock = mock(doctorRepository.class);
-       userEntityConverter userEntityConverterMock = mock(userEntityConverter.class);
-       doctorConverter doctorConverterMock = mock(doctorConverter.class);
+       UserRepository userRepositoryMock = mock(UserRepository.class);
+       DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
+       UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+       DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
+       PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
 
 
        DoctorEntity updateDoctor = DoctorEntity.builder()
@@ -176,6 +181,7 @@ class DoctorManagerImplTest {
        when(userRepositoryMock.findByRole(1)).thenReturn(new ArrayList<UserEntity>());
        when(userEntityConverterMock.fromUserEntity(updateDoctor)).thenReturn(doctor);
        when(doctorConverterMock.toDTO(doctor)).thenReturn(doctorDTO);
+       when(passwordEncoderMock.encode("123")).thenReturn("123");
 
         when(userRepositoryMock.findByRole(1)).thenReturn((List<UserEntity>) Arrays.asList(UserEntity.builder()
                 .id(1L)
@@ -192,10 +198,10 @@ class DoctorManagerImplTest {
                         .phoneNumber("+1234567")
                         .build()));
 
-       doctorManagerImpl sut =  new doctorManagerImpl(userRepositoryMock,userEntityConverterMock,doctorRepositoryMock);
+       DoctorManagerImpl sut =  new DoctorManagerImpl(userEntityConverterMock,userRepositoryMock,doctorRepositoryMock,passwordEncoderMock);
 
         //Act
-        getAllDoctorsResponse sutResponse = getAllDoctorsResponse.builder()
+        GetAllDoctorsResponse sutResponse = GetAllDoctorsResponse.builder()
                 .doctors(sut.getDoctors().stream().map(doctorConverterMock :: toDTO).toList())
                 .build();
         //Assert
@@ -205,15 +211,16 @@ class DoctorManagerImplTest {
 
     /**
      * @verifies return an empty list when no doctors are present
-     * @see doctorManagerImpl #getDoctors()( Doctor )
+     * @see DoctorManagerImpl #getDoctors()( Doctor )
      */
     @Test
      void getDoctor_shouldReturnAnEmptyListWhenNoDoctorsArePresent() throws Exception {
        //Arrange
-       userRepository userRepositoryMock = mock(userRepository.class);
-       doctorRepository doctorRepositoryMock = mock(doctorRepository.class);
-       userEntityConverter userEntityConverterMock = mock(userEntityConverter.class);
-       doctorConverter doctorConverterMock = mock(doctorConverter.class);
+       UserRepository userRepositoryMock = mock(UserRepository.class);
+       DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
+       UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+       DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
+       PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
 
        DoctorEntity updateDoctor = DoctorEntity.builder()
                .name("Nia")
@@ -239,11 +246,12 @@ class DoctorManagerImplTest {
        when(userEntityConverterMock.toDoctorEntity(doctor)).thenReturn(updateDoctor);
        when(doctorConverterMock.toDTO(doctor)).thenReturn(doctorDTO);
        when(doctorConverterMock.fromDTO(doctorDTO)).thenReturn(doctor);
+       when(passwordEncoderMock.encode("123")).thenReturn("123");
 
-       doctorManagerImpl sut =  new doctorManagerImpl(userRepositoryMock,userEntityConverterMock,doctorRepositoryMock);
+       DoctorManagerImpl sut =  new DoctorManagerImpl(userEntityConverterMock,userRepositoryMock,doctorRepositoryMock,passwordEncoderMock);
 
        //Act
-        getAllDoctorsResponse sutResponse = getAllDoctorsResponse.builder()
+        GetAllDoctorsResponse sutResponse = GetAllDoctorsResponse.builder()
                 .doctors(sut.getDoctors().stream().map(doctorConverterMock :: toDTO).toList())
                 .build();
 
