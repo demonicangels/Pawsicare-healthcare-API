@@ -1,7 +1,6 @@
 package com.example.pawsicare.business.impl;
 
 import com.example.pawsicare.domain.doctor;
-import com.example.pawsicare.domain.role;
 import com.example.pawsicare.domain.user;
 import com.example.pawsicare.domain.managerinterfaces.doctorManager;
 import com.example.pawsicare.persistence.userEntityConverter;

@@ -66,7 +66,7 @@ public class doctorController {
                     .build();
             return ResponseEntity.status(HttpStatus.OK).body(doctorsResponse);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
     @PostMapping()
     public ResponseEntity<createDoctorResponse> registerDoctor(@RequestBody @Valid createDoctorRequest request){
