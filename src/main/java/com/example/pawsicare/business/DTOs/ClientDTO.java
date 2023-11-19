@@ -1,5 +1,6 @@
 package com.example.pawsicare.business.DTOs;
 
+import com.example.pawsicare.domain.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -21,4 +22,5 @@ public class ClientDTO {
     @NotBlank
     private String email;
     private String phoneNumber;
+    private Role role;
 }

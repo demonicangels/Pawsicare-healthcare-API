@@ -26,13 +26,18 @@ import java.util.Optional;
 @AllArgsConstructor
 public class LoginServiceimpl implements LoginService {
 
-    private final UserRepository userRepository;
+    private final DoctorConverter doctorConverter;
+    private final ClientConverter clientConverter;
     private final UserEntityConverter converter;
+
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccessTokenEncoder accessTokenEncoder;
     public LoginResponse userLogin(LoginUserRequest loginRequest){
+        String accessToken ="";
 
-        Optional<User> loggedInUser = Optional.ofNullable(userRepository.findUserEntityByEmail(loginRequest.getEmail()).map(converter :: fromUserEntity).orElse(null));
+
+add        Optional<User> loggedInUser = Optional.ofNullable(userRepository.findUserEntityByEmail(loginRequest.getEmail()).map(converter :: fromUserEntity).orElse(null));
 
         if(loggedInUser.isEmpty()){
             throw new InvalidCredentialsException();
@@ -52,21 +57,27 @@ public class LoginServiceimpl implements LoginService {
                     .phoneNumber(doc.getPhoneNumber())
                     .field(doc.getField())
                     .build());
+
+            accessToken = generateAccessToken(doctorConverter.fromDTO(doctorDTO.get()));
+
         } else if (loggedInUser.get() instanceof Client client) {
             client = (com.example.pawsicare.domain.Client) loggedInUser.get();
 
-            Optional<ClientDTO> clientDTOOptional = Optional.of(ClientDTO.builder()
+            Optional<ClientDTO> clientDTO = Optional.of(ClientDTO.builder()
                     .id(client.getId())
                     .name(client.getName())
                     .birthday(client.getBirthday())
                     .email(client.getEmail())
                     .phoneNumber(client.getPhoneNumber())
+                    //.role(client.getRole())
                     .build());
+
+            accessToken = generateAccessToken(clientConverter.fromDTO(clientDTO.get()));
         }
 
-        String accessToken = generateAccessToken(loggedInUser.get());
-        LoginResponse.builder().accessToken(accessToken);
-        return new LoginResponse(accessToken);
+        return LoginResponse.builder()
+                .accessToken(accessToken)
+                .build();
     }
     private boolean passMatch(String rawPass, String encodedPass){
         return passwordEncoder.matches(rawPass, encodedPass);
