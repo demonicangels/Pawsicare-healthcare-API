@@ -37,7 +37,7 @@ public class LoginServiceimpl implements LoginService {
         String accessToken ="";
 
 
-add        Optional<User> loggedInUser = Optional.ofNullable(userRepository.findUserEntityByEmail(loginRequest.getEmail()).map(converter :: fromUserEntity).orElse(null));
+        Optional<User> loggedInUser = Optional.ofNullable(userRepository.findUserEntityByEmail(loginRequest.getEmail()).map(converter :: fromUserEntity).orElse(null));
 
         if(loggedInUser.isEmpty()){
             throw new InvalidCredentialsException();
