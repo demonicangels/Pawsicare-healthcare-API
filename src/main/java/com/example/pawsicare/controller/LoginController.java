@@ -1,5 +1,6 @@
 package com.example.pawsicare.controller;
 
+import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.responses.LoginResponse;
 import com.example.pawsicare.domain.managerinterfaces.LoginService;
@@ -23,7 +24,7 @@ public class LoginController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            throw e;
+            throw new InvalidCredentialsException();
         }
     }
 }

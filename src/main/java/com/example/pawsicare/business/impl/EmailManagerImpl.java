@@ -3,20 +3,19 @@ package com.example.pawsicare.business.impl;
 import com.example.pawsicare.business.requests.SendEmailRequest;
 import com.example.pawsicare.domain.config.MailConfig;
 import com.example.pawsicare.domain.managerinterfaces.EmailManager;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class EmailManagerImpl implements EmailManager {
     private String recipient = "nikolgeova@gmail.com";
+    private final JavaMailSender javaMailSender;
     @Override
     public String sendEmail(SendEmailRequest details) {
-
-        JavaMailSender javaMailSender;
-
-        MailConfig getJavaMailSender = new MailConfig();
-        javaMailSender = getJavaMailSender.JavaMailSender();
 
         try{
             SimpleMailMessage mailMessage = new SimpleMailMessage();
