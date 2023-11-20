@@ -69,7 +69,7 @@ public class AppointmentController {
                 .build();
 
         Optional<AppointmentDTO> app = Optional.ofNullable(appointmentManager.createAppointment(converter.fromDTO(appointment))
-                .map(appointmentValue -> converter.toDTO(appointmentValue))
+                .map(converter :: toDTO)
                 .orElse(null));
 
         if(app.isPresent()){
@@ -90,7 +90,7 @@ public class AppointmentController {
                 .dateAndEnd(appointmentRequest.getDateAndEnd())
                 .build();
 
-        Optional<AppointmentDTO> api = Optional.ofNullable(appointmentManager.rescheduleAppointment(id, converter.fromDTO(appointment)).map(app -> converter.toDTO(app)).orElse(null));
+        Optional<AppointmentDTO> api = Optional.ofNullable(appointmentManager.rescheduleAppointment(id, converter.fromDTO(appointment)).map(converter :: toDTO).orElse(null));
 
         if(api.isPresent()){
             UpdateAppointmentResponse updateAppointmentResponse = UpdateAppointmentResponse.builder()
