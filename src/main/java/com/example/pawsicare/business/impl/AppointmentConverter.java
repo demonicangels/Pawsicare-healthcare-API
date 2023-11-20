@@ -3,17 +3,23 @@ package com.example.pawsicare.business.impl;
 import com.example.pawsicare.business.DTOs.AppointmentDTO;
 import com.example.pawsicare.domain.Appointment;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AppointmentConverter {
 
     private final DoctorConverter doctorConverter;
     private final ClientConverter clientConverter;
     private final PetConverter petConverter;
 
-
+    /**
+     * @param appointment
+     * @return appointmentDTO when performed the conversion
+     * @should return an AppointmentDTO after successful conversion
+     */
     public AppointmentDTO toDTO (Appointment appointment){
         return AppointmentDTO.builder()
                 .id(appointment.getId())
@@ -25,6 +31,11 @@ public class AppointmentConverter {
                 .build();
     }
 
+    /**
+     * @param appointmentDTO
+     * @return appointment when performed the conversion
+     * @should return an Appointment after successful conversion
+     */
 
     public Appointment fromDTO (AppointmentDTO appointmentDTO){
         return Appointment.builder()
