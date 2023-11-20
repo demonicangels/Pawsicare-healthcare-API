@@ -33,6 +33,12 @@ public class LoginServiceimpl implements LoginService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccessTokenEncoder accessTokenEncoder;
+
+    /**
+     * @return user when logged in
+     * @should return a user when credentials are correct
+     * @should return exception if credentials are not correct
+     */
     public LoginResponse userLogin(LoginUserRequest loginRequest){
         String accessToken ="";
 
@@ -61,30 +67,34 @@ public class LoginServiceimpl implements LoginService {
             accessToken = generateAccessToken(doctorConverter.fromDTO(doctorDTO.get()));
 
         } else if (loggedInUser.get() instanceof Client client) {
-            client = (com.example.pawsicare.domain.Client) loggedInUser.get();
+            client = (Client) loggedInUser.get();
 
-            Optional<ClientDTO> clientDTO = Optional.of(ClientDTO.builder()
+            ClientDTO clientDTO = ClientDTO.builder()
                     .id(client.getId())
                     .name(client.getName())
                     .birthday(client.getBirthday())
                     .email(client.getEmail())
                     .phoneNumber(client.getPhoneNumber())
                     //.role(client.getRole())
-                    .build());
+                    .build();
 
-            accessToken = generateAccessToken(clientConverter.fromDTO(clientDTO.get()));
+            accessToken = generateAccessToken(clientConverter.fromDTO(clientDTO));
         }
 
         return LoginResponse.builder()
                 .accessToken(accessToken)
                 .build();
     }
-    private boolean passMatch(String rawPass, String encodedPass){
+    public boolean passMatch(String rawPass, String encodedPass){
         return passwordEncoder.matches(rawPass, encodedPass);
     }
 
-    private String generateAccessToken(User user) {
-        Long userId = user.getId() != null ? user.getId() : null;
+    public String generateAccessToken(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        Long userId = user.getId();
         List<String> roles = Arrays.stream(Role.values())
                 .map(Enum::name).toList();
 
