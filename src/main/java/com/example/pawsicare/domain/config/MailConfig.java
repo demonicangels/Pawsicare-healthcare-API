@@ -13,8 +13,6 @@ import java.util.Properties;
 @Configuration
 @PropertySource("classpath:application.properties")
 public class MailConfig {
-
-//        @Value("${spring.mail.port}")
         private Integer port;
         private String emailHost;
         private String username;
@@ -45,6 +43,7 @@ public class MailConfig {
             props.put("mail.transport.protocol", "smtp");
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.timeout", "5000");
             props.put("mail.debug", "true");
 
             return mailSender;
