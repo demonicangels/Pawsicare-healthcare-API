@@ -18,7 +18,9 @@ sonarqube-check:
       key: "${CI_JOB_NAME}"
       paths:
         - .sonar/cache
-  script: ./gradlew sonarqube -D sonar.qualitygate.wait=true
+  script:
+  - ./gradlew sonarqube -D sonar.qualitygate.wait=true
+  - ./gradlew test sonar
   allow_failure: true
   only:
       - merge_requests

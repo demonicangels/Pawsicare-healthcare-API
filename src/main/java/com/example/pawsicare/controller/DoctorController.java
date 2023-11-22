@@ -37,7 +37,7 @@ public class DoctorController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-    @RolesAllowed({"Client"})
+    //@RolesAllowed({"Client", "Doctor"})
     @GetMapping(params = "field")
     public ResponseEntity<GetAllDoctorsResponse> getDoctorsByField(@RequestParam(name = "field", required = false) String field){
         Optional<List<DoctorDTO>> doctorsByField = Optional.ofNullable(doctorManager.getDoctorsByField(field).stream()
