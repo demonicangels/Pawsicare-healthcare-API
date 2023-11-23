@@ -1,5 +1,6 @@
 package com.example.pawsicare.business.requests;
 
+import com.example.pawsicare.domain.Gender;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -13,8 +14,10 @@ public class CreatePetRequest {
     @Size(min = 3)
     @NotBlank
     private String name;
+    private Gender gender;
+    @NotBlank
+    private String type;
     @NonNull
     private String birthday;
-    private Integer age;
     private String information;
 }

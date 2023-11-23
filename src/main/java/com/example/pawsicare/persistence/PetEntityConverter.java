@@ -19,6 +19,8 @@ public class PetEntityConverter {
                 .name(pet.getName())
                 .ownerId(pet.getClient().getId())
                 .birthday(pet.getBirthday())
+                .type(pet.getType())
+                .gender(pet.getGender())
                 .information(pet.getInformation())
                 .build();
     }
@@ -28,6 +30,8 @@ public class PetEntityConverter {
                 .name(pet.getName())
                 .client(userRepository.getUserEntityById(pet.getOwnerId()).map(ClientEntity.class :: cast).orElse(null))
                 .birthday(pet.getBirthday())
+                .type(pet.getType())
+                .gender(pet.getGender())
                 .information(pet.getInformation())
                 .build();
     }

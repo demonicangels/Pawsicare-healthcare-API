@@ -8,7 +8,9 @@ import com.example.pawsicare.business.responses.CreatePetResponse;
 import com.example.pawsicare.business.responses.GetAllPetsResponse;
 import com.example.pawsicare.business.responses.GetPetResponse;
 import com.example.pawsicare.business.responses.UpdatePetResponse;
+import com.example.pawsicare.domain.Gender;
 import com.example.pawsicare.domain.managerinterfaces.PetManager;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,13 +28,15 @@ public class PetController {
     private final PetConverter converter;
 
 
+    //@RolesAllowed({"Client"})
     @PostMapping()
     public ResponseEntity<CreatePetResponse> createPet(@RequestBody @Valid CreatePetRequest request){
         PetDTO pet = PetDTO.builder()
                 .ownerId(request.getOwnerId())
                 .name(request.getName())
                 .information(request.getInformation())
-                .age(request.getAge())
+                .type(request.getType())
+                .gender(request.getGender())
                 .birthday(request.getBirthday())
                 .build();
 

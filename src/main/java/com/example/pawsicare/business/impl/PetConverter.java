@@ -14,6 +14,8 @@ public class PetConverter {
                 .name(petDTO.getName())
                 .birthday(petDTO.getBirthday())
                 .age(petDTO.getAge())
+                .type(petDTO.getType())
+                .gender(petDTO.getGender())
                 .information(petDTO.getInformation())
                 .build();
     }
@@ -26,6 +28,8 @@ public class PetConverter {
                 .name(pet.getName())
                 .birthday(pet.getBirthday())
                 .age(pet.getAge())
+                .type(pet.getType())
+                .gender(pet.getGender())
                 .information(pet.getInformation())
                 .build();
     }
