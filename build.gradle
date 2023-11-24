@@ -116,7 +116,7 @@ jacocoTestReport {
 						'src/**/business/requests/**/*',
 						'src/**/business/responses/**/*',
 						'src/**/business/security/**/*',
-						'src/**/business/security/token/**',
+						'src/**/business/security/token/**/*',
 						'src/**/business/security/auth/**',
 						'src/**/business/impl/DoctorConverter*.*',
 						'src/**/business/impl/ClientConverter*.*',
