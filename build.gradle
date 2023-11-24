@@ -16,14 +16,21 @@ sonar {
 		property "sonar.host.url", "http://localhost:9002/"
 		property "sonar.projectName", "PawsiCareBE S3"
 		property "sonar.qualitygate.wait", true
-		property "sonar.coverage.inclusions", [
-
-				'src/**/business/impl/DoctorManagerImpl*.*',
-				'src/**/business/impl/PetManagerImpl*.*',
-				'src/**/business/impl/LoginServiceImpl*.*',
-				'src/**/business/impl/AppointmentConverter*.*',
-				'src/**/persistence/jpaRepositories/AppointmentRepository*.*',
-				'src/**/persistence/UserEntityConverter*.*',
+		property "sonar.coverage.exclusions", [
+				'src/**/business/**/*DTO.*',
+				'src/**/domain/config/**/*',
+				'src/**/business/exceptions/**/*',
+				'src/**/business/requests/**/*',
+				'src/**/business/responses/**/*',
+				'src/**/business/security/**/*',
+				'src/**/business/impl/DoctorConverter*.*',
+				'src/**/business/impl/ClientConverter*.*',
+				'src/**/business/impl/PetConverter*.*',
+				'src/**/PawsiCareApplication.*',
+				'src/**/persistence/**/**/**',
+				'src/**/controller/**/*',
+				'src/**/business/impl/ClientManagerImpl*.*',
+				'src/**/business/impl/EmailManagerImpl*.*',
 
 		]
 		property "sonar.coverage.jacoco.xmlReportPaths", "$rootDir/build/jacocoHtml/jacocoTestReport.html"
@@ -100,16 +107,25 @@ jacocoTestReport {
 		html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
 	}
 	afterEvaluate {
-		classDirectories.setFrom(files(classDirectories.files.collect{
-			fileTree(dir: it, includes: [
-					'src/**/business/impl/DoctorManagerImpl*.*',
-					'src/**/business/impl/PetManagerImpl*.*',
-					'src/**/business/impl/LoginServiceImpl*.*',
-					'src/**/business/impl/AppointmentConverter*.*',
-					'src/**/persistence/jpaRepositories/AppointmentRepository*.*',
-					'src/**/persistence/UserEntityConverter*.*',
-			])
-		}))
+			classDirectories.setFrom(files(classDirectories.files.collect{
+				fileTree(dir: it, exclude: [
+						'src/**/business/**/*DTO.*',
+						'src/**/domain/config/**/*',
+						'src/**/business/exceptions/**/*',
+						'src/**/business/requests/**/*',
+						'src/**/business/responses/**/*',
+						'src/**/business/security/**/*',
+						'src/**/business/impl/DoctorConverter*.*',
+						'src/**/business/impl/ClientConverter*.*',
+						'src/**/business/impl/PetConverter*.*',
+						'src/**/PawsiCareApplication.*',
+						'src/**/persistence/**/**/**',
+						'src/**/controller/**/*',
+						'src/**/business/impl/ClientManagerImpl*.*',
+						'src/**/business/impl/EmailManagerImpl*.*',
+				])
+
+			}))
 	}
 }
 
