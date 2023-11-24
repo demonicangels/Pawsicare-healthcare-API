@@ -2,8 +2,8 @@ package com.example.pawsicare.persistence.entity;
 
 import com.example.pawsicare.domain.Gender;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,15 +27,13 @@ public class PetEntity {
     @Length(min = 3, max = 20)
     private String name;
 
-    @NotEmpty
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
-    @Length(max = 6)
     private Gender gender;
 
     @NotEmpty
     @Column(name="type_of_animal")
-    @Length(max = 8)
     private String type;
 
     @NotEmpty

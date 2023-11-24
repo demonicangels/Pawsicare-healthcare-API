@@ -2,6 +2,7 @@ package com.example.pawsicare.business.impl;
 
 import com.example.pawsicare.business.DTOs.PetDTO;
 import com.example.pawsicare.business.responses.GetAllPetsResponse;
+import com.example.pawsicare.domain.Gender;
 import com.example.pawsicare.domain.Pet;
 import com.example.pawsicare.persistence.PetEntityConverter;
 import com.example.pawsicare.persistence.entity.ClientEntity;
@@ -34,14 +35,14 @@ class PetManagerImplTest {
                         .email("nikol@mail.com")
                         .password("123").build();
 
-        PetEntity petEntity1 = new PetEntity(1L,"maia","12/12/2020","helloo", client);
-        PetEntity petEntity2 = new PetEntity(2L,"nia","13/12/2020","hiii",client);
-        Pet pet1 = new Pet(1L,1L,"maia","12/12/2020",null,"helloo");
-        Pet pet2 = new Pet(2L,1L,"nia","13/12/2020",null,"hiii");
-        PetDTO petDTO1 = new PetDTO(1L,1L,"maia","12/12/2020",null,"helloo");
-        PetDTO petDTO2 = new PetDTO(2L,1L,"nia","13/12/2020",null,"hiii");
+        PetEntity petEntity1 = new PetEntity(1L,"maia",Gender.FEMALE,"Cat","12/12/2020","helloo", client);
+        PetEntity petEntity2 = new PetEntity(2L,"nia",Gender.FEMALE,"Cat","13/12/2020","hiii",client);
+        Pet pet1 = new Pet(1L,1L,"maia", Gender.FEMALE,"Cat","12/12/2020",null,"helloo");
+        Pet pet2 = new Pet(2L,1L,"nia",Gender.FEMALE,"Cat","13/12/2020",null,"hiii");
+        PetDTO petDTO1 = new PetDTO(1L,1L,"maia", Gender.FEMALE,"Cat","12/12/2020",null,"helloo");
+        PetDTO petDTO2 = new PetDTO(2L,1L,"nia", Gender.FEMALE,"Cat","13/12/2020",null,"hiii");
 
-        when(petRepositoryMock.getPetEntitiesByClient_Id(1)).thenReturn(Arrays.asList(new PetEntity(1L,"maia","12/12/2020","helloo", client), new PetEntity(2L,"nia","13/12/2020","hiii",client)));
+        when(petRepositoryMock.getPetEntitiesByClient_Id(1)).thenReturn(Arrays.asList(new PetEntity(1L,"maia", Gender.FEMALE,"Cat","12/12/2020","helloo", client), new PetEntity(2L,"nia", Gender.FEMALE,"Cat","13/12/2020","hiii",client)));
         when(petEntityConverter.fromEntity(petEntity1)).thenReturn(pet1);
         when(petEntityConverter.fromEntity(petEntity2)).thenReturn(pet2);
         when(petConverter.toDTO(pet1)).thenReturn(petDTO1);
