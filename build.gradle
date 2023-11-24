@@ -29,6 +29,8 @@ sonar {
 				'src/**/PawsiCareApplication.*',
 				'src/**/persistence/**/**/**',
 				'src/**/controller/**/*',
+				'src/**/business/impl/ClientManagerImpl*.*',
+				'src/**/business/impl/EmailManagerImpl*.*',
 
 
 
@@ -122,6 +124,8 @@ jacocoTestReport {
 					'src/**/PawsiCareApplication.*',
 					'src/**/persistence/**/**/**',
 					'src/**/controller/**/*',
+					'src/**/business/impl/ClientManagerImpl*.*',
+					'src/**/business/impl/EmailManagerImpl*.*',
 			])
 		}))
 	}
