@@ -17,6 +17,5 @@ test:
 sonar:
   stage: sonar
   script:
-  - ./gradlew test sonar
-
-allow_failure: true
+    - ./gradlew test sonar
+  allow_failure: true
