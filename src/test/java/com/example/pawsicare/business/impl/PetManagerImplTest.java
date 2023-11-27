@@ -8,6 +8,7 @@ import com.example.pawsicare.persistence.PetEntityConverter;
 import com.example.pawsicare.persistence.entity.ClientEntity;
 import com.example.pawsicare.persistence.entity.PetEntity;
 import com.example.pawsicare.persistence.jpaRepositories.PetRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -16,8 +17,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PetManagerImplTest {
+
     /**
      * @verifies return a response with list containing all pets with the specified ownerId when such pets are present
      * @see PetManagerImpl#getPets(long)( Pet )
@@ -54,6 +59,7 @@ class PetManagerImplTest {
         GetAllPetsResponse sutResponse = GetAllPetsResponse.builder()
                 .pets(sut.getPets(1L).stream().map(petConverter :: toDTO).toList())
                 .build();
+
         //Assert
         assertThat(sutResponse.getPets()).hasSize(2);
         verify(petEntityConverter, times(1)).fromEntity(petEntity1);
@@ -86,5 +92,75 @@ class PetManagerImplTest {
                 .build();
         //Assert
         assertThat(sutResponse.getPets()).isEmpty();
+    }
+
+    /**
+     * @verifies return a pet object with the updated fields
+     * @see PetManagerImpl#updatePet(Pet)
+     */
+    @Test
+    public void updatePet_shouldReturnAPetObjectWithTheUpdatedFields() throws Exception {
+        //Arrange
+        PetRepository petRepositoryMock = mock(PetRepository.class);
+        PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
+
+        Pet pet1 = new Pet(1L,1L,"maia", Gender.FEMALE,"Cat","12/12/2020",null,"helloo");
+        pet1.setName("nia");
+        pet1.setId(2L);
+
+        PetEntity petEntity = PetEntity.builder()
+                .id(2L)
+                .name("nia")
+                .gender(Gender.FEMALE)
+                .build();
+
+        when(petEntityConverter.fromEntity(petEntity)).thenReturn(pet1);
+        when(petEntityConverter.toEntity((pet1))).thenReturn(petEntity);
+        when(petRepositoryMock.save(petEntityConverter.toEntity(pet1))).thenReturn(petEntity);
+
+        PetManagerImpl sut = new PetManagerImpl(petRepositoryMock,petEntityConverter);
+
+        //Act
+
+        Pet pet = sut.updatePet(pet1);
+
+        //Assert
+        assertNotNull(pet);
+        assertTrue(pet.getId() == pet1.getId());
+        assertTrue(pet.getName() == pet1.getName());
+    }
+
+    /**
+     * @verifies return a pet when the id matches
+     * @see PetManagerImpl#getPet(long)
+     */
+    @Test
+    public void getPet_shouldReturnAPetWhenTheIdMatches() throws Exception {
+        //Arrange
+        PetRepository petRepositoryMock = mock(PetRepository.class);
+        PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
+
+        Pet pet1 = new Pet(1L,1L,"maia", Gender.FEMALE,"Cat","12/12/2020",null,"helloo");
+
+        PetEntity petEntity = PetEntity.builder()
+                .id(1L)
+                .name("maia")
+                .gender(Gender.FEMALE)
+                .build();
+
+        when(petEntityConverter.fromEntity(petEntity)).thenReturn(pet1);
+        when(petEntityConverter.toEntity((pet1))).thenReturn(petEntity);
+        when(petRepositoryMock.getPetEntityById(pet1.getId())).thenReturn(petEntity);
+
+        PetManagerImpl sut = new PetManagerImpl(petRepositoryMock,petEntityConverter);
+
+        //Act
+
+         Pet pet = sut.getPet(pet1.getId());
+
+        //Assert
+        assertNotNull(pet);
+        assertTrue(pet.getId() == pet1.getId());
+
     }
 }

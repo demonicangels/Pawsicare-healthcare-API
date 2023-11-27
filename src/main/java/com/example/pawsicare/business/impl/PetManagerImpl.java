@@ -22,11 +22,22 @@ public class PetManagerImpl implements PetManager {
         return converter.fromEntity(petRepository.save(converter.toEntity(pet)));
     }
 
+    /**
+     * @param pet
+     * @return updated pet object
+     * @should return a pet object with the updated fields
+     *
+     */
     @Override
-    public Pet updatePet(long id, Pet pet) {
+    public Pet updatePet(Pet pet) {
        return converter.fromEntity(petRepository.save(converter.toEntity(pet)));
     }
 
+    /**
+     * @param id
+     * @should return a pet when the id matches
+     * @return pet when found
+     */
     @Override
     public Pet getPet(long id) {
         return converter.fromEntity(petRepository.getPetEntityById(id));

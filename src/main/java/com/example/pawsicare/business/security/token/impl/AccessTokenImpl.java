@@ -29,6 +29,6 @@ public class AccessTokenImpl implements AccessToken {
 
     @Override
     public boolean hasRole(String roleName) {
-        return this.role.name() == roleName;
+        return this.role.name().equals(roleName);
     }
 }

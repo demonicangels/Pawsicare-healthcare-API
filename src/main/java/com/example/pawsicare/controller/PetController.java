@@ -91,7 +91,7 @@ public class PetController {
                 .information(request.getInformation())
                 .build();
 
-        Optional<PetDTO> peti = Optional.ofNullable(converter.toDTO(petManager.updatePet(id,converter.fromDTO(pet))));
+        Optional<PetDTO> peti = Optional.ofNullable(converter.toDTO(petManager.updatePet(converter.fromDTO(pet))));
 
         if(peti.isPresent()){
 
