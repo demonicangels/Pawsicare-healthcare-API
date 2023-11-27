@@ -24,6 +24,8 @@ import static org.mockito.Mockito.*;
 
 
 class DoctorManagerImplTest {
+    //TODO test  getDoctor method using the id and getDoctorsByField
+
     /**
      * @verifies return a filled in doctor object when the doctor is created
      * @see DoctorManagerImpl#createDoctor(Doctor)

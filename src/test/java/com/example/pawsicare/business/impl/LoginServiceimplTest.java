@@ -30,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class LoginServiceimplTest {
 
     //partial integration tests
+    //TODO test also the generate access token method
 
     /**
      * @verifies return a user when credentials are correct

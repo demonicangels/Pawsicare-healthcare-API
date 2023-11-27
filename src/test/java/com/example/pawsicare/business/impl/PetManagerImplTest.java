@@ -16,12 +16,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PetManagerImplTest {
+
 
     /**
      * @verifies return a response with list containing all pets with the specified ownerId when such pets are present
@@ -99,7 +100,7 @@ class PetManagerImplTest {
      * @see PetManagerImpl#updatePet(Pet)
      */
     @Test
-    public void updatePet_shouldReturnAPetObjectWithTheUpdatedFields() throws Exception {
+    void updatePet_shouldReturnAPetObjectWithTheUpdatedFields() throws Exception {
         //Arrange
         PetRepository petRepositoryMock = mock(PetRepository.class);
         PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
@@ -126,8 +127,8 @@ class PetManagerImplTest {
 
         //Assert
         assertNotNull(pet);
-        assertTrue(pet.getId() == pet1.getId());
-        assertTrue(pet.getName() == pet1.getName());
+        assertEquals(pet.getId(), pet1.getId());
+        assertEquals(pet.getName(), pet1.getName());
     }
 
     /**
@@ -135,7 +136,7 @@ class PetManagerImplTest {
      * @see PetManagerImpl#getPet(long)
      */
     @Test
-    public void getPet_shouldReturnAPetWhenTheIdMatches() throws Exception {
+    getPet_shouldReturnAPetWhenTheIdMatches() throws Exception {
         //Arrange
         PetRepository petRepositoryMock = mock(PetRepository.class);
         PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
@@ -160,7 +161,47 @@ class PetManagerImplTest {
 
         //Assert
         assertNotNull(pet);
-        assertTrue(pet.getId() == pet1.getId());
+        assertEquals(pet.getId(), pet1.getId());
+
+    }
+
+    /**
+     * @verifies create pet object with all fields when created
+     * @see PetManagerImpl#createPet(Pet)
+     */
+    @Test
+    void createPet_shouldCreatePetObjectWithAllFieldsWhenCreated() throws Exception {
+
+        //Arrange
+        PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
+        PetRepository petRepository = mock(PetRepository.class);
+
+        PetManagerImpl sut = new PetManagerImpl(petRepository,petEntityConverter);
+
+        PetEntity petEntity = PetEntity.builder()
+                .id(1L)
+                .name("maia")
+                .gender(Gender.FEMALE)
+                .build();
+
+        Pet pet = Pet.builder()
+                .id(1L)
+                .name("maia")
+                .gender(Gender.FEMALE)
+                .build();
+
+        when(petRepository.save(petEntity)).thenReturn(petEntity);
+        when(petEntityConverter.fromEntity(petEntity)).thenReturn(pet);
+        when(petEntityConverter.toEntity(pet)).thenReturn(petEntity);
+        //Act
+
+        Pet savedPet = sut.createPet(pet);
+
+        //Assert
+        assertNotNull(savedPet);
+        assertEquals(savedPet.getId(),pet.getId());
+        assertEquals(savedPet.getName(),pet.getName());
+
 
     }
 }

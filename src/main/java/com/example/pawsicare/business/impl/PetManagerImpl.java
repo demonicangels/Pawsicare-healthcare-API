@@ -17,6 +17,11 @@ public class PetManagerImpl implements PetManager {
     private final PetRepository petRepository;
     private final PetEntityConverter converter;
 
+    /**
+     * @param pet
+     * @return pet object when pet is created
+     * @should create pet object with all fields when created
+     */
     @Override
     public Pet createPet(Pet pet) {
         return converter.fromEntity(petRepository.save(converter.toEntity(pet)));
