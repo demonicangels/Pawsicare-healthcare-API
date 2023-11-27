@@ -1,14 +1,14 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.DTOs.DoctorDTO;
+import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.responses.CreateDoctorResponse;
 import com.example.pawsicare.business.responses.GetAllDoctorsResponse;
 import com.example.pawsicare.business.responses.UpdateDoctorResponse;
 import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.persistence.entity.DoctorEntity;
 import com.example.pawsicare.persistence.entity.UserEntity;
-import com.example.pawsicare.persistence.jpaRepositories.DoctorRepository;
-import com.example.pawsicare.persistence.jpaRepositories.UserRepository;
+import com.example.pawsicare.persistence.jparepositories.DoctorRepository;
+import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import org.junit.jupiter.api.Assertions;
 

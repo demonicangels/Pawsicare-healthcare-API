@@ -1,7 +1,7 @@
 package com.example.pawsicare.business.responses;
 
-import com.example.pawsicare.business.DTOs.ClientDTO;
-import com.example.pawsicare.business.DTOs.DoctorDTO;
+import com.example.pawsicare.business.dto.ClientDTO;
+import com.example.pawsicare.business.dto.DoctorDTO;
 import lombok.Builder;
 import lombok.Data;
 

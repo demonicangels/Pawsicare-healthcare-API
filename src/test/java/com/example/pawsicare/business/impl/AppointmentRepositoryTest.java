@@ -1,10 +1,9 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.persistence.entity.AppointmentEntity;
 import com.example.pawsicare.persistence.entity.ClientEntity;
 import com.example.pawsicare.persistence.entity.DoctorEntity;
-import com.example.pawsicare.persistence.jpaRepositories.AppointmentRepository;
+import com.example.pawsicare.persistence.jparepositories.AppointmentRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.junit.jupiter.api.Test;

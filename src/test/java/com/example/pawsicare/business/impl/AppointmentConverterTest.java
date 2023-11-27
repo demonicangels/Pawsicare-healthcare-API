@@ -1,16 +1,15 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.DTOs.AppointmentDTO;
-import com.example.pawsicare.business.DTOs.ClientDTO;
-import com.example.pawsicare.business.DTOs.DoctorDTO;
-import com.example.pawsicare.business.DTOs.PetDTO;
+import com.example.pawsicare.business.dto.AppointmentDTO;
+import com.example.pawsicare.business.dto.ClientDTO;
+import com.example.pawsicare.business.dto.DoctorDTO;
+import com.example.pawsicare.business.dto.PetDTO;
 import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.Pet;
 import static org.assertj.core.api.Assertions.*;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

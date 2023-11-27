@@ -1,9 +1,7 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.DTOs.AppointmentDTO;
+import com.example.pawsicare.business.dto.AppointmentDTO;
 import com.example.pawsicare.domain.Appointment;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

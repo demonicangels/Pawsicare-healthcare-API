@@ -1,4 +1,4 @@
-package com.example.pawsicare.business.DTOs;
+package com.example.pawsicare.business.dto;
 
 import com.example.pawsicare.domain.Gender;
 import jakarta.validation.constraints.NotBlank;

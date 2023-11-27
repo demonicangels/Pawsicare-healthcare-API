@@ -1,4 +1,4 @@
-package com.example.pawsicare.persistence.fakeRepositoryInterfaces;
+package com.example.pawsicare.persistence.fakerepositoryinterfaces;
 
 import com.example.pawsicare.domain.User;
 

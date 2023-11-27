@@ -5,8 +5,8 @@ import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.DoctorEntity;
-import com.example.pawsicare.persistence.jpaRepositories.DoctorRepository;
-import com.example.pawsicare.persistence.jpaRepositories.UserRepository;
+import com.example.pawsicare.persistence.jparepositories.DoctorRepository;
+import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

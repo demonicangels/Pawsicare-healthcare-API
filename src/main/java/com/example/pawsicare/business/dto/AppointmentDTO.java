@@ -1,4 +1,4 @@
-package com.example.pawsicare.business.DTOs;
+package com.example.pawsicare.business.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

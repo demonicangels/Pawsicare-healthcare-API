@@ -1,6 +1,6 @@
 package com.example.pawsicare.controller;
 
-import com.example.pawsicare.business.DTOs.ClientDTO;
+import com.example.pawsicare.business.dto.ClientDTO;
 import com.example.pawsicare.business.impl.ClientConverter;
 import com.example.pawsicare.business.requests.CreateClientRequest;
 import com.example.pawsicare.business.requests.UpdateClientRequest;

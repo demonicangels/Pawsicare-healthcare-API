@@ -1,6 +1,6 @@
 package com.example.pawsicare.controller;
 
-import com.example.pawsicare.business.DTOs.PetDTO;
+import com.example.pawsicare.business.dto.PetDTO;
 import com.example.pawsicare.business.impl.PetConverter;
 import com.example.pawsicare.business.requests.CreatePetRequest;
 import com.example.pawsicare.business.requests.UpdatePetRequest;
@@ -8,7 +8,6 @@ import com.example.pawsicare.business.responses.CreatePetResponse;
 import com.example.pawsicare.business.responses.GetAllPetsResponse;
 import com.example.pawsicare.business.responses.GetPetResponse;
 import com.example.pawsicare.business.responses.UpdatePetResponse;
-import com.example.pawsicare.domain.Gender;
 import com.example.pawsicare.domain.managerinterfaces.PetManager;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -28,7 +27,7 @@ public class PetController {
     private final PetConverter converter;
 
 
-    //@RolesAllowed({"Client"})
+    @RolesAllowed({"Client"})
     @PostMapping()
     public ResponseEntity<CreatePetResponse> createPet(@RequestBody @Valid CreatePetRequest request){
         PetDTO pet = PetDTO.builder()
@@ -58,7 +57,8 @@ public class PetController {
         Optional<List<PetDTO>> pets = Optional.ofNullable(petManager.getPets(ownerId).stream()
                 .map(converter :: toDTO)
                 .toList());
-        if(pets.isPresent()){
+
+        if(!pets.isEmpty()){
 
             GetAllPetsResponse allPets = GetAllPetsResponse.builder()
                     .pets(pets.get())

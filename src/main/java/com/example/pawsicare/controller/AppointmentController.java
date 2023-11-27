@@ -1,6 +1,6 @@
 package com.example.pawsicare.controller;
 
-import com.example.pawsicare.business.DTOs.AppointmentDTO;
+import com.example.pawsicare.business.dto.AppointmentDTO;
 import com.example.pawsicare.business.impl.AppointmentConverter;
 import com.example.pawsicare.business.impl.ClientConverter;
 import com.example.pawsicare.business.impl.DoctorConverter;

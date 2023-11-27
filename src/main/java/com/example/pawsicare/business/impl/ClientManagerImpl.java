@@ -4,7 +4,7 @@ import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.managerinterfaces.ClientManager;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.ClientEntity;
-import com.example.pawsicare.persistence.jpaRepositories.UserRepository;
+import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

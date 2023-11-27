@@ -1,14 +1,13 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.DTOs.PetDTO;
+import com.example.pawsicare.business.dto.PetDTO;
 import com.example.pawsicare.business.responses.GetAllPetsResponse;
 import com.example.pawsicare.domain.Gender;
 import com.example.pawsicare.domain.Pet;
 import com.example.pawsicare.persistence.PetEntityConverter;
 import com.example.pawsicare.persistence.entity.ClientEntity;
 import com.example.pawsicare.persistence.entity.PetEntity;
-import com.example.pawsicare.persistence.jpaRepositories.PetRepository;
-import org.junit.jupiter.api.Assertions;
+import com.example.pawsicare.persistence.jparepositories.PetRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

@@ -1,12 +1,9 @@
 package com.example.pawsicare.business.impl;
 
 import com.example.pawsicare.domain.Appointment;
-import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.persistence.AppointmentEntityConverter;
 import com.example.pawsicare.persistence.entity.AppointmentEntity;
-import com.example.pawsicare.persistence.entity.ClientEntity;
-import com.example.pawsicare.persistence.jpaRepositories.AppointmentRepository;
-import org.junit.jupiter.api.Assertions;
+import com.example.pawsicare.persistence.jparepositories.AppointmentRepository;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

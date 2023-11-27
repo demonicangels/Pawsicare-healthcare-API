@@ -1,6 +1,6 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.DTOs.PetDTO;
+import com.example.pawsicare.business.dto.PetDTO;
 import com.example.pawsicare.domain.Pet;
 import org.springframework.stereotype.Service;
 

@@ -3,7 +3,7 @@ package com.example.pawsicare.persistence;
 import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.Role;
 import org.springframework.stereotype.Repository;
-import com.example.pawsicare.persistence.fakeRepositoryInterfaces.DoctorRepository;
+import com.example.pawsicare.persistence.fakerepositoryinterfaces.DoctorRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +12,15 @@ import java.util.Optional;
 @Repository
 public class FakeDoctorRepositoryImpl implements DoctorRepository {
 
-    private final List<Doctor> Doctors;
+    private final List<Doctor> doctors;
     private Long doctorId = 3L;
 
     static String birthday = "1-1-1999";
 
     public FakeDoctorRepositoryImpl(){
-        this.Doctors = new ArrayList<>();
+        this.doctors = new ArrayList<>();
 
-        Doctors.add(Doctor.builder()
+        doctors.add(Doctor.builder()
                 .id(1L)
                 .name("Maia")
                 .birthday(birthday)
@@ -34,7 +34,7 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
 
 
 
-        Doctors.add(Doctor.builder()
+        doctors.add(Doctor.builder()
                 .id(2L)
                 .name("Nia")
                 .birthday(birthday)
@@ -46,7 +46,7 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
                 .field("neurology")
                 .build());
 
-        Doctors.add(Doctor.builder()
+        doctors.add(Doctor.builder()
                 .id(3L)
                 .name("Ana")
                 .birthday(birthday)
@@ -65,15 +65,15 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
         doctor.setId(doctorId);
         doctorId++;
 
-        Doctors.add(doctor);
+        doctors.add(doctor);
         return doctor;
     }
 
     @Override
     public Doctor updateDoctor(long id, Doctor doctor) {
-        Optional<Doctor> doc = this.Doctors.stream().filter(d -> d.getId() == id).findFirst();
+        Optional<Doctor> doc = this.doctors.stream().filter(d -> d.getId() == id).findFirst();
         if(doc.isPresent()){
-            int index = Doctors.indexOf(doc.get());
+            int index = doctors.indexOf(doc.get());
 
             Doctor doctorDTO = doc.get();
             doctorDTO.setName(doctor.getName());
@@ -85,7 +85,7 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
             doctorDTO.setPassword(doctor.getPassword());
 
 
-            Doctors.set(index, doctorDTO);
+            doctors.set(index, doctorDTO);
 
             return doctorDTO;
         }
@@ -94,7 +94,7 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
 
     @Override
     public Doctor getDoctor(long id) {
-        Optional<Doctor> doc = this.Doctors.stream().filter(d -> d.getId() == id).findFirst();
+        Optional<Doctor> doc = this.doctors.stream().filter(d -> d.getId() == id).findFirst();
         if(doc.isPresent()){
             return doc.get();
         }
@@ -103,11 +103,11 @@ public class FakeDoctorRepositoryImpl implements DoctorRepository {
 
     @Override
     public List<Doctor> getDoctors() {
-        return this.Doctors;
+        return this.doctors;
     }
 
     @Override
     public void deleteDoctor(long id) {
-        Doctors.removeIf(d -> d.getId() == id);
+        doctors.removeIf(d -> d.getId() == id);
     }
 }

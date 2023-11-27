@@ -3,7 +3,7 @@ package com.example.pawsicare.persistence;
 import com.example.pawsicare.domain.Pet;
 import com.example.pawsicare.persistence.entity.ClientEntity;
 import com.example.pawsicare.persistence.entity.PetEntity;
-import com.example.pawsicare.persistence.jpaRepositories.UserRepository;
+import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

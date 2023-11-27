@@ -1,6 +1,6 @@
 package com.example.pawsicare.controller;
 
-import com.example.pawsicare.business.DTOs.DoctorDTO;
+import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.impl.DoctorConverter;
 import com.example.pawsicare.business.requests.CreateDoctorRequest;
 import com.example.pawsicare.business.requests.UpdateDoctorRequest;
@@ -61,7 +61,7 @@ public class DoctorController {
                 .map(converter :: toDTO)
                 .toList());
 
-        if(doctors.isPresent()){
+        if(!doctors.get().isEmpty()){
             GetAllDoctorsResponse doctorsResponse = GetAllDoctorsResponse.builder()
                     .doctors(doctors.get())
                     .build();

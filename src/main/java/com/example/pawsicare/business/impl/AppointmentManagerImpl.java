@@ -3,7 +3,7 @@ package com.example.pawsicare.business.impl;
 import com.example.pawsicare.domain.managerinterfaces.AppointmentManager;
 import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.persistence.AppointmentEntityConverter;
-import com.example.pawsicare.persistence.jpaRepositories.AppointmentRepository;
+import com.example.pawsicare.persistence.jparepositories.AppointmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -47,8 +47,7 @@ public class AppointmentManagerImpl implements AppointmentManager {
     @Override
     public Optional<List<Appointment>> getUsersAppointments(long userId) {
         //TODO fix this method the repository returns null
-        Optional<List<Appointment>> appointments = Optional.of(appointmentRepository.findAppointmentEntitiesByClient_IdOrDoctor_Id(userId,userId).stream().map(converter :: fromEntity).toList());
-        return appointments;
+        return Optional.of(appointmentRepository.findAppointmentEntitiesByClient_IdOrDoctor_Id(userId,userId).stream().map(converter :: fromEntity).toList());
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.DTOs.ClientDTO;
-import com.example.pawsicare.business.DTOs.DoctorDTO;
+import com.example.pawsicare.business.dto.ClientDTO;
+import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.responses.LoginResponse;
@@ -12,7 +12,7 @@ import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.LoginService;
-import com.example.pawsicare.persistence.jpaRepositories.UserRepository;
+import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

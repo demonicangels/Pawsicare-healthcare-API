@@ -1,4 +1,4 @@
-package com.example.pawsicare.persistence.jpaRepositories;
+package com.example.pawsicare.persistence.jparepositories;
 
 import com.example.pawsicare.persistence.entity.PetEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

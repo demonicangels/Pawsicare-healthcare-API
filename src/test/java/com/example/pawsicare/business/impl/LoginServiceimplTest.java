@@ -1,6 +1,6 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.business.DTOs.ClientDTO;
+import com.example.pawsicare.business.dto.ClientDTO;
 import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.responses.LoginResponse;
@@ -11,12 +11,10 @@ import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.UserEntity;
-import com.example.pawsicare.persistence.jpaRepositories.UserRepository;
-import org.junit.jupiter.api.Assertions;
+import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;

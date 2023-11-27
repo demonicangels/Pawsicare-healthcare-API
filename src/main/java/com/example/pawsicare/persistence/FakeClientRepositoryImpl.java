@@ -2,32 +2,32 @@ package com.example.pawsicare.persistence;
 
 import com.example.pawsicare.domain.Client;
 import org.springframework.stereotype.Repository;
-import com.example.pawsicare.persistence.fakeRepositoryInterfaces.ClientRepository;
+import com.example.pawsicare.persistence.fakerepositoryinterfaces.ClientRepository;
 
 import java.util.*;
 
 @Repository
 public class FakeClientRepositoryImpl implements ClientRepository {
-    private final List<Client> Clients;
+    private final List<Client> clients;
     Long fakeID = 1L;
 
     public FakeClientRepositoryImpl(){
-        this.Clients = new ArrayList<>();
+        this.clients = new ArrayList<>();
     }
     @Override
     public Client createClient(Client client) {
         client.setId(fakeID);
         fakeID++;
 
-        Clients.add(client);
+        clients.add(client);
         return client;
     }
 
     @Override
     public Client updateClient(long id, Client client) {
-        Optional<Client> cli = Clients.stream().filter(c -> c.getId() == id).findFirst();
+        Optional<Client> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
         if(cli.isPresent()){
-            int index = Clients.indexOf(cli.get());
+            int index = clients.indexOf(cli.get());
 
             Client c = cli.get();
             c.setName(client.getName());
@@ -35,7 +35,7 @@ public class FakeClientRepositoryImpl implements ClientRepository {
             c.setPhoneNumber(client.getPhoneNumber());
             c.setPassword(client.getPassword());
 
-            Clients.set(index, c);
+            clients.set(index, c);
 
             return c;
         }
@@ -44,7 +44,7 @@ public class FakeClientRepositoryImpl implements ClientRepository {
 
     @Override
     public Client getClient(long id) {
-        Optional<Client> cli = Clients.stream().filter(c -> c.getId() == id).findFirst();
+        Optional<Client> cli = clients.stream().filter(c -> c.getId() == id).findFirst();
         if(cli.isPresent()){
 
             return cli.get();
@@ -54,11 +54,11 @@ public class FakeClientRepositoryImpl implements ClientRepository {
 
     @Override
     public List<Client> getClients() {
-        return Clients;
+        return clients;
     }
 
     @Override
     public void deleteClient(long id) {
-        Clients.removeIf(c -> c.getId() == id);
+        clients.removeIf(c -> c.getId() == id);
     }
 }
