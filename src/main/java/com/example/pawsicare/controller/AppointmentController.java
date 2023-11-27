@@ -36,6 +36,7 @@ public class AppointmentController {
     private final DoctorConverter doctorConverter;
     private final PetConverter petConverter;
 
+
     @RolesAllowed({"Doctor", "Client"})
     @GetMapping(params = "userId")
     public ResponseEntity<GetAppointmentsResponse> getUsersAppointments(@Valid @RequestParam(name = "userId")long userId){
@@ -84,13 +85,13 @@ public class AppointmentController {
 
     @RolesAllowed({"Doctor","Client"})
     @PutMapping(params = "id")
-    public ResponseEntity<UpdateAppointmentResponse> rescheduleAppointment (@Valid @RequestParam(name = "id") long id, @RequestBody @Valid UpdateAppointmentRequest appointmentRequest){
+    public ResponseEntity<UpdateAppointmentResponse> rescheduleAppointment (@RequestBody @Valid UpdateAppointmentRequest appointmentRequest){
         AppointmentDTO appointment = AppointmentDTO.builder()
                 .dateAndStart(appointmentRequest.getDateAndStart())
                 .dateAndEnd(appointmentRequest.getDateAndEnd())
                 .build();
 
-        Optional<AppointmentDTO> api = Optional.ofNullable(appointmentManager.rescheduleAppointment(id, converter.fromDTO(appointment)).map(converter :: toDTO).orElse(null));
+        Optional<AppointmentDTO> api = Optional.ofNullable(appointmentManager.rescheduleAppointment(converter.fromDTO(appointment)).map(converter :: toDTO).orElse(null));
 
         if(api.isPresent()){
             UpdateAppointmentResponse updateAppointmentResponse = UpdateAppointmentResponse.builder()

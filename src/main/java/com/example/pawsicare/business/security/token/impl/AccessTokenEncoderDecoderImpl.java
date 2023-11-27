@@ -2,6 +2,7 @@ package com.example.pawsicare.business.security.token.impl;
 
 import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.exception.InvalidAccessTokenException;
+import com.example.pawsicare.domain.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtException;
@@ -10,7 +11,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.business.security.token.AccessTokenEncoder;
 
@@ -19,8 +19,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import static java.lang.Long.parseLong;
 
 @Service
 public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, AccessTokenDecoder {
@@ -34,8 +35,8 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
     @Override
     public String encode(AccessToken accessToken) {
         Map<String, Object> claimsMap = new HashMap<>();
-        if (!CollectionUtils.isEmpty(accessToken.getRoles())){
-            claimsMap.put("roles", accessToken.getRoles());
+        if (accessToken.getRole() != null){
+            claimsMap.put("role", accessToken.getRole().name());
         }
         if (accessToken.getId() != null) {
             claimsMap.put("userId", accessToken.getId());
@@ -43,9 +44,9 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
 
         Instant now = Instant.now();
         return Jwts.builder()
-                .setSubject(accessToken.getEmail())
+                .setSubject(accessToken.getId().toString())
                 .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(now.plus(30, ChronoUnit.MINUTES)))
+                .setExpiration(Date.from(now.plus(30, ChronoUnit.SECONDS)))
                 .addClaims(claimsMap)
                 .signWith(key)
                 .compact();
@@ -58,10 +59,10 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
                     .parseClaimsJws(accessTokenEncoded);
             Claims claims = jwt.getBody();
 
-            List<String> roles = claims.get("roles", List.class);
-            Long studentId = claims.get("userId", Long.class);
+            String strRole = (String)claims.get("role");
+            Role role = Role.valueOf(strRole);
 
-            return new AccessTokenImpl(claims.getSubject(), studentId, roles);
+            return new AccessTokenImpl(parseLong(claims.getSubject()), role);
         } catch (JwtException e) {
             throw new InvalidAccessTokenException(e.getMessage());
         }

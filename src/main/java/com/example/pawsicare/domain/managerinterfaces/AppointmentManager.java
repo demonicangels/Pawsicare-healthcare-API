@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface AppointmentManager {
     Optional<Appointment> createAppointment(Appointment appointment);
-    Optional<Appointment> rescheduleAppointment(long id, Appointment appointment);
+    Optional<Appointment> rescheduleAppointment(Appointment appointment);
     Optional <List<Appointment>> getUsersAppointments(long userId);
     void cancelAppointment(long id);
 }

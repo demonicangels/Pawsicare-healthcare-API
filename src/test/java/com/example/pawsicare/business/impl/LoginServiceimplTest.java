@@ -7,6 +7,7 @@ import com.example.pawsicare.business.responses.LoginResponse;
 import com.example.pawsicare.business.security.token.AccessTokenEncoder;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.Client;
+import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.UserEntity;
@@ -80,7 +81,7 @@ class LoginServiceimplTest {
         when(sut.passMatch("123","123")).thenReturn(true);
         when(passwordEncoder.matches("123","123")).thenReturn(true);
         when(sut.generateAccessToken(clientConverterMock.fromDTO(userDTO))).thenReturn("947563794");
-        when(accessTokenEncoder.encode(new AccessTokenImpl("nikol@mail.com",1L,new ArrayList<>()))).thenReturn("947563794");
+        when(accessTokenEncoder.encode(new AccessTokenImpl(1L, Role.Client))).thenReturn("947563794");
 
         //Act
         LoginUserRequest request = LoginUserRequest.builder()

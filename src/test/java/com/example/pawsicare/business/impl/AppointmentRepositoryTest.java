@@ -1,5 +1,6 @@
 package com.example.pawsicare.business.impl;
 
+import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.persistence.entity.AppointmentEntity;
 import com.example.pawsicare.persistence.entity.ClientEntity;
 import com.example.pawsicare.persistence.entity.DoctorEntity;
@@ -25,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AppointmentRepositoryTest {
+class AppointmentRepositoryTest {
 
     @Autowired
     EntityManager entityManager;
@@ -148,4 +149,45 @@ public class AppointmentRepositoryTest {
         assertNotNull(doctorsAppointments);
         assertThat(doctorsAppointments).hasSize(2);
     }
+
+    @Test
+    void update_rescheduleAnAppointment(){
+
+        DoctorEntity doctor = DoctorEntity.builder()
+                .name("Maria")
+                .email("maria@gmail.com")
+                .password("123")
+                .field("neurology")
+                .build();
+
+        entityManager.persist(doctor);
+
+        DoctorEntity doctor2 = DoctorEntity.builder()
+                .name("Maria")
+                .email("maria@gmail.com")
+                .password("123")
+                .field("neurology")
+                .build();
+
+        entityManager.persist(doctor2);
+
+        AppointmentEntity updatedAppointment = AppointmentEntity.builder()
+                .id(1L)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
+                .client(null)
+                .doctor(doctor2)
+                .build();
+
+        updatedAppointment = entityManager.merge(updatedAppointment);
+        appointmentRepository.save(updatedAppointment);
+
+        AppointmentEntity dbUpdatedAppointment = appointmentRepository.findById(1L).get();
+
+        assertNotNull(dbUpdatedAppointment);
+        assertEquals(1L,dbUpdatedAppointment.getId());
+        assertEquals(dbUpdatedAppointment.getDoctor(), doctor2);
+    }
+
+
 }

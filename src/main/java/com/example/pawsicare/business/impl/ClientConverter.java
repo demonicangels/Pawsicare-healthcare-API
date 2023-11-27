@@ -16,6 +16,7 @@ public class ClientConverter {
                 .password(client.getPassword())
                 .email(client.getEmail())
                 .phoneNumber(client.getPhoneNumber())
+                .role(client.getRole())
                 .build();
     }
 
@@ -28,6 +29,7 @@ public class ClientConverter {
                 .password(clientDTO.getPassword())
                 .email(clientDTO.getEmail())
                 .phoneNumber(clientDTO.getPhoneNumber())
+                .role(clientDTO.getRole())
                 .build();
     }
 }

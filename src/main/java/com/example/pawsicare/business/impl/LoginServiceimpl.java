@@ -18,8 +18,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,7 +41,7 @@ public class LoginServiceimpl implements LoginService {
         String accessToken ="";
 
 
-        Optional<User> loggedInUser = Optional.ofNullable(userRepository.findUserEntityByEmail(loginRequest.getEmail()).map(converter :: fromUserEntity).orElse(null));
+        Optional<User>  loggedInUser = Optional.ofNullable(userRepository.findUserEntityByEmail(loginRequest.getEmail()).map(converter :: fromUserEntity).orElse(null));
 
         if(loggedInUser.isEmpty()){
             throw new InvalidCredentialsException();
@@ -75,7 +73,7 @@ public class LoginServiceimpl implements LoginService {
                     .birthday(client.getBirthday())
                     .email(client.getEmail())
                     .phoneNumber(client.getPhoneNumber())
-                    //.role(client.getRole())
+                    .role(client.getRole())
                     .build();
 
             accessToken = generateAccessToken(clientConverter.fromDTO(clientDTO));
@@ -95,10 +93,9 @@ public class LoginServiceimpl implements LoginService {
         }
 
         Long userId = user.getId();
-        List<String> roles = Arrays.stream(Role.values())
-                .map(Enum::name).toList();
+        Role role = user.getRole();
 
         return accessTokenEncoder.encode(
-                new AccessTokenImpl(user.getId().toString(), userId, roles));
+                new AccessTokenImpl(userId, role));
     }
 }

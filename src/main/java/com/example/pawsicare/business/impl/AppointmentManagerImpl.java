@@ -17,16 +17,33 @@ public class AppointmentManagerImpl implements AppointmentManager {
     private final AppointmentRepository appointmentRepository;
     private final AppointmentEntityConverter converter;
 
+    /**
+     * @param appointment
+     * @should return a fully created appointment with all fields
+     * @return created appointment
+     */
     @Override
     public Optional<Appointment> createAppointment(Appointment appointment) {
         return Optional.of(converter.fromEntity(appointmentRepository.save(converter.toEntity(appointment))));
     }
 
+    /**
+     * @param appointment
+     * @should update the correct appointment with the correct values
+     * @return updated appointment
+     */
     @Override
-    public Optional<Appointment> rescheduleAppointment(long id, Appointment appointment) {
+    public Optional<Appointment> rescheduleAppointment(Appointment appointment) {
         return Optional.of(converter.fromEntity(appointmentRepository.save(converter.toEntity(appointment))));
     }
 
+    /**
+     * @param userId
+     * @should  return all users appointments when present
+     * @should  return an empty list if the user has no appointments
+     * @return list of appointments
+     *
+     */
     @Override
     public Optional<List<Appointment>> getUsersAppointments(long userId) {
         //TODO fix this method the repository returns null

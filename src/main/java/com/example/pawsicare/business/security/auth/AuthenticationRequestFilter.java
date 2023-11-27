@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -56,11 +57,12 @@ public class AuthenticationRequestFilter extends OncePerRequestFilter {
     }
 
     private void setupSpringSecurityContext(AccessToken accessToken) {
-        UserDetails userDetails = new User(accessToken.getEmail(), "",
-                accessToken.getRoles()
+        UserDetails userDetails = new User(accessToken.getId().toString(), "",
+                List.of(new SimpleGrantedAuthority(SPRING_SECURITY_ROLE_PREFIX + accessToken.getRole().name())));
+                /*accessToken.getRole()
                         .stream()
                         .map(role -> new SimpleGrantedAuthority(SPRING_SECURITY_ROLE_PREFIX + role))
-                        .toList());
+                        .toList());*/
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
