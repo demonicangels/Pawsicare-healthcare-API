@@ -47,7 +47,7 @@ public class AppointmentController {
                         .or(() -> Optional.of(new ArrayList<>()));
 
 
-        if(!app.isEmpty()){
+        if(!app.isEmpty() && !app.get().isEmpty()){
 
             GetAppointmentsResponse appointmentsResponse = GetAppointmentsResponse.builder()
                     .appointments(app.get())
