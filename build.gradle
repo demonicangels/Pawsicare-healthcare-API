@@ -19,7 +19,6 @@ sonar {
 		property "sonar.coverage.exclusions", [
 				'src/**/business/**/*DTO.*',
 				'src/**/domain/config/**/*',
-				'src/**/domain/**/*',
 				'src/**/business/exceptions/**/*',
 				'src/**/business/requests/**/*',
 				'src/**/business/responses/**/*',
