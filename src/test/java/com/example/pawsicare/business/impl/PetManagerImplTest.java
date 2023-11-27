@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PetManagerImplTest {
 
-
     /**
      * @verifies return a response with list containing all pets with the specified ownerId when such pets are present
      * @see PetManagerImpl#getPets(long)( Pet )
@@ -136,7 +135,7 @@ class PetManagerImplTest {
      * @see PetManagerImpl#getPet(long)
      */
     @Test
-    getPet_shouldReturnAPetWhenTheIdMatches() throws Exception {
+    void getPet_shouldReturnAPetWhenTheIdMatches() throws Exception {
         //Arrange
         PetRepository petRepositoryMock = mock(PetRepository.class);
         PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
