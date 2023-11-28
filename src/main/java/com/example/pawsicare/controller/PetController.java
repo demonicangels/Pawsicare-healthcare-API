@@ -52,6 +52,7 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+    @RolesAllowed({"Client","Doctor"})
     @GetMapping(params = "ownerId")
     public ResponseEntity<GetAllPetsResponse> getPetsByOwnerId(@RequestParam(name = "ownerId", required = false) long ownerId){
         Optional<List<PetDTO>> pets = Optional.ofNullable(petManager.getPets(ownerId).stream()
@@ -69,6 +70,7 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @RolesAllowed({"Client","Doctor"})
     @GetMapping(params = "id")
     public ResponseEntity<GetPetResponse> getPetById(@RequestParam(name = "id") long petId){
         Optional<PetDTO> pet = Optional.ofNullable(converter.toDTO(petManager.getPet(petId)));
@@ -83,6 +85,7 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @RolesAllowed({"Client"})
     @PutMapping(params = "id")
     public ResponseEntity<UpdatePetResponse> updatePet(@RequestParam(name = "id") long id, @RequestBody @Valid UpdatePetRequest request){
         PetDTO pet = PetDTO.builder()
@@ -104,6 +107,7 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
+    @RolesAllowed({"Client"})
     @DeleteMapping()
     public ResponseEntity<Void> deletePet(@RequestParam(name = "id") long id){
         petManager.deletePet(id);

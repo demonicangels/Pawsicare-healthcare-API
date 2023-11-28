@@ -23,7 +23,7 @@ public class DoctorController {
     private final DoctorManager doctorManager;
     private final DoctorConverter converter;
 
-    @RolesAllowed({"Client"})
+    @RolesAllowed({"Client","Doctor"})
     @GetMapping(params = "id")
     public ResponseEntity<GetDoctorResponse> getDoctorById(@RequestParam(name = "id", required = false) long id){
         Optional<DoctorDTO> doctor = Optional.ofNullable(converter.toDTO(doctorManager.getDoctor(id)));
@@ -37,7 +37,7 @@ public class DoctorController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-    //@RolesAllowed({"Client", "Doctor"})
+    @RolesAllowed({"Client"})
     @GetMapping(params = "field")
     public ResponseEntity<GetAllDoctorsResponse> getDoctorsByField(@RequestParam(name = "field", required = false) String field){
         Optional<List<DoctorDTO>> doctorsByField = Optional.ofNullable(doctorManager.getDoctorsByField(field).stream()
@@ -92,7 +92,7 @@ public class DoctorController {
     }
     @RolesAllowed({"Doctor"})
     @PutMapping()
-    public ResponseEntity<UpdateDoctorResponse> updateDoctor(@RequestParam(name = "id") long id, @RequestBody @Valid UpdateDoctorRequest request){
+    public ResponseEntity<UpdateDoctorResponse> updateDoctor(@RequestBody @Valid UpdateDoctorRequest request){
         DoctorDTO doctorDTO = DoctorDTO.builder()
                 .name(request.getName())
                 .password(request.getPassword())

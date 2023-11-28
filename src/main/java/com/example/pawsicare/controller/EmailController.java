@@ -3,6 +3,7 @@ package com.example.pawsicare.controller;
 
 import com.example.pawsicare.business.requests.SendEmailRequest;
 import com.example.pawsicare.domain.managerinterfaces.EmailManager;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class EmailController {
 
     private final EmailManager emailManager;
+
+    @RolesAllowed({"Client"})
     @PostMapping
     public ResponseEntity<String> sendContactEmail(@RequestBody @Valid SendEmailRequest emailRequest)
     {
