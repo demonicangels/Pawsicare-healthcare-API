@@ -12,6 +12,7 @@ import com.example.pawsicare.domain.User;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -156,5 +157,42 @@ class LoginServiceimplTest {
         }catch (InvalidCredentialsException e){
 
         }
+    }
+
+    /**
+     * @verifies return an accessToken based on the loggedIn user
+     * @see LoginServiceimpl#generateAccessToken(User)
+     */
+    @Test
+    public void generateAccessToken_shouldReturnAnAccessTokenBasedOnTheLoggedInUser() throws Exception {
+
+        //Arrange
+
+        UserRepository userRepositoryMock = mock(UserRepository.class);
+        DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
+        ClientConverter clientConverterMock = mock(ClientConverter.class);
+        UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+        PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+        AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
+
+        LoginServiceimpl sut = new LoginServiceimpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder);
+
+        User user = Client.builder()
+                .id(1L)
+                .name("Nikol")
+                .email("nikol@mail.com")
+                .password("123").build();
+
+        when(sut.generateAccessToken(user)).thenReturn("9575635accessTokenForNikol64782956");
+
+        String expectedAccessToken = "9575635accessTokenForNikol64782956";
+
+        //Act
+
+        String actual = sut.generateAccessToken(user);
+
+        //Assert
+        assertNotNull(actual);
+        assertTrue(actual == expectedAccessToken);
     }
 }

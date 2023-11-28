@@ -87,6 +87,11 @@ public class LoginServiceimpl implements LoginService {
         return passwordEncoder.matches(rawPass, encodedPass);
     }
 
+    /**
+     * @param user
+     * @return accessToken
+     * @should return an accessToken based on the loggedIn user
+     */
     public String generateAccessToken(User user) {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");

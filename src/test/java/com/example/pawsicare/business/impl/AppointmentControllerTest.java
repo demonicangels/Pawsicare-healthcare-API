@@ -127,12 +127,6 @@ class AppointmentControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
-
-
-
-
-
-
     @Test
     void testCreateAppointment() {
         // Arrange

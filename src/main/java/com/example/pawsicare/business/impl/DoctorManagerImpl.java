@@ -13,7 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +50,11 @@ public class DoctorManagerImpl implements DoctorManager {
         return converter.fromDoctorEntity((DoctorEntity) userRepository.save(converter.toUserEntity(doctor)));
     }
 
+    /**
+     * @param id
+     * @return doctor
+     * @should return doctor when one with matching id is found
+     */
     @Override
     public Doctor getDoctor(long id) {
          return converter.fromDoctorEntity(userRepository.getUserEntityById(id).map(DoctorEntity.class :: cast).orElse(null));
@@ -74,16 +81,16 @@ public class DoctorManagerImpl implements DoctorManager {
         userRepository.deleteById(id);
     }
 
+    /**
+     * @param field
+     * @return list of doctors from the specified field
+     * @should return a list of doctors from the specified field
+     */
     @Override
     public List<Doctor> getDoctorsByField(String field) {
-        List<Doctor> fieldDoctors = new ArrayList<>();
 
-        doctorRepository.getDoctorEntitiesByField(field).stream().map(
-                converter :: fromDoctorEntity
-        ).forEach(
-                fieldDoctors :: add
-        );
-
-        return fieldDoctors;
+        return doctorRepository.getDoctorEntitiesByField(field)
+                .map(list -> list.stream().map(converter::fromDoctorEntity).collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
     }
 }

@@ -13,18 +13,20 @@ import com.example.pawsicare.persistence.UserEntityConverter;
 import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.data.convert.EntityConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
 class DoctorManagerImplTest {
-    //TODO test  getDoctor method using the id and getDoctorsByField
 
     /**
      * @verifies return a filled in doctor object when the doctor is created
@@ -81,7 +83,7 @@ class DoctorManagerImplTest {
                 .build();
 
         //Assert
-        Assertions.assertNotNull(sutResponse.getDoctor());
+        assertNotNull(sutResponse.getDoctor());
         assertThat(sutResponse.getDoctor().getName()).isEqualTo("Amara");
         assertThat(sutResponse.getDoctor().getId()).isNotZero();
 
@@ -150,10 +152,10 @@ class DoctorManagerImplTest {
 
     /**
      * @verifies return a list with all doctors when doctors are present
-     * @see DoctorManagerImpl #getDoctors()( Doctor )
+     * @see DoctorManagerImpl#getDoctors()
      */
     @Test
-     void getDoctor_shouldReturnAListWithAllDoctorsWhenDoctorsArePresent() throws Exception {
+    public void getDoctors_shouldReturnAListWithAllDoctorsWhenDoctorsArePresent() throws Exception {
         //Arrange
        UserRepository userRepositoryMock = mock(UserRepository.class);
        DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
@@ -207,16 +209,16 @@ class DoctorManagerImplTest {
                 .doctors(sut.getDoctors().stream().map(doctorConverterMock :: toDTO).toList())
                 .build();
         //Assert
-        Assertions.assertNotNull(sutResponse.getDoctors());
+        assertNotNull(sutResponse.getDoctors());
         assertThat(sutResponse.getDoctors()).hasSize(2);
     }
 
     /**
      * @verifies return an empty list when no doctors are present
-     * @see DoctorManagerImpl #getDoctors()( Doctor )
+     * @see DoctorManagerImpl#getDoctors()
      */
     @Test
-     void getDoctor_shouldReturnAnEmptyListWhenNoDoctorsArePresent() throws Exception {
+    public void getDoctors_shouldReturnAnEmptyListWhenNoDoctorsArePresent() throws Exception {
        //Arrange
        UserRepository userRepositoryMock = mock(UserRepository.class);
        DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
@@ -259,5 +261,107 @@ class DoctorManagerImplTest {
 
        //Assert
         assertThat(sutResponse.getDoctors()).isEmpty();
+    }
+
+    /**
+     * @verifies return doctor when one with matching id is found
+     * @see DoctorManagerImpl#getDoctor(long)
+     */
+    @Test
+    void getDoctor_shouldReturnDoctorWhenOneWithMatchingIdIsFound() throws Exception {
+        //Arrange
+        UserRepository userRepositoryMock = mock(UserRepository.class);
+        DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
+        UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+        PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
+
+        DoctorManagerImpl sut = new DoctorManagerImpl(userEntityConverterMock,userRepositoryMock,doctorRepositoryMock,passwordEncoderMock);
+
+        DoctorEntity updateDoctor = DoctorEntity.builder()
+                .id(1L)
+                .name("Nia")
+                .field("neurology")
+                .email("nia@mail.com")
+                .build();
+
+        Doctor doctor = Doctor.builder()
+                .id(1L)
+                .name("Nia")
+                .field("neurology")
+                .email("nia@mail.com")
+                .build();
+
+        when(userEntityConverterMock.fromDoctorEntity(updateDoctor)).thenReturn(doctor);
+        when(userRepositoryMock.getUserEntityById(doctor.getId())).thenReturn(Optional.of(updateDoctor));
+        //Act
+
+        Doctor doc = sut.getDoctor(doctor.getId());
+
+        //Assert
+        assertNotNull(doc);
+        assertEquals(doctor,doc);
+        assertEquals(doctor.getId(),doc.getId());
+    }
+
+    /**
+     * @verifies return a list of doctors from the specified field
+     * @see DoctorManagerImpl#getDoctorsByField(String)
+     */
+    @Test
+    public void getDoctorsByField_shouldReturnAListOfDoctorsFromTheSpecifiedField() throws Exception {
+
+        //Arrange
+        DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
+        UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+        UserRepository userRepositoryMock = mock(UserRepository.class);
+        PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
+
+        DoctorEntity updateDoctor = DoctorEntity.builder()
+                .id(1L)
+                .name("Nia")
+                .field("neurology")
+                .email("nia@mail.com")
+                .build();
+
+        DoctorEntity doctorEntity = DoctorEntity.builder()
+                .id(2L)
+                .name("Ana")
+                .field("neurology")
+                .email("ana@mail.com")
+                .build();
+
+        Doctor doctor = Doctor.builder()
+                .id(1L)
+                .name("Nia")
+                .field("neurology")
+                .email("nia@mail.com")
+                .build();
+
+        Doctor doctor2 = Doctor.builder()
+                .id(2L)
+                .name("Ana")
+                .field("neurology")
+                .email("ana@mail.com")
+                .build();
+
+
+        DoctorManagerImpl sut = new DoctorManagerImpl(userEntityConverterMock,userRepositoryMock,doctorRepositoryMock,passwordEncoderMock);
+
+
+
+        List<DoctorEntity> doctorEntities = Arrays.asList(doctorEntity,updateDoctor);
+
+        when(userEntityConverterMock.fromDoctorEntity(updateDoctor)).thenReturn(doctor);
+        when(userEntityConverterMock.fromDoctorEntity(doctorEntity)).thenReturn(doctor2);
+        when(doctorRepositoryMock.getDoctorEntitiesByField(doctor.getField())).thenReturn(Optional.of(doctorEntities));
+
+        //Act
+
+        List<Doctor> doctors = sut.getDoctorsByField(doctor.getField());
+
+        //Assert
+        assertNotNull(doctors);
+        assertFalse(doctors.isEmpty());
+        assertEquals(2, doctors.size());
     }
 }
