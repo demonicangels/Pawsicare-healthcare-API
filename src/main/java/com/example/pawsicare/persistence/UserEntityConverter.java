@@ -14,9 +14,9 @@ public class UserEntityConverter {
 
     public User fromUserEntity (UserEntity entity){
         if (entity != null) {
-            if (entity.getRole().equals(0)) {
+            if (entity.getRole() == 0) {
                 return fromClientEntity((ClientEntity) entity);
-            } else if (entity.getRole().equals(1)) {
+            } else if (entity.getRole() == 1) {
                 return fromDoctorEntity((DoctorEntity) entity);
             } else {
                 throw new IllegalArgumentException("Unsupported entity type.");
@@ -29,9 +29,9 @@ public class UserEntityConverter {
     }
     public UserEntity toUserEntity (User user){
 
-        if (user.getRole().equals(0)) {
+        if (user.getRole() == Role.Client) {
             return toClientEntity((Client) user);
-        } else if (user.getRole().equals(1)) {
+        } else if (user.getRole() == Role.Doctor) {
             return toDoctorEntity((Doctor) user);
         } else {
             throw new IllegalArgumentException("Unsupported user type.");
