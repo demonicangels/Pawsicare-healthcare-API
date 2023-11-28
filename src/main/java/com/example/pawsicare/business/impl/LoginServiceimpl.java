@@ -36,6 +36,8 @@ public class LoginServiceimpl implements LoginService {
      * @return user when logged in
      * @should return a user when credentials are correct
      * @should return exception if credentials are not correct
+     * @should return doctor obj if a doctor is logged in
+     * @should return client obj if a client is logged in
      */
     public LoginResponse userLogin(LoginUserRequest loginRequest){
         String accessToken ="";
@@ -91,6 +93,7 @@ public class LoginServiceimpl implements LoginService {
      * @param user
      * @return accessToken
      * @should return an accessToken based on the loggedIn user
+     * @should return IllegalArgument exception when user is null
      */
     public String generateAccessToken(User user) {
         if (user == null) {

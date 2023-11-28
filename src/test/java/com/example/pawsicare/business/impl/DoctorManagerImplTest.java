@@ -155,7 +155,7 @@ class DoctorManagerImplTest {
      * @see DoctorManagerImpl#getDoctors()
      */
     @Test
-    public void getDoctors_shouldReturnAListWithAllDoctorsWhenDoctorsArePresent() throws Exception {
+    void getDoctors_shouldReturnAListWithAllDoctorsWhenDoctorsArePresent() throws Exception {
         //Arrange
        UserRepository userRepositoryMock = mock(UserRepository.class);
        DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);

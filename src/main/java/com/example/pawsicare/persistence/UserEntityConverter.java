@@ -13,13 +13,19 @@ import org.springframework.stereotype.Service;
 public class UserEntityConverter {
 
     public User fromUserEntity (UserEntity entity){
-        if (entity.getRole().equals(0)) {
-            return fromClientEntity((ClientEntity) entity);
-        } else if (entity.getRole().equals(1)) {
-            return fromDoctorEntity((DoctorEntity) entity);
-        } else {
-            throw new IllegalArgumentException("Unsupported entity type.");
+        if (entity != null) {
+            if (entity.getRole().equals(0)) {
+                return fromClientEntity((ClientEntity) entity);
+            } else if (entity.getRole().equals(1)) {
+                return fromDoctorEntity((DoctorEntity) entity);
+            } else {
+                throw new IllegalArgumentException("Unsupported entity type.");
+            }
         }
+        else{
+            throw new IllegalArgumentException("UserEntity cannot be null");
+        }
+
     }
     public UserEntity toUserEntity (User user){
 
