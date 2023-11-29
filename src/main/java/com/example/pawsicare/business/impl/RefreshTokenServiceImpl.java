@@ -33,7 +33,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .userInfo(user)
                 .token(accessTokenEncoder.generateAccessToken(new AccessTokenImpl(user.getId(),user.getRole())).toString())
-                .expiryDate(Instant.now().plusSeconds(10))
+                .expiryDate(Instant.now().plusSeconds(30))
                 .build();
 
         return refreshTokenEntityConverter.fromEntity(refreshTokenRepository.save(refreshTokenEntityConverter.toEntity(refreshToken)));

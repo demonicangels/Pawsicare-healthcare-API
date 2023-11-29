@@ -31,7 +31,7 @@ public class WebSecurityConfig {
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()   // CORS pre-flight requests should be public
-                                .requestMatchers(HttpMethod.POST,"/login", "/doctors", "/clients").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/auth", "/doctors", "/clients").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/doctors").permitAll()// Creating a student and login are public
                                 .anyRequest().authenticated()                                             // Everything else --> authentication required, which is Spring security's default behaviour
                 )

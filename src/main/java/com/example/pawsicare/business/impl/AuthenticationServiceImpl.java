@@ -4,20 +4,21 @@ import com.example.pawsicare.business.dto.ClientDTO;
 import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
+import com.example.pawsicare.business.responses.JWTResponse;
 import com.example.pawsicare.business.responses.LoginResponse;
 import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.AccessTokenEncoder;
+import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
-import com.example.pawsicare.domain.Client;
-import com.example.pawsicare.domain.Doctor;
-import com.example.pawsicare.domain.Role;
-import com.example.pawsicare.domain.User;
+import com.example.pawsicare.domain.*;
 import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
+import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
@@ -32,6 +33,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccessTokenEncoder accessTokenEncoder;
+    private final AccessTokenDecoderEncoderImpl accessTokenService;
+    private final RefreshTokenService refreshTokenService;
 
     /**
      * @return user when logged in
@@ -79,6 +82,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .role(client.getRole())
                     .build();
 
+
             accessToken = generateAccessToken(clientConverter.fromDTO(clientDTO));
         }
 
@@ -94,7 +98,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if(user != null){
           return true;
         }
-        return null;
+        return false;
     }
 
     public boolean passMatch(String rawPass, String encodedPass){
@@ -117,5 +121,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         return accessTokenEncoder.generateAccessToken(
                 new AccessTokenImpl(userId, role));
+    }
+
+    @Override
+    public JWTResponse authenticateAndGetToken (@RequestBody LoginUserRequest request){ //for when a refreshToken is needed
+
+        AccessToken accessToken = accessTokenService.decode(loginUser(request).getAccessToken());
+        if(accessToken != null){
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(accessToken.getId());
+            return JWTResponse.builder()
+                    .refreshToken(refreshToken.getToken())
+                    .accessToken(accessToken.toString()).build();
+        }
+        else {
+            throw new InvalidCredentialsException();
+        }
     }
 }

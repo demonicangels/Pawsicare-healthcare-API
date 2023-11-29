@@ -32,29 +32,16 @@ public class LoginController {
     private final RefreshTokenEntityConverter converter;
 
     @PostMapping
-    public ResponseEntity<JWTResponse> loginUser(@RequestBody @Valid LoginUserRequest loginUserRequest) {
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody @Valid LoginUserRequest loginUserRequest) {
         try{
 
-            JWTResponse response = authenticateAndGetToken(loginUserRequest);
+            LoginResponse response = authenticationService.loginUser(loginUserRequest);
 
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             throw new InvalidCredentialsException();
         }
-    }
-    private JWTResponse authenticateAndGetToken (@RequestBody LoginUserRequest request){
-
-           AccessToken accessToken = accessTokenService.decode(authenticationService.loginUser(request).getAccessToken());
-           if(accessToken != null){
-               RefreshToken refreshToken = refreshTokenService.createRefreshToken(accessToken.getId());
-               return JWTResponse.builder()
-                       .refreshToken(refreshToken.getToken())
-                       .accessToken(accessToken.toString()).build();
-           }
-           else {
-               throw new InvalidCredentialsException();
-           }
     }
 
     @PostMapping("/refreshToken")

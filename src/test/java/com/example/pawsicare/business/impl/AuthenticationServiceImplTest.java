@@ -6,11 +6,13 @@ import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.responses.LoginResponse;
 import com.example.pawsicare.business.security.token.AccessTokenEncoder;
+import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
+import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
@@ -208,6 +210,7 @@ class AuthenticationServiceImplTest {
     @Test
     void generateAccessToken_shouldReturnIllegalArgumentExceptionWhenUserIsNull() throws Exception {
 
+        //TODO fix this test to the new authentication classes (do stubbing for AccessTokenEncoder, AccessTokenDecoderEncoderImpl, RefreshTokenService)
         try{
             //Arrange
             UserRepository userRepositoryMock = mock(UserRepository.class);
@@ -216,8 +219,10 @@ class AuthenticationServiceImplTest {
             UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
             PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
             AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
+            AccessTokenDecoderEncoderImpl accessTokenDecoderEncoder = mock(AccessTokenDecoderEncoderImpl.class);
+            RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
 
-            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock, clientConverterMock, userEntityConverterMock, userRepositoryMock, passwordEncoder, accessTokenEncoder);
+            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock, clientConverterMock, userEntityConverterMock, userRepositoryMock, passwordEncoder, accessTokenEncoder,accessTokenDecoderEncoder,refreshTokenService);
 
             when(sut.generateAccessToken(null)).thenThrow(new IllegalArgumentException("User cannot be null"));
 
