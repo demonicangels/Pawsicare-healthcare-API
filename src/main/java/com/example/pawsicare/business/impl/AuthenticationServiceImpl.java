@@ -5,13 +5,14 @@ import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.responses.LoginResponse;
+import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.AccessTokenEncoder;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
-import com.example.pawsicare.domain.managerinterfaces.LoginService;
+import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class LoginServiceimpl implements LoginService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final DoctorConverter doctorConverter;
     private final ClientConverter clientConverter;
@@ -39,9 +40,9 @@ public class LoginServiceimpl implements LoginService {
      * @should return doctor obj if a doctor is logged in
      * @should return client obj if a client is logged in
      */
-    public LoginResponse userLogin(LoginUserRequest loginRequest){
+    @Override
+    public LoginResponse loginUser(LoginUserRequest loginRequest){
         String accessToken ="";
-
 
         Optional<User>  loggedInUser = Optional.ofNullable(userRepository.findUserEntityByEmail(loginRequest.getEmail()).map(converter :: fromUserEntity).orElse(null));
 
@@ -85,6 +86,17 @@ public class LoginServiceimpl implements LoginService {
                 .accessToken(accessToken)
                 .build();
     }
+
+    @Override
+    public Boolean authenticateUser(Long usrId) {
+        User user = converter.fromUserEntity(userRepository.getUserEntityById(usrId).get());
+
+        if(user != null){
+          return true;
+        }
+        return null;
+    }
+
     public boolean passMatch(String rawPass, String encodedPass){
         return passwordEncoder.matches(rawPass, encodedPass);
     }
@@ -103,7 +115,7 @@ public class LoginServiceimpl implements LoginService {
         Long userId = user.getId();
         Role role = user.getRole();
 
-        return accessTokenEncoder.encode(
+        return accessTokenEncoder.generateAccessToken(
                 new AccessTokenImpl(userId, role));
     }
 }

@@ -22,7 +22,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AuthenticationRequestFilter extends OncePerRequestFilter {
+public class AuthenticationService extends OncePerRequestFilter {
 
     private static final String SPRING_SECURITY_ROLE_PREFIX = "ROLE_";
 

@@ -5,11 +5,9 @@ import com.example.pawsicare.business.security.token.AccessTokenEncoder;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.RefreshToken;
 import com.example.pawsicare.domain.User;
-import com.example.pawsicare.domain.managerinterfaces.LoginService;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.UserEntityConverter;
-import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -35,20 +32,24 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .userInfo(user)
-                .token(accessTokenEncoder.encode(new AccessTokenImpl(user.getId(),user.getRole())))
+                .token(accessTokenEncoder.generateAccessToken(new AccessTokenImpl(user.getId(),user.getRole())).toString())
                 .expiryDate(Instant.now().plusSeconds(10))
                 .build();
 
-        return refreshTokenRepository.save(refreshTokenEntityConverter.toEntity(refreshToken))
+        return refreshTokenEntityConverter.fromEntity(refreshTokenRepository.save(refreshTokenEntityConverter.toEntity(refreshToken)));
     }
 
     @Override
     public Optional<RefreshToken> getByToken(String token) {
-        return Optional.empty();
+        return Optional.of(refreshTokenEntityConverter.fromEntity(refreshTokenRepository.findByToken(token).get()));
     }
 
     @Override
     public RefreshToken verifyExpiration(RefreshToken token) {
-        return null;
+        if(token.getExpiryDate().compareTo(Instant.now()) < 0){
+            refreshTokenRepository.delete(refreshTokenEntityConverter.toEntity(token));
+            throw new RuntimeException(token.getToken() + " Refresh token is expired. Please make a new login..!");
+        }
+        return token;
     }
 }

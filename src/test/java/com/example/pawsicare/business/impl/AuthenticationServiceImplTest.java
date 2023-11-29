@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.InstanceOfAssertFactories.STRING;
 import static org.hibernate.validator.internal.util.Contracts.assertNotEmpty;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,13 +27,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-class LoginServiceimplTest {
+class AuthenticationServiceImplTest {
 
     //partial integration tests
 
     /**
      * @verifies return a user when credentials are correct
-     * @see LoginServiceimpl#userLogin(LoginUserRequest)
+     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
      */
     @Test
      void userLogin_shouldReturnAUserWhenCredentialsAreCorrect() throws Exception {
@@ -66,7 +65,7 @@ class LoginServiceimplTest {
                 .email("nikol@mail.com")
                 .password("123").build();
 
-        LoginServiceimpl sut = new LoginServiceimpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder);
+        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder);
 
         when(userRepositoryMock.findUserEntityByEmail("nikol@mail.com")).thenReturn(Optional.ofNullable(userEntity));
         when(userEntityConverterMock.fromUserEntity(userEntity)).thenReturn(Client.builder()
@@ -84,14 +83,14 @@ class LoginServiceimplTest {
         when(sut.passMatch("123","123")).thenReturn(true);
         when(sut.passMatch("123", "123")).thenReturn(true);
         when(sut.generateAccessToken(clientConverterMock.fromDTO(userDTO))).thenReturn("947563794");
-        when(accessTokenEncoder.encode(new AccessTokenImpl(1L, Role.Client))).thenReturn("947563794");
+        when(accessTokenEncoder.generateAccessToken(new AccessTokenImpl(1L, Role.Client))).thenReturn("947563794");
 
         //Act
         LoginUserRequest request = LoginUserRequest.builder()
                 .email(user.getEmail())
                 .password(user.getPassword()).build();
 
-        LoginResponse response = sut.userLogin(request);
+        LoginResponse response = sut.loginUser(request);
 
         //Assert
         String accessToken = response.getAccessToken();
@@ -101,7 +100,7 @@ class LoginServiceimplTest {
 
     /**
      * @verifies return exception if credentials are not correct
-     * @see LoginServiceimpl#userLogin(LoginUserRequest)
+     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
      */
     @Test
     void userLogin_shouldReturnExceptionIfCredentialsAreNotCorrect() throws Exception {
@@ -132,7 +131,7 @@ class LoginServiceimplTest {
                     .email("nikol@mail.com")
                     .password("123").build();
 
-            LoginServiceimpl sut = new LoginServiceimpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder);
+            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder);
 
             when(userRepositoryMock.findUserEntityByEmail("nikol@mail.com")).thenReturn(Optional.ofNullable(userEntity));
             when(userEntityConverterMock.fromUserEntity(userEntity)).thenReturn(Client.builder()
@@ -154,11 +153,11 @@ class LoginServiceimplTest {
                     .email(user.getEmail())
                     .password("999").build();
 
-            LoginResponse response = sut.userLogin(request);
+            LoginResponse response = sut.loginUser(request);
 
             //Assert
             assertThat(sut.passMatch("123","999")).isFalse();
-            assertThrows(InvalidCredentialsException.class, () -> sut.userLogin(request));
+            assertThrows(InvalidCredentialsException.class, () -> sut.loginUser(request));
 
         }catch (InvalidCredentialsException e){
 
@@ -167,7 +166,7 @@ class LoginServiceimplTest {
 
     /**
      * @verifies return an accessToken based on the loggedIn user
-     * @see LoginServiceimpl#generateAccessToken(User)
+     * @see AuthenticationServiceImpl#generateAccessToken(User)
      */
     @Test
     void generateAccessToken_shouldReturnAnAccessTokenBasedOnTheLoggedInUser() throws Exception {
@@ -181,7 +180,7 @@ class LoginServiceimplTest {
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
         AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
 
-        LoginServiceimpl sut = new LoginServiceimpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder);
+        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder);
 
         User user = Client.builder()
                 .id(1L)
@@ -204,7 +203,7 @@ class LoginServiceimplTest {
 
     /**
      * @verifies return IllegalArgument exception when user is null
-     * @see LoginServiceimpl#generateAccessToken(User)
+     * @see AuthenticationServiceImpl#generateAccessToken(User)
      */
     @Test
     void generateAccessToken_shouldReturnIllegalArgumentExceptionWhenUserIsNull() throws Exception {
@@ -218,7 +217,7 @@ class LoginServiceimplTest {
             PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
             AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
 
-            LoginServiceimpl sut = new LoginServiceimpl(doctorConverterMock, clientConverterMock, userEntityConverterMock, userRepositoryMock, passwordEncoder, accessTokenEncoder);
+            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock, clientConverterMock, userEntityConverterMock, userRepositoryMock, passwordEncoder, accessTokenEncoder);
 
             when(sut.generateAccessToken(null)).thenThrow(new IllegalArgumentException("User cannot be null"));
 
@@ -234,7 +233,7 @@ class LoginServiceimplTest {
 
     /**
      * @verifies return doctor obj if a doctor is logged in
-     * @see LoginServiceimpl#userLogin(LoginUserRequest)
+     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
      */
     @Test
     void userLogin_shouldReturnDoctorObjIfADoctorIsLoggedIn() throws Exception {
@@ -247,7 +246,7 @@ class LoginServiceimplTest {
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
         AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
 
-        LoginServiceimpl sut = new LoginServiceimpl(doctorConverterMock, clientConverterMock, userEntityConverterMock, userRepositoryMock, passwordEncoder, accessTokenEncoder);
+        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock, clientConverterMock, userEntityConverterMock, userRepositoryMock, passwordEncoder, accessTokenEncoder);
 
         UserEntity userEntity = UserEntity.builder()
                 .id(1L)
@@ -286,7 +285,7 @@ class LoginServiceimplTest {
         when(sut.generateAccessToken(user)).thenReturn("mockedAccessToken");
 
         // Act
-        String accessToken = sut.userLogin(loginRequest).getAccessToken();
+        String accessToken = sut.loginUser(loginRequest).getAccessToken();
 
         // Assert
         assertEquals("mockedAccessToken", accessToken);
@@ -295,7 +294,7 @@ class LoginServiceimplTest {
 
     /**
      * @verifies return client obj if a client is logged in
-     * @see LoginServiceimpl#userLogin(LoginUserRequest)
+     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
      */
     @Test
     void userLogin_shouldReturnClientObjIfAClientIsLoggedIn() throws Exception {
@@ -307,7 +306,7 @@ class LoginServiceimplTest {
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
         AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
 
-        LoginServiceimpl sut = new LoginServiceimpl(doctorConverterMock, clientConverterMock, userEntityConverterMock, userRepositoryMock, passwordEncoder, accessTokenEncoder);
+        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock, clientConverterMock, userEntityConverterMock, userRepositoryMock, passwordEncoder, accessTokenEncoder);
 
         UserEntity userEntity = UserEntity.builder()
                 .id(1L)
@@ -345,7 +344,7 @@ class LoginServiceimplTest {
         when(sut.generateAccessToken(user)).thenReturn("mockedAccessToken");
 
         // Act
-        String accessToken = sut.userLogin(loginRequest).getAccessToken();
+        String accessToken = sut.loginUser(loginRequest).getAccessToken();
 
         // Assert
         assertEquals("mockedAccessToken", accessToken);

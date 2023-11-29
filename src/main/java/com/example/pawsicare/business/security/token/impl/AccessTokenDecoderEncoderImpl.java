@@ -3,13 +3,16 @@ package com.example.pawsicare.business.security.token.impl;
 import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.exception.InvalidAccessTokenException;
 import com.example.pawsicare.domain.Role;
+import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.business.security.token.AccessTokenEncoder;
@@ -20,21 +23,54 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import static java.lang.Long.parseLong;
 
 @Service
-public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, AccessTokenDecoder {
+public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, AccessTokenDecoder {
     private final Key key;
 
-    public AccessTokenEncoderDecoderImpl(@Value("${jwt.secret}") String secretKey) {
+    public AccessTokenDecoderEncoderImpl(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public String extractId(AccessToken token) {
+        return extractClaim(token.toString(), Claims::getSubject);
+    }
+
+    public Date extractExpiration(AccessToken token) {
+        return extractClaim(token.toString(), Claims::getExpiration);
+    }
+
+    private  <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private Boolean isTokenExpired(AccessToken token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    public Boolean validateToken(AccessToken token, UserDetails userDetails) {
+        final String username = extractId(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
     @Override
-    public String encode(AccessToken accessToken) {
+    public String generateAccessToken(AccessToken accessToken) {
         Map<String, Object> claimsMap = new HashMap<>();
+
         if (accessToken.getRole() != null){
             claimsMap.put("role", accessToken.getRole().name());
         }
@@ -43,6 +79,7 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
         }
 
         Instant now = Instant.now();
+
         return Jwts.builder()
                 .setSubject(accessToken.getId().toString())
                 .setIssuedAt(Date.from(now))
@@ -57,6 +94,7 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
         try {
             Jwt<?, Claims> jwt = Jwts.parserBuilder().setSigningKey(key).build()
                     .parseClaimsJws(accessTokenEncoded);
+
             Claims claims = jwt.getBody();
 
             String strRole = (String)claims.get("role");

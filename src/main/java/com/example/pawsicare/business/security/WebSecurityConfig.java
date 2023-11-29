@@ -1,6 +1,6 @@
 package com.example.pawsicare.business.security;
 
-import com.example.pawsicare.business.security.auth.AuthenticationRequestFilter;
+import com.example.pawsicare.business.security.auth.AuthenticationService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,7 +23,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
                                            AuthenticationEntryPoint authenticationEntryPoint,
-                                           AuthenticationRequestFilter authenticationRequestFilter) throws Exception {
+                                           AuthenticationService authenticationService) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                                 .anyRequest().authenticated()                                             // Everything else --> authentication required, which is Spring security's default behaviour
                 )
                 .exceptionHandling(configure -> configure.authenticationEntryPoint(authenticationEntryPoint))
-                .addFilterBefore(authenticationRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationService, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 

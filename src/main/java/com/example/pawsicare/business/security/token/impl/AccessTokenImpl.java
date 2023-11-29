@@ -1,13 +1,12 @@
 package com.example.pawsicare.business.security.token.impl;
 
-import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.domain.Role;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @EqualsAndHashCode
 @Getter
-public class AccessTokenImpl implements AccessToken {
+public class AccessTokenImpl implements com.example.pawsicare.business.security.token.AccessToken {
 
     private final Long userId;
     private final Role role;

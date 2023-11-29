@@ -1,11 +1,8 @@
 package com.example.pawsicare.persistence;
 
-import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.RefreshToken;
 import com.example.pawsicare.persistence.entity.RefreshTokenEntity;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
 
 @Service
 public class RefreshTokenEntityConverter {
