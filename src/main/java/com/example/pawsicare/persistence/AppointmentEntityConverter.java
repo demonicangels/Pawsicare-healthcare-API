@@ -3,10 +3,11 @@ package com.example.pawsicare.persistence;
 import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.persistence.entity.AppointmentEntity;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AppointmentEntityConverter {
 
     private final UserEntityConverter converter;

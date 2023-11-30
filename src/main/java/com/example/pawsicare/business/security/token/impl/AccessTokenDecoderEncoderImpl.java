@@ -19,6 +19,7 @@ import com.example.pawsicare.business.security.token.AccessTokenEncoder;
 
 import java.security.Key;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,7 +69,7 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
     }
 
     @Override
-    public String generateAccessToken(AccessToken accessToken) {
+    public String generateJWT(AccessToken accessToken) {
         Map<String, Object> claimsMap = new HashMap<>();
 
         if (accessToken.getRole() != null){
@@ -99,8 +100,13 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
 
             String strRole = (String)claims.get("role");
             Role role = Role.valueOf(strRole);
+            Date expiration =  claims.getExpiration();
 
-            return new AccessTokenImpl(parseLong(claims.getSubject()), role);
+            return AccessTokenImpl.builder()
+                    .userId(parseLong(claims.getSubject()))
+                    .role(role)
+                    .expiration(expiration).build();
+
         } catch (JwtException e) {
             throw new InvalidAccessTokenException(e.getMessage());
         }

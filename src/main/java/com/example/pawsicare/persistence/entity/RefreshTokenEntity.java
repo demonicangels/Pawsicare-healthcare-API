@@ -4,9 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
-@Table(name = "authTokens")
+@Table(name = "auth_tokens")
 @Data
 @Builder
 @AllArgsConstructor
@@ -15,8 +16,10 @@ public class RefreshTokenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "token")
     private String token;
-    private Instant expiryDate;
+    @Column(name = "expiry_date")
+    private Date expiryDate;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -32,8 +34,11 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .userInfo(user)
-                .token(accessTokenEncoder.generateAccessToken(new AccessTokenImpl(user.getId(),user.getRole())).toString())
-                .expiryDate(Instant.now().plusSeconds(30))
+                .token(accessTokenEncoder.generateJWT(AccessTokenImpl.builder()
+                        .userId(user.getId())
+                        .role(user.getRole()).build())
+                        .toString())
+                .expiryDate(Date.from(Instant.now().plus(30, ChronoUnit.SECONDS)))
                 .build();
 
         return refreshTokenEntityConverter.fromEntity(refreshTokenRepository.save(refreshTokenEntityConverter.toEntity(refreshToken)));
@@ -46,7 +51,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public RefreshToken verifyExpiration(RefreshToken token) {
-        if(token.getExpiryDate().compareTo(Instant.now()) < 0){
+        if(token.getExpiryDate().compareTo(token.getExpiryDate()) < 0){
             refreshTokenRepository.delete(refreshTokenEntityConverter.toEntity(token));
             throw new RuntimeException(token.getToken() + " Refresh token is expired. Please make a new login..!");
         }

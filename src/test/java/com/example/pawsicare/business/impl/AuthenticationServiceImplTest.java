@@ -13,8 +13,11 @@ import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
+import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.UserEntityConverter;
+import com.example.pawsicare.persistence.entity.RefreshTokenEntity;
 import com.example.pawsicare.persistence.entity.UserEntity;
+import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -47,7 +50,10 @@ class AuthenticationServiceImplTest {
         ClientConverter clientConverterMock = mock(ClientConverter.class);
         UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-        AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
+        AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
+        RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
+        RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
+        RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
         UserEntity userEntity = UserEntity.builder()
                 .id(1L)
@@ -67,7 +73,7 @@ class AuthenticationServiceImplTest {
                 .email("nikol@mail.com")
                 .password("123").build();
 
-        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder);
+        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,refreshTokenEntityConverter,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository);
 
         when(userRepositoryMock.findUserEntityByEmail("nikol@mail.com")).thenReturn(Optional.ofNullable(userEntity));
         when(userEntityConverterMock.fromUserEntity(userEntity)).thenReturn(Client.builder()
@@ -85,7 +91,9 @@ class AuthenticationServiceImplTest {
         when(sut.passMatch("123","123")).thenReturn(true);
         when(sut.passMatch("123", "123")).thenReturn(true);
         when(sut.generateAccessToken(clientConverterMock.fromDTO(userDTO))).thenReturn("947563794");
-        when(accessTokenEncoder.generateAccessToken(new AccessTokenImpl(1L, Role.Client))).thenReturn("947563794");
+        when(accessTokenEncoder.generateJWT( AccessTokenImpl.builder()
+                .userId(1L)
+                .role(Role.Client).build())).thenReturn("947563794");
 
         //Act
         LoginUserRequest request = LoginUserRequest.builder()
@@ -113,7 +121,10 @@ class AuthenticationServiceImplTest {
             ClientConverter clientConverterMock = mock(ClientConverter.class);
             UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
             PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-            AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
+            AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
+            RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
+            RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
+            RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
             UserEntity userEntity = UserEntity.builder()
                     .id(1L)
@@ -133,7 +144,7 @@ class AuthenticationServiceImplTest {
                     .email("nikol@mail.com")
                     .password("123").build();
 
-            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder);
+            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,refreshTokenEntityConverter,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository);
 
             when(userRepositoryMock.findUserEntityByEmail("nikol@mail.com")).thenReturn(Optional.ofNullable(userEntity));
             when(userEntityConverterMock.fromUserEntity(userEntity)).thenReturn(Client.builder()
@@ -180,9 +191,12 @@ class AuthenticationServiceImplTest {
         ClientConverter clientConverterMock = mock(ClientConverter.class);
         UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-        AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
+        AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
+        RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
+        RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
+        RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder);
+        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,refreshTokenEntityConverter,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository);
 
         User user = Client.builder()
                 .id(1L)
@@ -218,11 +232,12 @@ class AuthenticationServiceImplTest {
             ClientConverter clientConverterMock = mock(ClientConverter.class);
             UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
             PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-            AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
-            AccessTokenDecoderEncoderImpl accessTokenDecoderEncoder = mock(AccessTokenDecoderEncoderImpl.class);
+            AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
             RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
+            RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
+            RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock, clientConverterMock, userEntityConverterMock, userRepositoryMock, passwordEncoder, accessTokenEncoder,accessTokenDecoderEncoder,refreshTokenService);
+            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,refreshTokenEntityConverter,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository);
 
             when(sut.generateAccessToken(null)).thenThrow(new IllegalArgumentException("User cannot be null"));
 
@@ -249,9 +264,12 @@ class AuthenticationServiceImplTest {
         ClientConverter clientConverterMock = mock(ClientConverter.class);
         UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-        AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
+        AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
+        RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
+        RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
+        RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock, clientConverterMock, userEntityConverterMock, userRepositoryMock, passwordEncoder, accessTokenEncoder);
+        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,refreshTokenEntityConverter,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository);
 
         UserEntity userEntity = UserEntity.builder()
                 .id(1L)
@@ -309,9 +327,12 @@ class AuthenticationServiceImplTest {
         ClientConverter clientConverterMock = mock(ClientConverter.class);
         UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-        AccessTokenEncoder accessTokenEncoder = mock(AccessTokenEncoder.class);
+        AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
+        RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
+        RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
+        RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock, clientConverterMock, userEntityConverterMock, userRepositoryMock, passwordEncoder, accessTokenEncoder);
+        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,refreshTokenEntityConverter,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository);
 
         UserEntity userEntity = UserEntity.builder()
                 .id(1L)

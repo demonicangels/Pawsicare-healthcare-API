@@ -37,6 +37,9 @@ public class LoginController {
 
             LoginResponse response = authenticationService.loginUser(loginUserRequest);
 
+
+
+
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
@@ -53,7 +56,7 @@ public class LoginController {
                     Boolean isUserAuthenticated = authenticationService.authenticateUser(userInfo.getId());
                     String accessToken = "";
                     if (isUserAuthenticated) {
-                        accessToken = accessTokenService.generateAccessToken(accessTokenService.decode(request.getAccessToken()));
+                        accessToken = accessTokenService.generateJWT(accessTokenService.decode(request.getAccessToken()));
                     }
                     return JWTResponse.builder()
                             .accessToken(accessToken)
