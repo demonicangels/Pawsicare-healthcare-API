@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -90,7 +89,7 @@ public class DoctorManagerImpl implements DoctorManager {
     public List<Doctor> getDoctorsByField(String field) {
 
         return doctorRepository.getDoctorEntitiesByField(field)
-                .map(list -> list.stream().map(converter::fromDoctorEntity).collect(Collectors.toList()))
+                .map(list -> list.stream().map(converter::fromDoctorEntity).toList())
                 .orElse(Collections.emptyList());
     }
 }

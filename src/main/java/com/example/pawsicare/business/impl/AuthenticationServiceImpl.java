@@ -5,15 +5,12 @@ import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.responses.JWTResponse;
-import com.example.pawsicare.business.responses.LoginResponse;
 import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.*;
 import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
-import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
-import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +27,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final DoctorConverter doctorConverter;
     private final ClientConverter clientConverter;
     private final UserEntityConverter userEntityConverter;
-    private final RefreshTokenEntityConverter refreshTokenEntityConverter;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccessTokenDecoderEncoderImpl accessTokenService;
     private final RefreshTokenService refreshTokenService;
-//    private final RefreshTokenRepository refreshTokenRepository;
 
     /**
      * @return user when logged in
@@ -77,6 +72,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             accessToken = generateAccessToken(doctor);
 
             refreshToken = refreshTokenService.createRefreshToken(doctor.getId());
+            refresh = refreshTokenService.encode(refreshToken);
 
 
         } else if (loggedInUser.get() instanceof Client client) {

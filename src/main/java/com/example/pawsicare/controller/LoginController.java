@@ -4,7 +4,6 @@ import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.requests.RefreshTokenRequest;
 import com.example.pawsicare.business.responses.JWTResponse;
-import com.example.pawsicare.business.responses.LoginResponse;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.domain.RefreshToken;
 import com.example.pawsicare.domain.User;

@@ -1,26 +1,20 @@
 package com.example.pawsicare.business.impl;
 
 
-import com.example.pawsicare.business.security.token.AccessToken;
+
 import com.example.pawsicare.business.security.token.AccessTokenEncoder;
-import com.example.pawsicare.business.security.token.exception.InvalidAccessTokenException;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.RefreshToken;
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
-import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.UserEntityConverter;
-import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +24,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.lang.Long.parseLong;
 
@@ -58,21 +51,15 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     public RefreshToken createRefreshToken(Long usrId) {
         User user = userConverter.fromUserEntity(userRepository.getUserEntityById(usrId).get());
 
-        RefreshToken refreshToken = RefreshToken.builder()
+
+        return RefreshToken.builder()
                 .userInfo(user)
                 .token(accessTokenEncoder.generateJWT(AccessTokenImpl.builder()
                         .userId(user.getId())
-                        .role(user.getRole()).build())
-                        .toString())
+                        .role(user.getRole()).build()))
                 .expiryDate(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
                 .build();
-
-
-
-        return refreshToken;
     }
-
-
 
     @Override
     public RefreshToken verifyExpiration(RefreshToken token) {
