@@ -5,10 +5,9 @@ import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.requests.RefreshTokenRequest;
 import com.example.pawsicare.business.responses.JWTResponse;
 import com.example.pawsicare.business.responses.LoginResponse;
-import com.example.pawsicare.business.security.token.AccessToken;
-import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.domain.RefreshToken;
+import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
@@ -16,7 +15,6 @@ import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,15 +30,13 @@ public class LoginController {
     private final RefreshTokenEntityConverter converter;
 
     @PostMapping
-    public ResponseEntity<LoginResponse> loginUser(@RequestBody @Valid LoginUserRequest loginUserRequest) {
+    public ResponseEntity<JWTResponse> loginUser(@RequestBody @Valid LoginUserRequest loginUserRequest) {
         try{
 
-            LoginResponse response = authenticationService.loginUser(loginUserRequest);
-
-
-
+            JWTResponse response = authenticationService.loginUser(loginUserRequest);
 
             return ResponseEntity.ok(response);
+
 
         } catch (Exception e) {
             throw new InvalidCredentialsException();
@@ -49,18 +45,25 @@ public class LoginController {
 
     @PostMapping("/refreshToken")
     public JWTResponse refreshToken (@RequestBody RefreshTokenRequest request) {
-        return refreshTokenRepository.findByToken(request.getAccessToken())
-                .map(converter::fromEntity)
-                .map(refreshTokenService::verifyExpiration)
-                .map(RefreshToken::getUserInfo).map(userInfo -> {
-                    Boolean isUserAuthenticated = authenticationService.authenticateUser(userInfo.getId());
-                    String accessToken = "";
-                    if (isUserAuthenticated) {
-                        accessToken = accessTokenService.generateJWT(accessTokenService.decode(request.getAccessToken()));
-                    }
-                    return JWTResponse.builder()
-                            .accessToken(accessToken)
-                            .refreshToken(request.getAccessToken()).build();
-                }).orElseThrow(() -> new RuntimeException("Refresh Token is not in DB..!!"));
+        RefreshToken refreshToken = refreshTokenService.decode(request.getRefreshToken());
+        RefreshToken verifiedToken = refreshTokenService.verifyExpiration(refreshToken);
+
+        User userInfo = verifiedToken.getUserInfo();
+
+        Boolean isUserAuthenticated = authenticationService.authenticateUser(userInfo.getId());
+        String accessToken = isUserAuthenticated ?
+                accessTokenService.generateJWT(accessTokenService.decode(request.getRefreshToken())) :
+                "";
+
+        JWTResponse jwtResponse = JWTResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(request.getRefreshToken())
+                .build();
+
+        if (accessToken.isEmpty()) {
+            throw new RuntimeException("Access token generation failed");
+        }
+
+        return jwtResponse;
     }
 }

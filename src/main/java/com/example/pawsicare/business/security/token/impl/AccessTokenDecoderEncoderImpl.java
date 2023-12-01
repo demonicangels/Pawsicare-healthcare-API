@@ -69,7 +69,7 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
     }
 
     @Override
-    public String generateJWT(AccessToken accessToken) {
+    public String generateJWT(AccessToken accessToken) { //do one for the refresh token
         Map<String, Object> claimsMap = new HashMap<>();
 
         if (accessToken.getRole() != null){

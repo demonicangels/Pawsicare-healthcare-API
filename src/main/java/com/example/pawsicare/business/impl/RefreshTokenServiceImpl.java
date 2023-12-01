@@ -1,32 +1,58 @@
 package com.example.pawsicare.business.impl;
 
 
+import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.AccessTokenEncoder;
+import com.example.pawsicare.business.security.token.exception.InvalidAccessTokenException;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
+import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.RefreshToken;
+import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.Long.parseLong;
+
 @Service
-@AllArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private final UserRepository userRepository;
     private final UserEntityConverter userConverter;
     private final AccessTokenEncoder accessTokenEncoder;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final RefreshTokenEntityConverter refreshTokenEntityConverter;
+
+    private final Key key;
+
+    public RefreshTokenServiceImpl(@Value("${jwt.secret}") String secretKey,
+                                   UserRepository userRepository,
+                                   UserEntityConverter userEntityConverter,
+                                   AccessTokenEncoder accessTokenEncoder) {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.userRepository = userRepository;
+        this.userConverter = userEntityConverter;
+        this.accessTokenEncoder = accessTokenEncoder;
+    }
 
     @Override
     public RefreshToken createRefreshToken(Long usrId) {
@@ -38,23 +64,67 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                         .userId(user.getId())
                         .role(user.getRole()).build())
                         .toString())
-                .expiryDate(Date.from(Instant.now().plus(30, ChronoUnit.SECONDS)))
+                .expiryDate(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
                 .build();
 
-        return refreshTokenEntityConverter.fromEntity(refreshTokenRepository.save(refreshTokenEntityConverter.toEntity(refreshToken)));
+
+
+        return refreshToken;
     }
 
-    @Override
-    public Optional<RefreshToken> getByToken(String token) {
-        return Optional.of(refreshTokenEntityConverter.fromEntity(refreshTokenRepository.findByToken(token).get()));
-    }
+
 
     @Override
     public RefreshToken verifyExpiration(RefreshToken token) {
         if(token.getExpiryDate().compareTo(token.getExpiryDate()) < 0){
-            refreshTokenRepository.delete(refreshTokenEntityConverter.toEntity(token));
             throw new RuntimeException(token.getToken() + " Refresh token is expired. Please make a new login..!");
         }
         return token;
+    }
+
+    @Override
+    public String encode (RefreshToken refreshToken) { //do one for the refresh token
+        Map<String, Object> claimsMap = new HashMap<>();
+
+        if (refreshToken.getUserInfo().getRole() != null){
+            claimsMap.put("role", refreshToken.getUserInfo().getRole().name());
+        }
+        if (refreshToken.getUserInfo().getId() != null) {
+            claimsMap.put("userId", refreshToken.getUserInfo().getId());
+        }
+
+        Instant now = Instant.now();
+
+        return Jwts.builder()
+                .setSubject(refreshToken.getUserInfo().getId().toString())
+                .setIssuedAt(Date.from(now))
+                .setExpiration(refreshToken.getExpiryDate())
+                .addClaims(claimsMap)
+                .signWith(key)
+                .compact();
+    }
+
+    @Override
+    public RefreshToken decode (String refreshToken){
+
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(refreshToken)
+                .getBody();
+
+        // Extract information from JWT claims
+        Long userId = parseLong(claims.get("userId").toString());
+        Role role = Role.valueOf(claims.get("role", String.class));
+
+        User user = Client.builder()
+                .id(userId)
+                .role(role).build();
+
+        return RefreshToken.builder()
+                .userInfo(user)
+                .token(refreshToken)
+                .expiryDate(claims.getExpiration())
+                .build();
     }
 }

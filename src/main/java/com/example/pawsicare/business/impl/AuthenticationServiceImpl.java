@@ -7,7 +7,6 @@ import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.responses.JWTResponse;
 import com.example.pawsicare.business.responses.LoginResponse;
 import com.example.pawsicare.business.security.token.AccessToken;
-import com.example.pawsicare.business.security.token.AccessTokenEncoder;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.*;
@@ -17,9 +16,7 @@ import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import com.example.pawsicare.persistence.UserEntityConverter;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,30 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AccessTokenDecoderEncoderImpl accessTokenService;
     private final RefreshTokenService refreshTokenService;
-    private final RefreshTokenRepository refreshTokenRepository;
-
-//    @Autowired
-//    public AuthenticationServiceImpl(DoctorConverter doctorConverter,
-//                                     ClientConverter clientConverter,
-//                                     UserEntityConverter userEntityConverter,
-//                                     RefreshTokenEntityConverter refreshTokenEntityConverter,
-//                                     UserRepository userRepository,
-//                                     PasswordEncoder passwordEncoder,
-//                                     AccessTokenDecoderEncoderImpl accessTokenService,
-//                                     RefreshTokenService refreshTokenService,
-//                                     RefreshTokenRepository refreshTokenRepository){
-//
-//        this.doctorConverter = doctorConverter;
-//        this.clientConverter = clientConverter;
-//        this.userEntityConverter = userEntityConverter;
-//        this.refreshTokenEntityConverter = refreshTokenEntityConverter;
-//        this.userRepository = userRepository;
-//        this.passwordEncoder = passwordEncoder;
-//        this.accessTokenService = accessTokenService;
-//        this.refreshTokenService = refreshTokenService;
-//        this.refreshTokenRepository = refreshTokenRepository;
-//    }
-
+//    private final RefreshTokenRepository refreshTokenRepository;
 
     /**
      * @return user when logged in
@@ -72,8 +46,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @should return client obj if a client is logged in
      */
     @Override
-    public LoginResponse loginUser(LoginUserRequest loginRequest){
+    public JWTResponse loginUser(LoginUserRequest loginRequest){
         String accessToken ="";
+        RefreshToken refreshToken = null;
+        String refresh = "";
 
         Optional<User>  loggedInUser = Optional.ofNullable(userRepository.findUserEntityByEmail(loginRequest.getEmail()).map(userEntityConverter :: fromUserEntity).orElse(null));
 
@@ -100,15 +76,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             accessToken = generateAccessToken(doctor);
 
-            RefreshToken saveTokenInDb = RefreshToken.builder()
-                    .userInfo(doctor)
-                    .token(accessToken)
-                    .expiryDate(accessTokenService.decode(accessToken).getExpiration())
-                    .build();
+            refreshToken = refreshTokenService.createRefreshToken(doctor.getId());
 
-            refreshTokenRepository.save(refreshTokenEntityConverter.toEntity(saveTokenInDb));
 
         } else if (loggedInUser.get() instanceof Client client) {
+
             client = (Client) loggedInUser.get();
 
             ClientDTO clientDTO = ClientDTO.builder()
@@ -124,17 +96,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             accessToken = generateAccessToken(client1);
 
-            RefreshToken saveTokenInDb = RefreshToken.builder()
-                    .userInfo(client1)
-                    .token(accessToken)
-                    .expiryDate(accessTokenService.decode(accessToken).getExpiration())
-                    .build();
+            refreshToken = refreshTokenService.createRefreshToken(client1.getId());
+            refresh = refreshTokenService.encode(refreshToken);
 
-            refreshTokenRepository.save(refreshTokenEntityConverter.toEntity(saveTokenInDb));
         }
 
-        return LoginResponse.builder()
+        return JWTResponse.builder()
                 .accessToken(accessToken)
+                .refreshToken(refresh)
                 .build();
     }
 
