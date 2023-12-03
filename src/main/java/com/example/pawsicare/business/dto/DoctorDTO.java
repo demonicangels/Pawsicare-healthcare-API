@@ -1,5 +1,6 @@
 package com.example.pawsicare.business.dto;
 
+import com.example.pawsicare.domain.Role;
 import lombok.*;
 
 @Builder
@@ -18,4 +19,5 @@ public class DoctorDTO {
     private String email;
     private String phoneNumber;
     private String image;
+    private Role role;
 }

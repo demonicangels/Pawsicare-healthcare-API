@@ -65,6 +65,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .email(doc.getEmail())
                     .phoneNumber(doc.getPhoneNumber())
                     .field(doc.getField())
+                    .role(doc.getRole())
                     .build());
 
             Doctor doctor = doctorConverter.fromDTO(doctorDTO.get());
@@ -72,6 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             accessToken = generateAccessToken(doctor);
 
             refreshToken = refreshTokenService.createRefreshToken(doctor.getId());
+
             refresh = refreshTokenService.encode(refreshToken);
 
 
@@ -93,6 +95,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             accessToken = generateAccessToken(client1);
 
             refreshToken = refreshTokenService.createRefreshToken(client1.getId());
+
             refresh = refreshTokenService.encode(refreshToken);
 
         }

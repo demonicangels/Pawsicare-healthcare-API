@@ -95,8 +95,9 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
 
             Claims claims = jwt.getBody();
 
-            String strRole = (String)claims.get("role");
+            String strRole = claims.get("role").toString();
             Role role = Role.valueOf(strRole);
+
             Date expiration =  claims.getExpiration();
 
             return AccessTokenImpl.builder()

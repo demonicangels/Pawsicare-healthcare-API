@@ -50,7 +50,7 @@ public class LoginController {
         User userInfo = verifiedToken.getUserInfo();
 
         Boolean isUserAuthenticated = authenticationService.authenticateUser(userInfo.getId());
-        String accessToken = isUserAuthenticated ?
+        String accessToken = isUserAuthenticated == true ?
                 accessTokenService.generateJWT(accessTokenService.decode(request.getRefreshToken())) :
                 "";
 

@@ -18,6 +18,7 @@ public class DoctorConverter {
                 .description(doctor.getDescription())
                 .field(doctor.getField())
                 .image(doctor.getImage())
+                .role(doctor.getRole())
                 .build();
     }
 
@@ -33,6 +34,7 @@ public class DoctorConverter {
                 .description(doctorDTO.getDescription())
                 .field(doctorDTO.getField())
                 .image(doctorDTO.getImage())
+                .role(doctorDTO.getRole())
                 .build();
     }
 }

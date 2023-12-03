@@ -3,19 +3,19 @@ package com.example.pawsicare.business.impl;
 
 
 import com.example.pawsicare.business.security.token.AccessTokenEncoder;
+import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
-import com.example.pawsicare.domain.Client;
-import com.example.pawsicare.domain.RefreshToken;
-import com.example.pawsicare.domain.Role;
-import com.example.pawsicare.domain.User;
+import com.example.pawsicare.domain.*;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.UserEntityConverter;
+import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.config.annotation.web.configurers.oauth2.client.OAuth2LoginConfigurer;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -32,19 +32,19 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private final UserRepository userRepository;
     private final UserEntityConverter userConverter;
-    private final AccessTokenEncoder accessTokenEncoder;
+    private final AccessTokenDecoderEncoderImpl accessTokenService;
 
     private final Key key;
 
     public RefreshTokenServiceImpl(@Value("${jwt.secret}") String secretKey,
                                    UserRepository userRepository,
                                    UserEntityConverter userEntityConverter,
-                                   AccessTokenEncoder accessTokenEncoder) {
+                                   AccessTokenDecoderEncoderImpl accessTokenEncoder) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.userRepository = userRepository;
         this.userConverter = userEntityConverter;
-        this.accessTokenEncoder = accessTokenEncoder;
+        this.accessTokenService = accessTokenEncoder;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         return RefreshToken.builder()
                 .userInfo(user)
-                .token(accessTokenEncoder.generateJWT(AccessTokenImpl.builder()
+                .token(accessTokenService.generateJWT(AccessTokenImpl.builder()
                         .userId(user.getId())
                         .role(user.getRole()).build()))
                 .expiryDate(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
@@ -103,10 +103,19 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         // Extract information from JWT claims
         Long userId = parseLong(claims.get("userId").toString());
         Role role = Role.valueOf(claims.get("role", String.class));
+        User user;
 
-        User user = Client.builder()
-                .id(userId)
-                .role(role).build();
+        if(role.name() == "Client"){
+            user = Client.builder()
+                    .id(userId)
+                    .role(role).build();
+        }
+        else{
+            user = Doctor.builder()
+                    .id(userId)
+                    .role(role).build();
+        }
+
 
         return RefreshToken.builder()
                 .userInfo(user)
