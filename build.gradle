@@ -26,6 +26,7 @@ sonar {
 				'src/**/business/impl/DoctorConverter*.*',
 				'src/**/business/impl/ClientConverter*.*',
 				'src/**/business/impl/PetConverter*.*',
+				'src/**/business/impl/TokenConverter*.*',
 				'src/**/controller/ClientController/*.*',
 				'src/**/domain/**/*',
 				'src/**/controller/EmailController/*.*',
