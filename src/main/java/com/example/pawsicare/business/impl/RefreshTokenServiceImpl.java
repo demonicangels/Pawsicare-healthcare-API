@@ -98,7 +98,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 refreshTokenRepository.deleteByUserInfo(userInfo);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            
         }
 
     }
