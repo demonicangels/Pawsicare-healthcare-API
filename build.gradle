@@ -127,6 +127,7 @@ jacocoTestReport {
 						'src/**/business/impl/DoctorConverter*.*',
 						'src/**/business/impl/ClientConverter*.*',
 						'src/**/business/impl/PetConverter*.*',
+						'src/**/business/impl/TokenConverter*.*',
 						'src/**/domain/ClientController/*.*',
 						'src/**/domain/PetController/*.*',
 						'src/**/domain/EmailController/*.*',
