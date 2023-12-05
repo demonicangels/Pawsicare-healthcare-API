@@ -37,6 +37,7 @@ sonar {
 				'src/**/controller/**/*',
 				'src/**/business/impl/ClientManagerImpl*.*',
 				'src/**/business/impl/EmailManagerImpl*.*',
+				'src/**/business/impl/RefreshTokenServiceImpl*.*'
 
 		]
 		property "sonar.coverage.jacoco.xmlReportPaths", "$rootDir/build/jacocoHtml/jacocoTestReport.html"
@@ -137,6 +138,7 @@ jacocoTestReport {
 						'src/**/business/impl/ClientManagerImpl*.*',
 						'src/**/business/impl/EmailManagerImpl*.*',
 						'src/**/domain/**/*',
+						'src/**/business/impl/RefreshTokenServiceImpl*.*'
 				])
 
 			}))

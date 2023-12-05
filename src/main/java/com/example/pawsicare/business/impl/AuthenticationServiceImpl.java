@@ -5,18 +5,17 @@ import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.responses.JWTResponse;
-import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.*;
 import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
+import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
@@ -106,11 +105,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
+    /**
+     * @param usrId
+     * @should return true if a user with the same id is found in the database
+     * @should return false if no user with that id is found in the db
+     * @return true if user found in db
+     * @return false if no user is found
+     */
     @Override
     public Boolean authenticateUser(Long usrId) {
-        User user = userEntityConverter.fromUserEntity(userRepository.getUserEntityById(usrId).get());
+        Optional<UserEntity> userEntity = userRepository.getUserEntityById(usrId);
 
-        return user != null ? true : false;
+        return userEntity.isPresent();
     }
 
     public boolean passMatch(String rawPass, String encodedPass){
@@ -135,20 +141,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 AccessTokenImpl.builder()
                          .userId(userId)
                          .role(role).build());
-    }
-
-    @Override
-    public JWTResponse authenticateAndGetToken (@RequestBody LoginUserRequest request){ //for when a refreshToken is needed
-
-        AccessToken accessToken = accessTokenService.decode(loginUser(request).getAccessToken());
-        if(accessToken != null){
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(accessToken.getId());
-            return JWTResponse.builder()
-                    .refreshToken(refreshToken.getToken())
-                    .accessToken(accessToken.toString()).build();
-        }
-        else {
-            throw new InvalidCredentialsException();
-        }
     }
 }

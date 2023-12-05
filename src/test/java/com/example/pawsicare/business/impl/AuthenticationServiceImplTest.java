@@ -35,143 +35,6 @@ class AuthenticationServiceImplTest {
     //partial integration tests
 
     /**
-     * @verifies return a user when credentials are correct
-     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
-     */
-    @Test
-     void userLogin_shouldReturnAUserWhenCredentialsAreCorrect() throws Exception {
-
-        //Arrange
-
-        UserRepository userRepositoryMock = mock(UserRepository.class);
-        DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
-        ClientConverter clientConverterMock = mock(ClientConverter.class);
-        UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
-        PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-        AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
-        RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
-
-        UserEntity userEntity = UserEntity.builder()
-                .id(1L)
-                .name("Nikol")
-                .email("nikol@mail.com")
-                .password("123").build();
-
-        User user = Client.builder()
-                .id(1L)
-                .name("Nikol")
-                .email("nikol@mail.com")
-                .password("123").build();
-
-        ClientDTO userDTO = ClientDTO.builder()
-                .id(1L)
-                .name("Nikol")
-                .email("nikol@mail.com")
-                .password("123").build();
-
-        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService);
-
-        when(userRepositoryMock.findUserEntityByEmail("nikol@mail.com")).thenReturn(Optional.ofNullable(userEntity));
-        when(userEntityConverterMock.fromUserEntity(userEntity)).thenReturn(Client.builder()
-                .id(1L)
-                .name("Nikol")
-                .email("nikol@mail.com")
-                .password("123").build());
-
-        when(clientConverterMock.fromDTO(any(ClientDTO.class))).thenReturn(Client.builder()
-                .id(1L)
-                .name("Nikol")
-                .email("nikol@mail.com")
-                .password("123").build());
-
-        when(sut.passMatch("123","123")).thenReturn(true);
-        when(sut.passMatch("123", "123")).thenReturn(true);
-        when(sut.generateAccessToken(clientConverterMock.fromDTO(userDTO))).thenReturn("947563794");
-        when(accessTokenEncoder.generateJWT( AccessTokenImpl.builder()
-                .userId(1L)
-                .role(Role.Client).build())).thenReturn("947563794");
-
-        //Act
-        LoginUserRequest request = LoginUserRequest.builder()
-                .email(user.getEmail())
-                .password(user.getPassword()).build();
-
-        JWTResponse response = sut.loginUser(request);
-
-        //Assert
-        String accessToken = response.getAccessToken();
-        assertNotNull(accessToken);
-        assertTrue(accessToken.contains("947563794"));
-    }
-
-    /**
-     * @verifies return exception if credentials are not correct
-     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
-     */
-    @Test
-    void userLogin_shouldReturnExceptionIfCredentialsAreNotCorrect() throws Exception {
-
-        try{
-            UserRepository userRepositoryMock = mock(UserRepository.class);
-            DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
-            ClientConverter clientConverterMock = mock(ClientConverter.class);
-            UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
-            PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-            AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
-            RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
-
-            UserEntity userEntity = UserEntity.builder()
-                    .id(1L)
-                    .name("Nikol")
-                    .email("nikol@mail.com")
-                    .password("123").build();
-
-            User user = Client.builder()
-                    .id(1L)
-                    .name("Nikol")
-                    .email("nikol@mail.com")
-                    .password("123").build();
-
-            ClientDTO userDTO = ClientDTO.builder()
-                    .id(1L)
-                    .name("Nikol")
-                    .email("nikol@mail.com")
-                    .password("123").build();
-
-            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService);
-
-            when(userRepositoryMock.findUserEntityByEmail("nikol@mail.com")).thenReturn(Optional.ofNullable(userEntity));
-            when(userEntityConverterMock.fromUserEntity(userEntity)).thenReturn(Client.builder()
-                    .id(1L)
-                    .name("Nikol")
-                    .email("nikol@mail.com")
-                    .password("123").build());
-
-            when(clientConverterMock.fromDTO(any(ClientDTO.class))).thenReturn(Client.builder()
-                    .id(1L)
-                    .name("Nikol")
-                    .email("nikol@mail.com")
-                    .password("123").build());
-
-            when(sut.passMatch("123","999")).thenReturn(false);
-
-            //Act
-            LoginUserRequest request = LoginUserRequest.builder()
-                    .email(user.getEmail())
-                    .password("999").build();
-
-            JWTResponse response = sut.loginUser(request);
-
-            //Assert
-            assertThat(sut.passMatch("123","999")).isFalse();
-            assertThrows(InvalidCredentialsException.class, () -> sut.loginUser(request));
-
-        }catch (InvalidCredentialsException e){
-
-        }
-    }
-
-    /**
      * @verifies return an accessToken based on the loggedIn user
      * @see AuthenticationServiceImpl#generateAccessToken(User)
      */
@@ -242,11 +105,226 @@ class AuthenticationServiceImplTest {
     }
 
     /**
+     * @verifies return false if no user with that id is found in the db
+     * @see AuthenticationServiceImpl#authenticateUser(Long)
+     */
+    @Test
+    void authenticateUser_shouldReturnFalseIfNoUserWithThatIdIsFoundInTheDb() throws Exception {
+        //Arrange
+        UserRepository userRepositoryMock = mock(UserRepository.class);
+        DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
+        ClientConverter clientConverterMock = mock(ClientConverter.class);
+        UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+        PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+        AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
+        RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
+
+        AuthenticationServiceImpl authService = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService);
+
+        UserEntity userEntity = UserEntity.builder()
+                .id(1L)
+                .name("Himal")
+                .email("himal@gmail.com")
+                .password("123")
+                .build();
+
+        Long usrId = 1L;
+
+        when(userRepositoryMock.getUserEntityById(usrId)).thenReturn(Optional.empty());
+
+        //Act
+
+        Boolean result = authService.authenticateUser(usrId);
+
+        //Assert
+        assertNotNull(result);
+        assertFalse(result);
+    }
+
+    /**
+     * @verifies return true if a user with the same id is found in the database
+     * @see AuthenticationServiceImpl#authenticateUser(Long)
+     */
+    @Test
+    void authenticateUser_shouldReturnTrueIfAUserWithTheSameIdIsFoundInTheDatabase() throws Exception {
+        //Arrange
+        UserRepository userRepositoryMock = mock(UserRepository.class);
+        DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
+        ClientConverter clientConverterMock = mock(ClientConverter.class);
+        UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+        PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+        AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
+        RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
+
+        AuthenticationServiceImpl authService = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService);
+
+        UserEntity userEntity = UserEntity.builder()
+                .id(1L)
+                .name("Himal")
+                .email("himal@gmail.com")
+                .password("123")
+                .build();
+
+        User user = Client.builder()
+                .id(1L)
+                .name("Himal")
+                .email("himal@gmail.com")
+                .password("123")
+                .build();
+
+        Long usrId = 1L;
+
+        when(userRepositoryMock.getUserEntityById(usrId)).thenReturn(Optional.ofNullable(userEntity));
+
+        //Act
+
+        Boolean result = authService.authenticateUser(usrId);
+
+        //Assert
+        assertNotNull(result);
+        assertTrue(result);
+    }
+
+    /**
+     * @verifies return a user when credentials are correct
+     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
+     */
+    @Test
+    void loginUser_shouldReturnAUserWhenCredentialsAreCorrect() throws Exception {
+        //Arrange
+        UserRepository userRepositoryMock = mock(UserRepository.class);
+        DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
+        ClientConverter clientConverterMock = mock(ClientConverter.class);
+        UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+        PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+        AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
+        RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
+
+        UserEntity userEntity = UserEntity.builder()
+                .id(1L)
+                .name("Nikol")
+                .email("nikol@mail.com")
+                .password("123").build();
+
+        User user = Client.builder()
+                .id(1L)
+                .name("Nikol")
+                .email("nikol@mail.com")
+                .password("123").build();
+
+        ClientDTO userDTO = ClientDTO.builder()
+                .id(1L)
+                .name("Nikol")
+                .email("nikol@mail.com")
+                .password("123").build();
+
+        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService);
+
+        when(userRepositoryMock.findUserEntityByEmail("nikol@mail.com")).thenReturn(Optional.ofNullable(userEntity));
+        when(userEntityConverterMock.fromUserEntity(userEntity)).thenReturn(Client.builder()
+                .id(1L)
+                .name("Nikol")
+                .email("nikol@mail.com")
+                .password("123").build());
+
+        when(clientConverterMock.fromDTO(any(ClientDTO.class))).thenReturn(Client.builder()
+                .id(1L)
+                .name("Nikol")
+                .email("nikol@mail.com")
+                .password("123").build());
+
+        when(sut.passMatch("123","123")).thenReturn(true);
+        when(sut.passMatch("123", "123")).thenReturn(true);
+        when(sut.generateAccessToken(clientConverterMock.fromDTO(userDTO))).thenReturn("947563794");
+        when(accessTokenEncoder.generateJWT( AccessTokenImpl.builder()
+                .userId(1L)
+                .role(Role.Client).build())).thenReturn("947563794");
+
+        //Act
+        LoginUserRequest request = LoginUserRequest.builder()
+                .email(user.getEmail())
+                .password(user.getPassword()).build();
+
+        JWTResponse response = sut.loginUser(request);
+
+        //Assert
+        String accessToken = response.getAccessToken();
+        assertNotNull(accessToken);
+        assertTrue(accessToken.contains("947563794"));
+    }
+
+    /**
+     * @verifies return exception if credentials are not correct
+     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
+     */
+    @Test
+    void loginUser_shouldReturnExceptionIfCredentialsAreNotCorrect() throws Exception {
+        try{
+            UserRepository userRepositoryMock = mock(UserRepository.class);
+            DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
+            ClientConverter clientConverterMock = mock(ClientConverter.class);
+            UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+            PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+            AccessTokenDecoderEncoderImpl accessTokenEncoder = mock(AccessTokenDecoderEncoderImpl.class);
+            RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
+
+            UserEntity userEntity = UserEntity.builder()
+                    .id(1L)
+                    .name("Nikol")
+                    .email("nikol@mail.com")
+                    .password("123").build();
+
+            User user = Client.builder()
+                    .id(1L)
+                    .name("Nikol")
+                    .email("nikol@mail.com")
+                    .password("123").build();
+
+            ClientDTO userDTO = ClientDTO.builder()
+                    .id(1L)
+                    .name("Nikol")
+                    .email("nikol@mail.com")
+                    .password("123").build();
+
+            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService);
+
+            when(userRepositoryMock.findUserEntityByEmail("nikol@mail.com")).thenReturn(Optional.ofNullable(userEntity));
+            when(userEntityConverterMock.fromUserEntity(userEntity)).thenReturn(Client.builder()
+                    .id(1L)
+                    .name("Nikol")
+                    .email("nikol@mail.com")
+                    .password("123").build());
+
+            when(clientConverterMock.fromDTO(any(ClientDTO.class))).thenReturn(Client.builder()
+                    .id(1L)
+                    .name("Nikol")
+                    .email("nikol@mail.com")
+                    .password("123").build());
+
+            when(sut.passMatch("123","999")).thenReturn(false);
+
+            //Act
+            LoginUserRequest request = LoginUserRequest.builder()
+                    .email(user.getEmail())
+                    .password("999").build();
+
+            JWTResponse response = sut.loginUser(request);
+
+            //Assert
+            assertThat(sut.passMatch("123","999")).isFalse();
+            assertThrows(InvalidCredentialsException.class, () -> sut.loginUser(request));
+
+        }catch (InvalidCredentialsException e){
+
+        }
+    }
+
+    /**
      * @verifies return doctor obj if a doctor is logged in
      * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
      */
     @Test
-    void userLogin_shouldReturnDoctorObjIfADoctorIsLoggedIn() throws Exception {
+    void loginUser_shouldReturnDoctorObjIfADoctorIsLoggedIn() throws Exception {
 
         // Arrange
         UserRepository userRepositoryMock = mock(UserRepository.class);
@@ -300,7 +378,6 @@ class AuthenticationServiceImplTest {
 
         // Assert
         assertEquals("mockedAccessToken", accessToken);
-
     }
 
     /**
@@ -308,7 +385,8 @@ class AuthenticationServiceImplTest {
      * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
      */
     @Test
-    void userLogin_shouldReturnClientObjIfAClientIsLoggedIn() throws Exception {
+    void loginUser_shouldReturnClientObjIfAClientIsLoggedIn() throws Exception {
+
         // Arrange
         UserRepository userRepositoryMock = mock(UserRepository.class);
         DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
@@ -360,6 +438,5 @@ class AuthenticationServiceImplTest {
 
         // Assert
         assertEquals("mockedAccessToken", accessToken);
-
     }
 }

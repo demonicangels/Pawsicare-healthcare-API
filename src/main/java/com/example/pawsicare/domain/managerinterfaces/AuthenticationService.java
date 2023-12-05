@@ -7,5 +7,4 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface AuthenticationService {
     JWTResponse loginUser(LoginUserRequest loginRequest);
     Boolean authenticateUser(Long usrId);
-    JWTResponse authenticateAndGetToken (@RequestBody LoginUserRequest request);
 }
