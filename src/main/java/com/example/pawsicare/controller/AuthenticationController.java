@@ -15,6 +15,7 @@ import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refreshToken")
-    public JWTResponse refreshToken (@RequestBody RefreshTokenRequest request) throws UserNotAuthenticatedException, AccessTokenGenerationException {
+    public JWTResponse refreshToken (@RequestBody @NotNull RefreshTokenRequest request) throws UserNotAuthenticatedException, AccessTokenGenerationException {
         RefreshToken refreshToken = refreshTokenService.decode(request.getRefreshToken());
         RefreshToken verifiedToken = refreshTokenService.verifyExpiration(refreshToken);
 

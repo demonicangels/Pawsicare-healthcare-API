@@ -60,7 +60,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                     .token(accessTokenService.generateJWT(AccessTokenImpl.builder()
                             .userId(user.getId())
                             .role(user.getRole()).build()))
-                    .expiryDate(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
+                    .expiryDate(Date.from(Instant.now().plus(3, ChronoUnit.MINUTES)))
                     .build();
         }
         else{
@@ -74,7 +74,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public RefreshToken verifyExpiration(RefreshToken token) {
-        if(token.getExpiryDate().compareTo(token.getExpiryDate()) <= 0){
+        if(token.getExpiryDate().compareTo(token.getExpiryDate()) < 0){
             throw new RefreshTokenExpiredException(" Refresh token is expired. Please make a new login..!");
         }
         return token;
