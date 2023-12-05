@@ -1,22 +1,27 @@
 package com.example.pawsicare.controller;
 
-import com.example.pawsicare.business.exceptions.AccessTokenGenerationException;
 import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
+import com.example.pawsicare.business.exceptions.RefreshTokenExpiredException;
 import com.example.pawsicare.business.exceptions.UserNotAuthenticatedException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.requests.RefreshTokenRequest;
 import com.example.pawsicare.business.responses.JWTResponse;
+import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
+import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.RefreshToken;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
+import com.example.pawsicare.persistence.entity.RefreshTokenEntity;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -27,6 +32,8 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final AccessTokenDecoderEncoderImpl accessTokenService;
     private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenEntityConverter refreshTokenEntityConverter;
 
     @PostMapping
     public ResponseEntity<JWTResponse> loginUser(@RequestBody @Valid LoginUserRequest loginUserRequest) {
@@ -43,30 +50,45 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refreshToken")
-    public JWTResponse refreshToken (@RequestBody RefreshTokenRequest request) throws UserNotAuthenticatedException, AccessTokenGenerationException {
-        RefreshToken refreshToken = refreshTokenService.decode(request.getRefreshToken());
-        RefreshToken verifiedToken = refreshTokenService.verifyExpiration(refreshToken);
+    public JWTResponse refreshToken (@RequestBody RefreshTokenRequest token) throws UserNotAuthenticatedException {
+        Optional<RefreshTokenEntity> refreshTFromDb = refreshTokenRepository.findByToken(token.getToken());
 
-        User userInfo = verifiedToken.getUserInfo();
-
-        Boolean isUserAuthenticated = authenticationService.authenticateUser(userInfo.getId());
-
-        String accessToken;
-        if (isUserAuthenticated) {
-            accessToken = accessTokenService.generateJWT(accessTokenService.decode(request.getRefreshToken()));
-        } else {
-            throw new UserNotAuthenticatedException("USER_NOT_FOUND.INVALID_REFRESH_TOKEN");
+        if (refreshTFromDb.isEmpty()) {
+            throw new UserNotAuthenticatedException("Refresh token not found");
         }
+        RefreshToken refreshToken = refreshTokenEntityConverter.fromEntity(refreshTFromDb.get());
 
-        if (accessToken.isEmpty()) {
-            throw new AccessTokenGenerationException("Access token generation failed");
+        RefreshToken notExpiredRefreshToken = refreshTokenService.verifyExpiration(refreshToken);
+
+        if(notExpiredRefreshToken != null){
+            User userInfo = refreshToken.getUserInfo();
+            Boolean isUserAuthenticated = authenticationService.authenticateUser(userInfo.getId());
+
+            // Generate a new access token
+            if (isUserAuthenticated) {
+
+                AccessTokenImpl accessToken = AccessTokenImpl.builder()
+                        .userId(userInfo.getId())
+                        .role(userInfo.getRole()).build();
+
+                // Generate a new access token using the information from the existing access token
+                String newAccessToken = accessTokenService.generateJWT(accessToken);
+
+                return JWTResponse.builder()
+                        .accessToken(newAccessToken)
+                        .refreshToken(refreshToken.getToken())
+                        .build();
+            } else {
+                throw new UserNotAuthenticatedException("User not authenticated");
+            }
+        }else {
+            throw new RefreshTokenExpiredException("Refresh token has expired");
         }
+    }
 
-
-
-        return JWTResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(request.getRefreshToken())
-                .build();
+    @PostMapping("/logout")
+    public void deleteOldRefreshToken(@RequestBody RefreshTokenRequest request){
+        RefreshToken refreshToken = refreshTokenService.decode(request.getToken());
+        refreshTokenService.clearRefreshToken(refreshToken);
     }
 }
