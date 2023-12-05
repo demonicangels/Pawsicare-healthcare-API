@@ -10,7 +10,9 @@ import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.*;
 import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
+import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.entity.UserEntity;
+import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import com.example.pawsicare.persistence.UserEntityConverter;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AccessTokenDecoderEncoderImpl accessTokenService;
     private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenEntityConverter refreshTokenEntityConverter;
 
     /**
      * @return user when logged in
@@ -73,6 +77,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             refreshToken = refreshTokenService.createRefreshToken(doctor.getId());
 
+            refreshTokenRepository.save(refreshTokenEntityConverter.toEntity(refreshToken));
+
             refresh = refreshTokenService.encode(refreshToken);
 
 
@@ -94,6 +100,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             accessToken = generateAccessToken(client1);
 
             refreshToken = refreshTokenService.createRefreshToken(client1.getId());
+
+            refreshTokenRepository.save(refreshTokenEntityConverter.toEntity(refreshToken));
 
             refresh = refreshTokenService.encode(refreshToken);
 

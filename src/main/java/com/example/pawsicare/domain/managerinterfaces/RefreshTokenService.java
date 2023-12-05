@@ -7,4 +7,5 @@ public interface RefreshTokenService {
     String encode (RefreshToken refreshToken);
     RefreshToken decode (String refreshToken);
     RefreshToken verifyExpiration(RefreshToken token);
+    void clearRefreshToken(RefreshToken token);
 }

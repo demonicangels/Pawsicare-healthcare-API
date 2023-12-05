@@ -66,7 +66,7 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
     }
 
     @Override
-    public String generateJWT(AccessToken accessToken) { //do one for the refresh token
+    public String generateJWT(AccessToken accessToken) {
         Map<String, Object> claimsMap = new HashMap<>();
 
         if (accessToken.getRole() != null){
@@ -90,7 +90,7 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
     @Override
     public AccessToken decode(String accessTokenEncoded) {
         try {
-            Jwt<?, Claims> jwt = Jwts.parserBuilder().setSigningKey(key).build()
+            Jwt<?, Claims> jwt = Jwts.parserBuilder().setSigningKey(key).setAllowedClockSkewSeconds(60).build()
                     .parseClaimsJws(accessTokenEncoded);
 
             Claims claims = jwt.getBody();
