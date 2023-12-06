@@ -60,11 +60,6 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(AccessToken token, UserDetails userDetails) {
-        final String username = extractId(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
     @Override
     public String generateJWT(AccessToken accessToken) {
         Map<String, Object> claimsMap = new HashMap<>();

@@ -8,6 +8,8 @@ import com.example.pawsicare.business.responses.CreateClientResponse;
 import com.example.pawsicare.business.responses.GetAllClientsResponse;
 import com.example.pawsicare.business.responses.GetClientResponse;
 import com.example.pawsicare.business.responses.UpdateClientResponse;
+import com.example.pawsicare.business.security.token.AccessToken;
+import com.example.pawsicare.domain.Role;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -28,10 +30,16 @@ public class ClientController {
 
     private final ClientManager clientManager;
     private final ClientConverter converter;
+    private final AccessToken accessToken;
 
-    //@RolesAllowed({"Doctor","Client"})
+    @RolesAllowed({"Doctor","Client"})
     @GetMapping(params = "id")
-    public ResponseEntity<GetClientResponse> getClient(@RequestParam(name = "id") long id){
+    public ResponseEntity<GetClientResponse> getClient(@RequestParam(name = "id") Long id){
+
+        if(!accessToken.getId().equals(id) && !accessToken.getRole().equals(Role.Doctor)){
+            //throw exception
+        }
+
         Optional<ClientDTO> client = Optional.ofNullable(converter.toDTO(clientManager.getClient(id)));
         if(client.isPresent()){
 
@@ -44,7 +52,6 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    // @RolesAllowed({"Client"})
     @GetMapping()
     public ResponseEntity<GetAllClientsResponse> getClients(){
         Optional<List<ClientDTO>> allClients = Optional.ofNullable(clientManager.getClients().stream()

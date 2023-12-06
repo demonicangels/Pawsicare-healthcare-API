@@ -5,6 +5,7 @@ import com.example.pawsicare.business.impl.DoctorConverter;
 import com.example.pawsicare.business.requests.CreateDoctorRequest;
 import com.example.pawsicare.business.requests.UpdateDoctorRequest;
 import com.example.pawsicare.business.responses.*;
+import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -22,10 +23,12 @@ public class DoctorController {
 
     private final DoctorManager doctorManager;
     private final DoctorConverter converter;
+    private final AccessToken accessToken;
 
     @RolesAllowed({"Client","Doctor"})
     @GetMapping(params = "id")
     public ResponseEntity<GetDoctorResponse> getDoctorById(@RequestParam(name = "id", required = false) long id){
+
         Optional<DoctorDTO> doctor = Optional.ofNullable(converter.toDTO(doctorManager.getDoctor(id)));
 
         if(!doctor.isEmpty()){
