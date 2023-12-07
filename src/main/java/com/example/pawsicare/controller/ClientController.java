@@ -9,7 +9,6 @@ import com.example.pawsicare.business.responses.GetAllClientsResponse;
 import com.example.pawsicare.business.responses.GetClientResponse;
 import com.example.pawsicare.business.responses.UpdateClientResponse;
 import com.example.pawsicare.business.security.token.AccessToken;
-import com.example.pawsicare.domain.Role;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,6 @@ import com.example.pawsicare.domain.managerinterfaces.ClientManager;
 
 import java.util.*;
 
-
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", methods = {RequestMethod.GET, RequestMethod.POST})
 @RequestMapping("/clients")
@@ -32,13 +30,13 @@ public class ClientController {
     private final ClientConverter converter;
     private final AccessToken accessToken;
 
-    @RolesAllowed({"Doctor","Client"})
+    @RolesAllowed({"Client"})
     @GetMapping(params = "id")
     public ResponseEntity<GetClientResponse> getClient(@RequestParam(name = "id") Long id){
 
-        if(!accessToken.getId().equals(id) && !accessToken.getRole().equals(Role.Doctor)){
-            //throw exception
-        }
+//        if(!accessToken.getId().equals(id) && !accessToken.getRole().equals(Role.Doctor)){
+//            //throw exception
+//        }
 
         Optional<ClientDTO> client = Optional.ofNullable(converter.toDTO(clientManager.getClient(id)));
         if(client.isPresent()){

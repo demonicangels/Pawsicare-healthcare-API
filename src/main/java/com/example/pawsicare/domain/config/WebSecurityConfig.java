@@ -1,4 +1,4 @@
-package com.example.pawsicare.business.security;
+package com.example.pawsicare.domain.config;
 
 import com.example.pawsicare.business.security.auth.AuthenticationService;
 import org.springframework.context.annotation.Bean;

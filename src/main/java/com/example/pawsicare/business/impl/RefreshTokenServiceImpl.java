@@ -130,6 +130,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
+                .setAllowedClockSkewSeconds(120)
                 .build()
                 .parseClaimsJws(refreshToken)
                 .getBody();
