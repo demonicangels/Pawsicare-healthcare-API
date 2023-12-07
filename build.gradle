@@ -65,7 +65,7 @@ if (applicationPropertiesFile.exists()) {
 		driver = 'com.mysql.cj.jdbc.Driver'
 		user = properties.getProperty('spring.datasource.username')
 		password = properties.getProperty('spring.datasource.password')
-		baselineOnMigrate = true
+		baselineOnMigrate = false
 	}
 } else {
 	throw new GradleException("application.properties file not found!")
