@@ -78,10 +78,11 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
 
         Instant now = Instant.now();
 
+        //TODO revert the expiration back to 30 seconds for show purposes
         return Jwts.builder()
                 .setSubject(accessToken.getId().toString())
                 .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(now.plus(30, ChronoUnit.SECONDS)))
+                .setExpiration(Date.from(now.plus(3, ChronoUnit.HOURS)))
                 .addClaims(claimsMap)
                 .signWith(key)
                 .compact();

@@ -3,7 +3,9 @@ package com.example.pawsicare.business.impl;
 import com.example.pawsicare.domain.Pet;
 import com.example.pawsicare.domain.managerinterfaces.PetManager;
 import com.example.pawsicare.persistence.PetEntityConverter;
+import com.example.pawsicare.persistence.entity.PetEntity;
 import com.example.pawsicare.persistence.jparepositories.PetRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +35,21 @@ public class PetManagerImpl implements PetManager {
      * @should return a pet object with the updated fields
      *
      */
+    @Transactional
     @Override
-    public Pet updatePet(Pet pet) {
-       return converter.fromEntity(petRepository.save(converter.toEntity(pet)));
+    public void updatePet(Pet pet) {
+
+        PetEntity peti = petRepository.getPetEntityById(pet.getId());
+
+        if (pet.getName() == null || pet.getName().isEmpty()) {
+            pet.setName(peti.getName());
+        }
+
+        if (pet.getInformation() == null || pet.getInformation().isEmpty()) {
+            pet.setInformation(peti.getInformation());
+        }
+        petRepository.updatePetEntityById(pet.getId(),pet.getName(),pet.getInformation());
+
     }
 
     /**

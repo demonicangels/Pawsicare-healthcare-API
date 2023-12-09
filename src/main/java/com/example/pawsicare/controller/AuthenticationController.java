@@ -15,10 +15,11 @@ import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.entity.RefreshTokenEntity;
+import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
+import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ public class AuthenticationController {
     private final RefreshTokenService refreshTokenService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenEntityConverter refreshTokenEntityConverter;
+    private final UserRepository userRepository;
 
     @PostMapping
     public ResponseEntity<JWTResponse> loginUser(@RequestBody @Valid LoginUserRequest loginUserRequest) {
@@ -52,7 +54,12 @@ public class AuthenticationController {
 
     @PostMapping("/refreshToken")
     public JWTResponse refreshToken (@RequestBody RefreshTokenRequest token) throws UserNotAuthenticatedException {
-        Optional<RefreshTokenEntity> refreshTFromDb = refreshTokenRepository.findByToken(token.getToken());
+
+        AccessToken access = accessTokenService.decode(token.getToken());
+
+        UserEntity user = userRepository.getUserEntityById(access.getId()).get();
+
+        Optional<RefreshTokenEntity> refreshTFromDb = refreshTokenRepository.findByUserInfo(user);
 
         if (refreshTFromDb.isEmpty()) {
             throw new UserNotAuthenticatedException("Refresh token not found");

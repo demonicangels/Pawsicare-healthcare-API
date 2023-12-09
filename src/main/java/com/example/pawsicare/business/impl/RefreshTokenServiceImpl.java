@@ -64,12 +64,13 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         if(userEntity.isPresent()){
             User user = userConverter.fromUserEntity(userEntity.get());
 
+            //TODO revert the expiration back to 3 minutes for show purposes
             return RefreshToken.builder()
                     .userInfo(user)
                     .token(accessTokenService.generateJWT(AccessTokenImpl.builder()
                             .userId(user.getId())
                             .role(user.getRole()).build()))
-                    .expiryDate(Date.from(Instant.now().plus(3, ChronoUnit.MINUTES)))
+                    .expiryDate(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)))
                     .build();
         }
         else{
@@ -130,6 +131,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
+                .setAllowedClockSkewSeconds(300)
                 .build()
                 .parseClaimsJws(refreshToken)
                 .getBody();

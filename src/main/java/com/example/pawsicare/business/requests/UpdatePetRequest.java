@@ -9,9 +9,8 @@ import lombok.Data;
 @Builder
 public class UpdatePetRequest {
 
-    private long ownerId;
-    @Size(min = 3)
-    @NotBlank
+    private Long id;
+    private Long ownerId;
     private String name;
     private String information;
 }

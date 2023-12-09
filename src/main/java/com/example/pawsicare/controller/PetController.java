@@ -7,7 +7,6 @@ import com.example.pawsicare.business.requests.UpdatePetRequest;
 import com.example.pawsicare.business.responses.CreatePetResponse;
 import com.example.pawsicare.business.responses.GetAllPetsResponse;
 import com.example.pawsicare.business.responses.GetPetResponse;
-import com.example.pawsicare.business.responses.UpdatePetResponse;
 import com.example.pawsicare.domain.managerinterfaces.PetManager;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/pets")
 @AllArgsConstructor
 public class PetController {
@@ -86,31 +86,31 @@ public class PetController {
     }
 
     @RolesAllowed({"Client"})
-    @PutMapping(params = "id")
-    public ResponseEntity<UpdatePetResponse> updatePet(@RequestParam(name = "id") long id, @RequestBody @Valid UpdatePetRequest request){
-        PetDTO pet = PetDTO.builder()
-                .ownerId(request.getOwnerId())
-                .name(request.getName())
-                .information(request.getInformation())
-                .build();
-
-        Optional<PetDTO> peti = Optional.ofNullable(converter.toDTO(petManager.updatePet(converter.fromDTO(pet))));
-
-        if(peti.isPresent()){
-
-            UpdatePetResponse petResponse = UpdatePetResponse.builder()
-                    .updatedPet(pet)
+    @PutMapping()
+    public ResponseEntity<Void> updatePet(@RequestBody @Valid UpdatePetRequest request){
+        try{
+            PetDTO pet = PetDTO.builder()
+                    .id(request.getId())
+                    .ownerId(request.getOwnerId())
+                    .name(request.getName())
+                    .information(request.getInformation())
                     .build();
 
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(petResponse);
+            petManager.updatePet(converter.fromDTO(pet));
+
+
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        }catch(Exception err){
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+
+
     }
 
     @RolesAllowed({"Client"})
     @DeleteMapping()
     public ResponseEntity<Void> deletePet(@RequestParam(name = "id") long id){
         petManager.deletePet(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
