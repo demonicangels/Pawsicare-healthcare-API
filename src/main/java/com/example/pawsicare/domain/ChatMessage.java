@@ -1,8 +1,11 @@
 package com.example.pawsicare.domain;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatMessage {
     private String id;
     private String from;
