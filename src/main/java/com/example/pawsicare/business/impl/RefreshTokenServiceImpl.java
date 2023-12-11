@@ -70,7 +70,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                     .token(accessTokenService.generateJWT(AccessTokenImpl.builder()
                             .userId(user.getId())
                             .role(user.getRole()).build()))
-                    .expiryDate(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)))
+                    .expiryDate(Date.from(Instant.now().plus(2, ChronoUnit.MINUTES)))
                     .build();
         }
         else{

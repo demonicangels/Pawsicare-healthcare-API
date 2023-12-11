@@ -82,7 +82,7 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
         return Jwts.builder()
                 .setSubject(accessToken.getId().toString())
                 .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(now.plus(3, ChronoUnit.HOURS)))
+                .setExpiration(Date.from(now.plus(30, ChronoUnit.SECONDS)))
                 .addClaims(claimsMap)
                 .signWith(key)
                 .compact();
