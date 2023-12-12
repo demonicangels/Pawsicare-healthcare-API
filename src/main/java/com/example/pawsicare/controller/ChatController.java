@@ -2,7 +2,9 @@ package com.example.pawsicare.controller;
 
 
 import com.example.pawsicare.domain.ChatMessage;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -15,19 +17,20 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("chat")
 @CrossOrigin("http://localhost:5173")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ChatController {
+
     private final SimpMessagingTemplate messagingTemplate;
 
-    @PostMapping("/app/msg/public")
-    public ResponseEntity<Void> sendNotificationToAll(@Payload ChatMessage msg){
-        messagingTemplate.convertAndSend("/chat/public", msg); // listens to /chat
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+//    @PostMapping
+//    public ResponseEntity<Void> sendNotificationToAll(@RequestBody ChatMessage msg){
+//        messagingTemplate.convertAndSend("/chat/public", msg); // listens to /chat
+//        return ResponseEntity.status(HttpStatus.CREATED).build();
+//    }
 
-    @PostMapping("/app/message/private/{to}")
+    @PostMapping
     public ResponseEntity<Void> sendNotificationToUser(@DestinationVariable String to, @RequestBody ChatMessage msg) {
-        messagingTemplate.convertAndSendToUser(to, "/private", msg);
+        messagingTemplate.convertAndSendToUser(to, "/user" + to +"/private", msg);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
