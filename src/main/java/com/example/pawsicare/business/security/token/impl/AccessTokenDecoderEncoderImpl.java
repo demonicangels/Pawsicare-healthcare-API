@@ -78,7 +78,7 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
 
         Instant now = Instant.now();
 
-        //TODO revert the expiration back to 30 seconds for show purposes
+
         return Jwts.builder()
                 .setSubject(accessToken.getId().toString())
                 .setIssuedAt(Date.from(now))

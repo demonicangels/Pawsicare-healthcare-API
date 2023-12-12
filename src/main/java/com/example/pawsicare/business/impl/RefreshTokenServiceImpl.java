@@ -64,7 +64,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         if(userEntity.isPresent()){
             User user = userConverter.fromUserEntity(userEntity.get());
 
-            //TODO revert the expiration back to 3 minutes for show purposes
             return RefreshToken.builder()
                     .userInfo(user)
                     .token(accessTokenService.generateJWT(AccessTokenImpl.builder()
