@@ -31,10 +31,11 @@ public class WebSecurityConfig {
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()   // CORS pre-flight requests should be public
-                                .requestMatchers(HttpMethod.POST,"/auth","/auth/refreshToken","/auth/logout", "/doctors", "/clients","/ws").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/auth","/auth/refreshToken","/auth/logout", "/doctors", "/clients").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/doctors").permitAll()
 
-                                .requestMatchers("/ws/**").permitAll()
+
+                                .requestMatchers("/ws", "/messages/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(configure -> configure.authenticationEntryPoint(authenticationEntryPoint))
