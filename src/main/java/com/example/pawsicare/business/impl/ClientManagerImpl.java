@@ -39,7 +39,7 @@ public class ClientManagerImpl implements ClientManager {
     @Override
     public List<Client> getClients() {
         List<Client> returnedClients = new ArrayList<>();
-        userRepository.findAll().stream().map(converter :: fromUserEntity).map(u -> (Client) u).forEach(
+        userRepository.findByRole(0).stream().map(converter :: fromUserEntity).map(u -> (Client) u).forEach(
                 returnedClients :: add
         );
         return returnedClients;

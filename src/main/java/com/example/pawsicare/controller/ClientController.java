@@ -50,6 +50,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @RolesAllowed({"Doctor"})
     @GetMapping()
     public ResponseEntity<GetAllClientsResponse> getClients(){
         Optional<List<ClientDTO>> allClients = Optional.ofNullable(clientManager.getClients().stream()
