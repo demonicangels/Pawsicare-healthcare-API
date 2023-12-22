@@ -1,4 +1,4 @@
-package com.example.pawsicare.business.security;
+package com.example.pawsicare.domain.config;
 
 import com.example.pawsicare.business.security.auth.AuthenticationService;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +34,8 @@ public class WebSecurityConfig {
                                 .requestMatchers(HttpMethod.POST,"/auth","/auth/refreshToken","/auth/logout", "/doctors", "/clients").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/doctors").permitAll()
 
+
+                                .requestMatchers("/ws", "/messages/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(configure -> configure.authenticationEntryPoint(authenticationEntryPoint))

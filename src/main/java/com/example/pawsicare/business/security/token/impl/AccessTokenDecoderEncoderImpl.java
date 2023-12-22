@@ -60,11 +60,6 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(AccessToken token, UserDetails userDetails) {
-        final String username = extractId(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
     @Override
     public String generateJWT(AccessToken accessToken) {
         Map<String, Object> claimsMap = new HashMap<>();
@@ -82,7 +77,7 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
         return Jwts.builder()
                 .setSubject(accessToken.getId().toString())
                 .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(now.plus(30, ChronoUnit.SECONDS)))
+                .setExpiration(Date.from(now.plus(30, ChronoUnit.HOURS)))
                 .addClaims(claimsMap)
                 .signWith(key)
                 .compact();
