@@ -6,6 +6,7 @@ import com.example.pawsicare.business.exceptions.UserNotAuthenticatedException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.requests.RefreshTokenRequest;
 import com.example.pawsicare.business.responses.JWTResponse;
+import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.RefreshToken;

@@ -5,6 +5,11 @@ import com.example.pawsicare.domain.Appointment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 @Service
 @RequiredArgsConstructor
 public class AppointmentConverter {
@@ -44,5 +49,13 @@ public class AppointmentConverter {
                 .doctor(doctorConverter.fromDTO(appointmentDTO.getDoctor()))
                 .pet(petConverter.fromDTO(appointmentDTO.getPet()))
                 .build();
+    }
+
+    public LocalDateTime dateAndTime(String date,String start){
+        LocalDate date1 = LocalDate.parse(date);
+        LocalTime start1 = LocalTime.parse(start);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateAndTime = LocalDateTime.of(date1,start1);
+        return dateAndTime;
     }
 }

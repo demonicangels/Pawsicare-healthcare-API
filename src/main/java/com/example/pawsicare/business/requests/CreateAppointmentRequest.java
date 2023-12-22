@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateAppointmentRequest {
-    private LocalDateTime dateAndStart;
-    private LocalDateTime dateAndEnd;
+    private String date;
+    private String start;
+    private String end;
     private long clientId;
     private long doctorId;
     private long petId;

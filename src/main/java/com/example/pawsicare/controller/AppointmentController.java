@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -40,6 +41,8 @@ public class AppointmentController {
     @RolesAllowed({"Doctor", "Client"})
     @GetMapping(params = "userId")
     public ResponseEntity<GetAppointmentsResponse> getUsersAppointments(@Valid @RequestParam(name = "userId")long userId){
+
+        //if the user id is the same as the one from the token get the appointments otherwise return error check
         Optional<List<AppointmentDTO>> app = appointmentManager.getUsersAppointments(userId)
                         .map(appointments -> appointments.stream()
                                 .map(converter::toDTO)
@@ -61,9 +64,11 @@ public class AppointmentController {
     @RolesAllowed({"Client"})
     @PostMapping
     public ResponseEntity<CreateAppointmentResponse> createAppointment(@RequestBody @Valid CreateAppointmentRequest appointmentRequest){
+        LocalDateTime dateAndStart = converter.dateAndTime(appointmentRequest.getDate(),appointmentRequest.getStart());
+        LocalDateTime dateAndEnd = converter.dateAndTime(appointmentRequest.getDate(),appointmentRequest.getEnd());
         AppointmentDTO appointment = AppointmentDTO.builder()
-                .dateAndStart(appointmentRequest.getDateAndStart())
-                .dateAndEnd(appointmentRequest.getDateAndEnd())
+                .dateAndStart(dateAndStart)
+                .dateAndEnd(dateAndEnd)
                 .client(clientConverter.toDTO(clientManager.getClient(appointmentRequest.getClientId())))
                 .doctor(doctorConverter.toDTO(doctorManager.getDoctor(appointmentRequest.getDoctorId())))
                 .pet(petConverter.toDTO(petManager.getPet(appointmentRequest.getPetId())))
