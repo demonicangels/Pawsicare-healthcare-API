@@ -132,8 +132,9 @@ class AppointmentControllerTest {
         // Arrange
         AppointmentManager appointmentManager = mock(AppointmentManager.class);
         CreateAppointmentRequest request = CreateAppointmentRequest.builder()
-                .dateAndStart(LocalDateTime.now())
-                .dateAndEnd(LocalDateTime.of(2023,11,27,12,00,00))
+                .date("2023-11-27")
+                .start("11:00")
+                .end("12:00")
                 .clientId(1L)
                 .doctorId(2L)
                 .petId(3L)
@@ -231,8 +232,9 @@ class AppointmentControllerTest {
     void testCreateAppointmentBadRequest() {
         AppointmentManager appointmentManager = mock(AppointmentManager.class);
         CreateAppointmentRequest request = CreateAppointmentRequest.builder()
-                .dateAndStart(LocalDateTime.now())
-                .dateAndEnd(LocalDateTime.of(2023,11,27,12,00,00))
+                .date("2023-11-27")
+                .start("11:00")
+                .end("12:00")
                 .clientId(1L)
                 .doctorId(2L)
                 .petId(3L)
