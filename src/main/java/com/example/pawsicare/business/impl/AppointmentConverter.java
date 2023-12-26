@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -51,11 +50,15 @@ public class AppointmentConverter {
                 .build();
     }
 
+    /**
+     * @param date
+     * @param start
+     * @return LocalDateTime equivalent to a passed string
+     * @should return LocalDateTime object after successful conversion from string
+     */
     public LocalDateTime dateAndTime(String date,String start){
         LocalDate date1 = LocalDate.parse(date);
         LocalTime start1 = LocalTime.parse(start);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime dateAndTime = LocalDateTime.of(date1,start1);
-        return dateAndTime;
+        return LocalDateTime.of(date1,start1);
     }
 }

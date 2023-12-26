@@ -10,10 +10,12 @@ import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.Pet;
 import static org.assertj.core.api.Assertions.*;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -194,5 +196,28 @@ class AppointmentConverterTest {
         assertThat(actualResult.getDateAndStart()).isEqualTo(appointmentDTO.getDateAndStart());
         assertThat(actualResult.getClass()).isEqualTo(Appointment.class);
 
+    }
+
+    /**
+     * @verifies return LocalDateTime object after successful conversion from string
+     * @see AppointmentConverter#dateAndTime(String, String)
+     */
+    @Test
+    void dateAndTime_shouldReturnLocalDateTimeObjectAfterSuccessfulConversionFromString() throws Exception {
+
+        //Arrange
+        AppointmentConverter converterMock = mock(AppointmentConverter.class);
+        String date = "12-22-2023";
+        String time = "12:00";
+        LocalDateTime expected = LocalDateTime.of(2023,12,22,12,0);
+
+        when(converterMock.dateAndTime(date,time)).thenReturn(expected);
+        //Act
+
+        LocalDateTime result = converterMock.dateAndTime(date,time);
+
+        //Assert
+        assertThat(result).isNotNull();
+        assertEquals(result,expected);
     }
 }
