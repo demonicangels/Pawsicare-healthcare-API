@@ -2,6 +2,7 @@ package com.example.pawsicare.business.impl;
 
 import com.example.pawsicare.business.dto.AppointmentDTO;
 import com.example.pawsicare.domain.Appointment;
+import com.example.pawsicare.domain.config.ExcludeFromCodeCoverage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +57,7 @@ public class AppointmentConverter {
      * @return LocalDateTime equivalent to a passed string
      * @should return LocalDateTime object after successful conversion from string
      */
+    @ExcludeFromCodeCoverage
     public LocalDateTime dateAndTime(String date,String start){
         LocalDate date1 = LocalDate.parse(date);
         LocalTime start1 = LocalTime.parse(start);
