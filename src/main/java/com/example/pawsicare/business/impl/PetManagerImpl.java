@@ -80,6 +80,10 @@ public class PetManagerImpl implements PetManager {
         return pets;
     }
 
+    /**
+     * @param id
+     * @should verify if the deleteById method of the repository is being called
+     */
     @Override
     public void deletePet(long id) {
         petRepository.deleteById(id);

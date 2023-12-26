@@ -8,6 +8,7 @@ import com.example.pawsicare.persistence.PetEntityConverter;
 import com.example.pawsicare.persistence.entity.ClientEntity;
 import com.example.pawsicare.persistence.entity.PetEntity;
 import com.example.pawsicare.persistence.jparepositories.PetRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -200,5 +201,26 @@ class PetManagerImplTest {
         assertEquals(savedPet.getName(),pet.getName());
 
 
+    }
+
+    /**
+     * @verifies verify if the deleteById method of the repository is being called
+     * @see PetManagerImpl#deletePet(long)
+     */
+    @Test
+    void deletePet_shouldVerifyIfTheDeleteByIdMethodOfTheRepositoryIsBeingCalled() throws Exception {
+
+        //Arrange
+        PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
+        PetRepository petRepository = mock(PetRepository.class);
+
+        PetManagerImpl sut = new PetManagerImpl(petRepository,petEntityConverter);
+
+        //Act
+
+        sut.deletePet(1L);
+
+        //Assert
+        verify(petRepository, times(1)).deleteById(1L);
     }
 }

@@ -75,6 +75,10 @@ public class DoctorManagerImpl implements DoctorManager {
         return returnedDoctors;
     }
 
+    /**
+     * @param id
+     * @should verify if the deleteById method of the repository is being called
+     */
     @Override
     public void deleteDoctor(long id) {
         userRepository.deleteById(id);

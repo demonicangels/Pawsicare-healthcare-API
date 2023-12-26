@@ -364,4 +364,24 @@ class DoctorManagerImplTest {
         assertFalse(doctors.isEmpty());
         assertEquals(2, doctors.size());
     }
+
+    /**
+     * @verifies verify if the deleteById method of the repository is being called
+     * @see DoctorManagerImpl#deleteDoctor(long)
+     */
+    @Test
+    void deleteDoctor_shouldVerifyIfTheDeleteByIdMethodOfTheRepositoryIsBeingCalled() throws Exception {
+        //Arrange
+        DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
+        UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+        UserRepository userRepositoryMock = mock(UserRepository.class);
+        PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
+        DoctorManagerImpl sut = new DoctorManagerImpl(userEntityConverterMock,userRepositoryMock,doctorRepositoryMock,passwordEncoderMock);
+
+        //Act
+        sut.deleteDoctor(1L);
+
+        //Assert
+        verify(userRepositoryMock, times(1)).deleteById(1L);
+    }
 }

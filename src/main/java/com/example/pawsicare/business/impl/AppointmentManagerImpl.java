@@ -49,6 +49,10 @@ public class AppointmentManagerImpl implements AppointmentManager {
         return Optional.of(appointmentRepository.findAppointmentEntitiesByClient_IdOrDoctor_Id(userId,userId).stream().map(converter :: fromEntity).toList());
     }
 
+    /**
+     * @param id
+     * @should verify if the deleteById method of the repository is being called
+     */
     @Override
     public void cancelAppointment(long id) {
         appointmentRepository.deleteById(id);

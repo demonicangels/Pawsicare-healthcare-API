@@ -4,6 +4,7 @@ import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.persistence.AppointmentEntityConverter;
 import com.example.pawsicare.persistence.entity.AppointmentEntity;
 import com.example.pawsicare.persistence.jparepositories.AppointmentRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -216,5 +217,23 @@ class AppointmentManagerImplTest {
 
         // Assert
         assertTrue(returnedAppointments.isEmpty());
+    }
+
+    /**
+     * @verifies verify if the deleteById method of the repository is being called
+     * @see AppointmentManagerImpl#cancelAppointment(long)
+     */
+    @Test
+    void cancelAppointment_shouldVerifyIfTheDeleteByIdMethodOfTheRepositoryIsBeingCalled() throws Exception {
+        //Arrange
+        AppointmentEntityConverter converter = mock(AppointmentEntityConverter.class);
+        AppointmentRepository appointmentRepository = mock(AppointmentRepository.class);
+
+        AppointmentManagerImpl sut = new AppointmentManagerImpl(appointmentRepository, converter);
+        //Act
+        sut.cancelAppointment(1L);
+
+        //Assert
+        verify(appointmentRepository, times(1)).deleteById(1L);
     }
 }
