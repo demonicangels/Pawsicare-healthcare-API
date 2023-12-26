@@ -1,7 +1,5 @@
 package com.example.pawsicare.business.requests;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 

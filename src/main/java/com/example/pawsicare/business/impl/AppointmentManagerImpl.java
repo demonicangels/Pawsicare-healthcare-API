@@ -46,7 +46,6 @@ public class AppointmentManagerImpl implements AppointmentManager {
      */
     @Override
     public Optional<List<Appointment>> getUsersAppointments(long userId) {
-        //TODO fix this method the repository returns null
         return Optional.of(appointmentRepository.findAppointmentEntitiesByClient_IdOrDoctor_Id(userId,userId).stream().map(converter :: fromEntity).toList());
     }
 

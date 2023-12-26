@@ -7,8 +7,6 @@ import com.example.pawsicare.domain.User;
 import com.example.pawsicare.persistence.entity.ClientEntity;
 import com.example.pawsicare.persistence.entity.DoctorEntity;
 import com.example.pawsicare.persistence.entity.UserEntity;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 

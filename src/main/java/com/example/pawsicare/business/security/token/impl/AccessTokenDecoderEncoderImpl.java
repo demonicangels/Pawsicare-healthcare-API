@@ -10,7 +10,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.business.security.token.AccessTokenEncoder;
@@ -54,10 +53,6 @@ public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, Access
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    private Boolean isTokenExpired(AccessToken token) {
-        return extractExpiration(token).before(new Date());
     }
 
     @Override

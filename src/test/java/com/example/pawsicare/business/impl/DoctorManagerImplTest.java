@@ -218,7 +218,7 @@ class DoctorManagerImplTest {
      * @see DoctorManagerImpl#getDoctors()
      */
     @Test
-    public void getDoctors_shouldReturnAnEmptyListWhenNoDoctorsArePresent() throws Exception {
+    void getDoctors_shouldReturnAnEmptyListWhenNoDoctorsArePresent() throws Exception {
        //Arrange
        UserRepository userRepositoryMock = mock(UserRepository.class);
        DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
@@ -308,7 +308,7 @@ class DoctorManagerImplTest {
      * @see DoctorManagerImpl#getDoctorsByField(String)
      */
     @Test
-    public void getDoctorsByField_shouldReturnAListOfDoctorsFromTheSpecifiedField() throws Exception {
+    void getDoctorsByField_shouldReturnAListOfDoctorsFromTheSpecifiedField() throws Exception {
 
         //Arrange
         DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);

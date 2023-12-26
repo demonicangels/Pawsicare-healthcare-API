@@ -113,32 +113,4 @@ public class AppointmentController {
         appointmentManager.cancelAppointment(id);
         return ResponseEntity.ok().build();
     }
-//TODO in order to make an appointment i need everyone's id and to get their values from the database and then save the appointment
-
-//    @PostMapping(params = "test")
-//    public ResponseEntity<AppointmentDTO> test(@RequestParam(name="test") @Valid int test) {
-//        Optional<Client> clientOptional = Optional.ofNullable(clientManager.getClient(18));
-//        Optional<Doctor> doctorOptional = Optional.ofNullable(doctorManager.getDoctor(1));
-//
-//
-//        Optional<PetDTO> peti = Optional.ofNullable(petConverter.toDTO(petManager.getPet(9)));
-//
-//
-//        if (clientOptional.isPresent() && doctorOptional.isPresent()) {
-//            AppointmentDTO appointment = AppointmentDTO.builder()
-//                    .dateAndStart(LocalDateTime.of(2023, 11, 07,12,0))
-//                    .dateAndEnd(LocalDateTime.of(2023, 11, 07,13,0))
-//                    .client(clientConverter.toDTO(clientOptional.get()))
-//                    .doctor(doctorConverter.toDTO(doctorOptional.get()))
-//                    .pet(peti.get())
-//                    .build();
-//
-//            appointmentManager.createAppointment(converter.fromDTO(appointment));
-//
-//            return ResponseEntity.status(HttpStatus.CREATED).body(appointment);
-//        } else {
-//
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        }
-//    }
 }

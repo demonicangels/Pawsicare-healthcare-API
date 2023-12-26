@@ -57,41 +57,45 @@ public class AuthenticationController {
 
         AccessToken access = accessTokenService.decode(token.getToken());
 
-        UserEntity user = userRepository.getUserEntityById(access.getId()).get();
+        Optional<UserEntity> optionalUser = userRepository.getUserEntityById(access.getId());
 
-        Optional<RefreshTokenEntity> refreshTFromDb = refreshTokenRepository.findByUserInfo(user);
+        if(!optionalUser.isEmpty()) {
 
-        if (refreshTFromDb.isEmpty()) {
-            throw new UserNotAuthenticatedException("Refresh token not found");
-        }
-        RefreshToken refreshToken = refreshTokenEntityConverter.fromEntity(refreshTFromDb.get());
+            Optional<RefreshTokenEntity> refreshTFromDb = refreshTokenRepository.findByUserInfo(optionalUser.get());
 
-        RefreshToken notExpiredRefreshToken = refreshTokenService.verifyExpiration(refreshToken);
-
-        if(notExpiredRefreshToken != null){
-            User userInfo = refreshToken.getUserInfo();
-            Boolean isUserAuthenticated = authenticationService.authenticateUser(userInfo.getId());
-
-            // Generate a new access token
-            if (isUserAuthenticated) {
-
-                AccessTokenImpl accessToken = AccessTokenImpl.builder()
-                        .userId(userInfo.getId())
-                        .role(userInfo.getRole()).build();
-
-                // Generate a new access token using the information from the existing access token
-                String newAccessToken = accessTokenService.generateJWT(accessToken);
-
-                return JWTResponse.builder()
-                        .accessToken(newAccessToken)
-                        .refreshToken(refreshToken.getToken())
-                        .build();
-            } else {
-                throw new UserNotAuthenticatedException("User not authenticated");
+            if (refreshTFromDb.isEmpty()) {
+                throw new UserNotAuthenticatedException("Refresh token not found");
             }
-        }else {
-            throw new RefreshTokenExpiredException("Refresh token has expired");
+
+            RefreshToken refreshToken = refreshTokenEntityConverter.fromEntity(refreshTFromDb.get());
+
+            RefreshToken notExpiredRefreshToken = refreshTokenService.verifyExpiration(refreshToken);
+
+            if (notExpiredRefreshToken != null) {
+                User userInfo = refreshToken.getUserInfo();
+                Boolean isUserAuthenticated = authenticationService.authenticateUser(userInfo.getId());
+
+                // Generate a new access token
+                if (isUserAuthenticated.equals(true)) {
+
+                    AccessTokenImpl accessToken = AccessTokenImpl.builder()
+                            .userId(userInfo.getId())
+                            .role(userInfo.getRole()).build();
+
+                    // Generate a new access token using the information from the existing access token
+                    String newAccessToken = accessTokenService.generateJWT(accessToken);
+
+                    return JWTResponse.builder()
+                            .accessToken(newAccessToken)
+                            .refreshToken(refreshToken.getToken())
+                            .build();
+                }
+
+            } else {
+                throw new RefreshTokenExpiredException("Refresh token has expired");
+            }
         }
+        throw new UserNotAuthenticatedException("User not found");
     }
 
     @PostMapping("/logout")
