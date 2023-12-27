@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreatePetRequest {
+    private String token;
     private long ownerId;
     @Size(min = 3)
     @NotBlank

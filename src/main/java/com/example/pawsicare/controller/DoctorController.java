@@ -1,53 +1,83 @@
 package com.example.pawsicare.controller;
 
 import com.example.pawsicare.business.dto.DoctorDTO;
+import com.example.pawsicare.business.exceptions.UserNotAuthenticatedException;
 import com.example.pawsicare.business.impl.DoctorConverter;
 import com.example.pawsicare.business.requests.CreateDoctorRequest;
 import com.example.pawsicare.business.requests.UpdateDoctorRequest;
 import com.example.pawsicare.business.responses.*;
 import com.example.pawsicare.business.security.token.AccessToken;
+import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
+import com.example.pawsicare.domain.Role;
+import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
+import com.example.pawsicare.persistence.UserEntityConverter;
+import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173",methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
 @RequestMapping("/doctors")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DoctorController {
 
     private final DoctorManager doctorManager;
     private final DoctorConverter converter;
-    private final AccessToken accessToken;
+    private final AccessTokenDecoderEncoderImpl accessTokenService;
+    private final UserEntityConverter userEntityConverter;
+    private String errorMsg = "User not allowed!";
+    private final UserRepository userRepository;
 
     @RolesAllowed({"Client","Doctor"})
-    @GetMapping(params = "id")
-    public ResponseEntity<GetDoctorResponse> getDoctorById(@RequestParam(name = "id", required = false) long id){
+    @GetMapping("/docInfo")
+    public ResponseEntity<GetDoctorResponse> getDoctorById( @RequestParam("id") Long id,
+                                                            @RequestParam("token") String token) throws UserNotAuthenticatedException {
+        //only Clients and the Doctor himself are privy to a doctor's information
 
-        Optional<DoctorDTO> doctor = Optional.ofNullable(converter.toDTO(doctorManager.getDoctor(id)));
+        AccessToken tokenClaims = accessTokenService.decode(token);
+        Optional<User> userFound = userRepository.getUserEntityById(tokenClaims.getId())
+                .map(userEntityConverter::fromUserEntity)
+                .map(Optional::of)
+                .orElse(Optional.empty());
 
-        if(!doctor.isEmpty()){
-            GetDoctorResponse doctorResponse = GetDoctorResponse.builder()
-                    .doctor(doctor.get())
-                    .build();
 
-            return ResponseEntity.status(HttpStatus.OK).body(doctorResponse);
+        if (!userFound.isEmpty()){
+
+            Long userId = tokenClaims.getId();
+            boolean isDoctor = tokenClaims.hasRole(Role.Doctor.name());
+            boolean isClient = tokenClaims.hasRole(Role.Client.name());
+
+            if (userId.equals(id) && isDoctor || isClient){
+                Optional<DoctorDTO> doctor = Optional.ofNullable(converter.toDTO(doctorManager.getDoctor(id)));
+
+                if(!doctor.isEmpty()){
+                    GetDoctorResponse doctorResponse = GetDoctorResponse.builder()
+                            .doctor(doctor.get())
+                            .build();
+
+                    return ResponseEntity.status(HttpStatus.OK).body(doctorResponse);
+                }
+            }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        throw new UserNotAuthenticatedException(errorMsg);
+
     }
-    @RolesAllowed({"Client"})
-    @GetMapping(params = "field")
+
+    @GetMapping("/fields")
     public ResponseEntity<GetAllDoctorsResponse> getDoctorsByField(@RequestParam(name = "field", required = false) String field){
+
+        //possibly make so only clients can see the doctors by work field
         Optional<List<DoctorDTO>> doctorsByField = Optional.ofNullable(doctorManager.getDoctorsByField(field).stream()
                 .map(converter :: toDTO)
                 .toList());
 
-        if(doctorsByField.isPresent()){
+        if(!doctorsByField.isEmpty()){
 
             GetAllDoctorsResponse doctorsResponse = GetAllDoctorsResponse.builder()
                     .doctors(doctorsByField.get())
@@ -70,7 +100,7 @@ public class DoctorController {
                     .build();
             return ResponseEntity.status(HttpStatus.OK).body(doctorsResponse);
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
     }
     @PostMapping()
     public ResponseEntity<CreateDoctorResponse> registerDoctor(@RequestBody @Valid CreateDoctorRequest request){
@@ -95,32 +125,49 @@ public class DoctorController {
     }
     @RolesAllowed({"Doctor"})
     @PutMapping()
-    public ResponseEntity<UpdateDoctorResponse> updateDoctor(@RequestBody @Valid UpdateDoctorRequest request){
-        DoctorDTO doctorDTO = DoctorDTO.builder()
-                .name(request.getName())
-                .password(request.getPassword())
-                .description(request.getDescription())
-                .email(request.getEmail())
-                .phoneNumber(request.getPhoneNumber())
-                .field(request.getField())
-                .build();
+    public ResponseEntity<UpdateDoctorResponse> updateDoctor(@RequestBody @Valid UpdateDoctorRequest request) throws UserNotAuthenticatedException {
 
-        Optional<DoctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.updateDoctor(converter.fromDTO(doctorDTO))));
+        //only the doctor himself can update his information
 
-        if(!doc.isEmpty()){
+        AccessToken tokenClaims = accessTokenService.decode(request.getToken());
 
-            UpdateDoctorResponse doctorResponse = UpdateDoctorResponse.builder()
-                    .updatedDoctor(doctorDTO)
+        Long userId = tokenClaims.getId();
+
+        if(userId.equals(request.getId())) {
+            DoctorDTO doctorDTO = DoctorDTO.builder()
+                    .name(request.getName())
+                    .password(request.getPassword())
+                    .description(request.getDescription())
+                    .email(request.getEmail())
+                    .phoneNumber(request.getPhoneNumber())
+                    .field(request.getField())
                     .build();
 
-            return ResponseEntity.status(HttpStatus.OK).body(doctorResponse);
+            Optional<DoctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.updateDoctor(converter.fromDTO(doctorDTO))));
+
+            if (!doc.isEmpty()) {
+
+                UpdateDoctorResponse doctorResponse = UpdateDoctorResponse.builder()
+                        .updatedDoctor(doctorDTO)
+                        .build();
+
+                return ResponseEntity.status(HttpStatus.OK).body(doctorResponse);
+            }
         }
-        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        throw new UserNotAuthenticatedException(errorMsg);
     }
     @RolesAllowed({"Doctor"})
     @DeleteMapping()
-    public ResponseEntity<Void> deleteDoctor(@RequestParam(name = "id") long id){
-        doctorManager.deleteDoctor(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteDoctor(@RequestParam(name = "id") Long id, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
+        AccessToken tokenClaims = accessTokenService.decode(token);
+
+        Long userId = tokenClaims.getId();
+        boolean isDoctor = tokenClaims.hasRole(Role.Doctor.name());
+
+        if(userId.equals(id) && isDoctor){
+            doctorManager.deleteDoctor(id);
+            return ResponseEntity.noContent().build();
+        }
+        throw new UserNotAuthenticatedException(errorMsg);
     }
 }

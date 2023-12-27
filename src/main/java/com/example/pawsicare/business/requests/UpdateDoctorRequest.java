@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateDoctorRequest {
+    String token;
+    Long id;
     @Size(min = 3)
     @NotBlank
     private String name;

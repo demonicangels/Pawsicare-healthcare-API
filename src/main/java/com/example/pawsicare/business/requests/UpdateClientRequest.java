@@ -9,6 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateClientRequest {
+    Long id;
+    String token;
     @Size(min = 3)
     @NotBlank
     private String name;

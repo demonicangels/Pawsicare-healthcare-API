@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class UpdatePetRequest {
 
+    private String token;
     private Long id;
     private Long ownerId;
     private String name;

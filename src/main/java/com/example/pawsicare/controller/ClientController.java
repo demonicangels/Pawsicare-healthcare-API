@@ -1,6 +1,7 @@
 package com.example.pawsicare.controller;
 
 import com.example.pawsicare.business.dto.ClientDTO;
+import com.example.pawsicare.business.exceptions.UserNotAuthenticatedException;
 import com.example.pawsicare.business.impl.ClientConverter;
 import com.example.pawsicare.business.requests.CreateClientRequest;
 import com.example.pawsicare.business.requests.UpdateClientRequest;
@@ -9,9 +10,11 @@ import com.example.pawsicare.business.responses.GetAllClientsResponse;
 import com.example.pawsicare.business.responses.GetClientResponse;
 import com.example.pawsicare.business.responses.UpdateClientResponse;
 import com.example.pawsicare.business.security.token.AccessToken;
+import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
+import com.example.pawsicare.domain.Role;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,36 +26,41 @@ import java.util.*;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", methods = {RequestMethod.GET, RequestMethod.POST})
 @RequestMapping("/clients")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ClientController {
 
     private final ClientManager clientManager;
     private final ClientConverter converter;
-    private final AccessToken accessToken;
+    private final AccessTokenDecoderEncoderImpl accessTokenService;
+    private String errorMsg = "User not allowed!";
 
     @RolesAllowed({"Client"})
-    @GetMapping(params = "id")
-    public ResponseEntity<GetClientResponse> getClient(@RequestParam(name = "id") Long id){
+    @GetMapping()
+    public ResponseEntity<GetClientResponse> getClient(@RequestParam(name = "id") Long id, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
 
-//        if(!accessToken.getId().equals(id) && !accessToken.getRole().equals(Role.Doctor)){
-//            //throw exception
-//        }
+        AccessToken tokenClaims = accessTokenService.decode(token);
+        Long userId = tokenClaims.getId();
+        boolean isClient = tokenClaims.hasRole(Role.Client.name());
 
-        Optional<ClientDTO> client = Optional.ofNullable(converter.toDTO(clientManager.getClient(id)));
-        if(client.isPresent()){
+        if(userId.equals(id) && isClient){
+            Optional<ClientDTO> client = Optional.ofNullable(converter.toDTO(clientManager.getClient(id)));
+            if(client.isPresent()){
 
-            GetClientResponse clientResponse = GetClientResponse.builder()
-                    .client(client.get())
-                    .build();
+                GetClientResponse clientResponse = GetClientResponse.builder()
+                        .client(client.get())
+                        .build();
 
-            return ResponseEntity.status(HttpStatus.OK).body(clientResponse);
+                return ResponseEntity.status(HttpStatus.OK).body(clientResponse);
+            }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        throw new UserNotAuthenticatedException(errorMsg);
     }
 
     @RolesAllowed({"Doctor"})
     @GetMapping()
     public ResponseEntity<GetAllClientsResponse> getClients(){
+
+        //possibly neither doctors need this nor clients possible method for admins
         Optional<List<ClientDTO>> allClients = Optional.ofNullable(clientManager.getClients().stream()
                 .map(converter :: toDTO)
                 .toList());
@@ -91,30 +99,44 @@ public class ClientController {
     }
     @RolesAllowed({"Client"})
     @PutMapping()
-    public ResponseEntity<UpdateClientResponse> updateClient(@RequestParam(name = "id") long id, @RequestBody @Valid UpdateClientRequest request){
-        ClientDTO client = ClientDTO.builder()
-                .name(request.getName())
-                .phoneNumber(request.getPhoneNumber())
-                .email(request.getEmail())
-                .password(request.getPassword())
-                .build();
+    public ResponseEntity<UpdateClientResponse> updateClient(@RequestParam(name = "id") long id, @RequestBody @Valid UpdateClientRequest request) throws UserNotAuthenticatedException {
 
-        Optional<ClientDTO> client1 = Optional.ofNullable(converter.toDTO(clientManager.updateClient(converter.fromDTO(client))));
+        AccessToken tokenClaims = accessTokenService.decode(request.getToken());
+        Long userId = tokenClaims.getId();
+        boolean isClient = tokenClaims.hasRole(Role.Client.name());
 
-        if(client1.isPresent()){
-            UpdateClientResponse clientResponse = UpdateClientResponse.builder()
-                    .updatedClient(client1.get())
+        if(userId.equals(request.getId()) && isClient){
+            ClientDTO client = ClientDTO.builder()
+                    .name(request.getName())
+                    .phoneNumber(request.getPhoneNumber())
+                    .email(request.getEmail())
+                    .password(request.getPassword())
                     .build();
 
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(clientResponse);
+            Optional<ClientDTO> client1 = Optional.ofNullable(converter.toDTO(clientManager.updateClient(converter.fromDTO(client))));
+
+            if(client1.isPresent()){
+                UpdateClientResponse clientResponse = UpdateClientResponse.builder()
+                        .updatedClient(client1.get())
+                        .build();
+
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(clientResponse);
+            }
         }
-        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        throw new UserNotAuthenticatedException(errorMsg);
     }
 
     @RolesAllowed({"Client"})
     @DeleteMapping()
-    public ResponseEntity<Void> deleteClient(@RequestParam(name = "id") long id){
-        clientManager.deleteClient(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteClient(@RequestParam(name = "id") long id, @RequestParam(name = "token")String token) throws UserNotAuthenticatedException {
+        AccessToken tokenClaims = accessTokenService.decode(token);
+        Long userId = tokenClaims.getId();
+        boolean isClient = tokenClaims.hasRole(Role.Client.name());
+
+        if(userId.equals(id) && isClient) {
+            clientManager.deleteClient(id);
+            return ResponseEntity.noContent().build();
+        }
+        throw new UserNotAuthenticatedException(errorMsg);
     }
 }

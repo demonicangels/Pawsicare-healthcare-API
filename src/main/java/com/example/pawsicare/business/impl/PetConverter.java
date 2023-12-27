@@ -9,7 +9,7 @@ public class PetConverter {
     public Pet fromDTO(PetDTO petDTO){
 
         return Pet.builder()
-                .id(petDTO.getId())
+                .id(petDTO.getId() != 0 ? petDTO.getId() : 0 )
                 .ownerId(petDTO.getOwnerId())
                 .name(petDTO.getName())
                 .birthday(petDTO.getBirthday())

@@ -7,6 +7,7 @@ import com.example.pawsicare.persistence.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.DoctorEntity;
 import com.example.pawsicare.persistence.jparepositories.DoctorRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -44,8 +45,10 @@ public class DoctorManagerImpl implements DoctorManager {
      * @return updated doctor when updated
      * @should return a doctor object with updated fields
      */
+    @RolesAllowed({"Doctor"})
     @Override
     public Doctor updateDoctor(Doctor doctor) {
+
         return converter.fromDoctorEntity((DoctorEntity) userRepository.save(converter.toUserEntity(doctor)));
     }
 

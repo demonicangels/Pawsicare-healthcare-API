@@ -12,7 +12,6 @@ public interface PetRepository extends JpaRepository<PetEntity,Long> {
     PetEntity getPetEntityById(long id);
     List<PetEntity> getPetEntitiesByClient_Id(long ownerId);
 
-
     @Modifying
     @Query("update PetEntity p set p.name = coalesce(:name, p.name), p.information = coalesce(:info, p.information) where p.id = :id")
     void updatePetEntityById(@Param("id") Long id, @Param("name") String name, @Param("info") String info);
