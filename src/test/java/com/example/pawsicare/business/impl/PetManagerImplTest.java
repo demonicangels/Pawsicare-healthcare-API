@@ -100,7 +100,7 @@ class PetManagerImplTest {
      */
     @Test
     void updatePet_shouldReturnAPetObjectWithTheUpdatedFields() throws Exception {
-
+        //TODO make checks also for when the name is null and the description is null
 
         //Arrange
         PetRepository petRepositoryMock = mock(PetRepository.class);

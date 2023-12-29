@@ -8,4 +8,6 @@ public interface RefreshTokenService {
     RefreshToken decode (String refreshToken);
     RefreshToken verifyExpiration(RefreshToken token);
     void clearRefreshToken(RefreshToken token);
+
+    RefreshToken getRefreshTokenByToken(String accessToken);
 }

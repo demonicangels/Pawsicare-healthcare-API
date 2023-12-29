@@ -35,7 +35,7 @@ public class ClientController {
     private String errorMsg = "User not allowed!";
 
     @RolesAllowed({"Client"})
-    @GetMapping()
+    @GetMapping("/clientInfo")
     public ResponseEntity<GetClientResponse> getClient(@RequestParam(name = "id") Long id, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
 
         AccessToken tokenClaims = accessTokenService.decode(token);
@@ -122,20 +122,6 @@ public class ClientController {
 
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(clientResponse);
             }
-        }
-        throw new UserNotAuthenticatedException(errorMsg);
-    }
-
-    @RolesAllowed({"Client"})
-    @DeleteMapping()
-    public ResponseEntity<Void> deleteClient(@RequestParam(name = "id") long id, @RequestParam(name = "token")String token) throws UserNotAuthenticatedException {
-        AccessToken tokenClaims = accessTokenService.decode(token);
-        Long userId = tokenClaims.getId();
-        boolean isClient = tokenClaims.hasRole(Role.Client.name());
-
-        if(userId.equals(id) && isClient) {
-            clientManager.deleteClient(id);
-            return ResponseEntity.noContent().build();
         }
         throw new UserNotAuthenticatedException(errorMsg);
     }

@@ -382,6 +382,6 @@ class DoctorManagerImplTest {
         sut.deleteDoctor(1L);
 
         //Assert
-        verify(userRepositoryMock, times(1)).deleteById(1L);
+        verify(userRepositoryMock, times(1)).deleteUserEntityById(1L);
     }
 }

@@ -92,15 +92,16 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Transactional
     @Override
     public void clearRefreshToken(RefreshToken token) {
-        try{
+
             UserEntity userInfo = refreshTokenEntityConverter.toEntity(token).getUserInfo();
             if(userInfo != null){
                 refreshTokenRepository.deleteByUserInfo(userInfo);
             }
-        }catch(Exception e){
+    }
 
-        }
-
+    @Override
+    public RefreshToken getRefreshTokenByToken(String accessToken) {
+        return refreshTokenEntityConverter.fromEntity(refreshTokenRepository.findByToken(accessToken).get());
     }
 
     @Override

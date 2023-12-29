@@ -84,7 +84,7 @@ public class DoctorManagerImpl implements DoctorManager {
      */
     @Override
     public void deleteDoctor(long id) {
-        userRepository.deleteById(id);
+        userRepository.deleteUserEntityById(id);
     }
 
     /**

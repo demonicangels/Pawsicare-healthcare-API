@@ -10,16 +10,19 @@ import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.RefreshToken;
+import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
+import com.example.pawsicare.domain.managerinterfaces.ClientManager;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.entity.RefreshTokenEntity;
 import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +30,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
-@AllArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173"}, methods = {RequestMethod.GET, RequestMethod.POST})
+@RequiredArgsConstructor
+@CrossOrigin(origins = {"http://localhost:5173"}, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -37,6 +40,9 @@ public class AuthenticationController {
     private final RefreshTokenRepository refreshTokenRepository;
     private final RefreshTokenEntityConverter refreshTokenEntityConverter;
     private final UserRepository userRepository;
+    private final ClientManager clientManager;
+
+    private String errorMsg = "User not allowed!";
 
     @PostMapping
     public ResponseEntity<JWTResponse> loginUser(@RequestBody @Valid LoginUserRequest loginUserRequest) {
@@ -102,5 +108,23 @@ public class AuthenticationController {
     public void deleteOldRefreshToken(@RequestBody RefreshTokenRequest request){
         RefreshToken refreshToken = refreshTokenService.decode(request.getToken());
         refreshTokenService.clearRefreshToken(refreshToken);
+    }
+
+    @RolesAllowed({"Client", "Doctor"})
+    @DeleteMapping()
+    public ResponseEntity<Void> deleteUser(@RequestParam(name = "id") long id, @RequestParam(name = "token")String token) throws UserNotAuthenticatedException {
+        AccessToken tokenClaims = accessTokenService.decode(token);
+
+        RefreshToken refreshToken = refreshTokenService.getRefreshTokenByToken(token);
+
+        Long userId = tokenClaims.getId();
+        boolean isClient = tokenClaims.hasRole(Role.Client.name());
+        boolean isDoctor = tokenClaims.hasRole(Role.Doctor.name());
+
+        if(userId.equals(id) && (isClient || isDoctor) ){
+            clientManager.deleteClient(id, refreshToken);
+            return ResponseEntity.noContent().build();
+        }
+        throw new UserNotAuthenticatedException(errorMsg);
     }
 }

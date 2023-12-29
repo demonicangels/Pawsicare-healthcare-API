@@ -1,6 +1,7 @@
 package com.example.pawsicare.domain.managerinterfaces;
 
 import com.example.pawsicare.domain.Client;
+import com.example.pawsicare.domain.RefreshToken;
 
 import java.util.List;
 
@@ -11,6 +12,6 @@ public interface ClientManager {
     Client getClient(long id);
 
     List<Client> getClients();
-    void deleteClient(long id);
+    void deleteClient(long id, RefreshToken token);
 
 }

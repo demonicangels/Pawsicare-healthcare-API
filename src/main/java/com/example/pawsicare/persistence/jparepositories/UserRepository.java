@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     //TODO fix this
     //Optional<UserEntity> updateUserEntityById(long id);
-    void deleteById(long id);
+    void deleteUserEntityById(long id);
     List<UserEntity> findByRole(Integer role);
 }

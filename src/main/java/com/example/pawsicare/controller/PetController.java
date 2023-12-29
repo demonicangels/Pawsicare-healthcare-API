@@ -83,8 +83,8 @@ public class PetController {
     }
 
     @RolesAllowed({"Client","Doctor"})
-    @GetMapping(params = "ownerId")
-    public ResponseEntity<GetAllPetsResponse> getPetsByOwnerId(@RequestParam(name = "ownerId", required = false) Long ownerId, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
+    @GetMapping()
+    public ResponseEntity<GetAllPetsResponse> getPetsByOwnerId(@RequestParam(name = "ownerId") Long ownerId, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
 
         AccessToken tokenClaims = accessTokenService.decode(token);
 
