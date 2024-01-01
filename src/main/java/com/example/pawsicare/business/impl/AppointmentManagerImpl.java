@@ -1,21 +1,73 @@
 package com.example.pawsicare.business.impl;
 
+import com.example.pawsicare.business.dto.AppointmentDTO;
+import com.example.pawsicare.business.dto.DoctorDTO;
+import com.example.pawsicare.business.security.token.AccessToken;
+import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
+import com.example.pawsicare.domain.DayOfWeek;
+import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.managerinterfaces.AppointmentManager;
 import com.example.pawsicare.domain.Appointment;
+import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
 import com.example.pawsicare.persistence.AppointmentEntityConverter;
 import com.example.pawsicare.persistence.jparepositories.AppointmentRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AppointmentManagerImpl implements AppointmentManager {
 
     private final AppointmentRepository appointmentRepository;
     private final AppointmentEntityConverter converter;
+    private final AccessTokenDecoderEncoderImpl accessTokenService;
+    private final DoctorManager doctorManager;
+
+
+    private int numberOfWeeks = 4;
+    private int appointmentDurationInMinutes = 60;
+
+    @Override
+    public List<Appointment> createDoctorSchedule(String token, DayOfWeek startDay, DayOfWeek endDay, LocalTime startTime, LocalTime endTime) {
+        AccessToken tokenClaims =  accessTokenService.decode(token);
+
+        Long doctorId = tokenClaims.getId();
+
+        Doctor doctor = doctorManager.getDoctor(doctorId);
+
+        LocalDateTime currentDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
+        LocalDateTime endDateTime = currentDateTime.plusWeeks(numberOfWeeks);
+
+        List<Appointment> appointments = new ArrayList<>();
+
+        while (currentDateTime.isBefore(endDateTime)){
+            DayOfWeek dayOfWeek = DayOfWeek.values()[currentDateTime.get(ChronoField.DAY_OF_WEEK) - 1];
+
+            if(dayOfWeek.compareTo(startDay) >= 0 && dayOfWeek.compareTo(endDay) <= 0){
+                if(currentDateTime.getHour() >= startTime.getHour() && currentDateTime.getHour() < endTime.getHour()){
+                    LocalDateTime appStart = currentDateTime;
+                    LocalDateTime appEnd = currentDateTime.plusMinutes(appointmentDurationInMinutes);
+                    appointments.add(Appointment.builder()
+                            .dateAndStart(appStart)
+                            .dateAndEnd(appEnd)
+                            .doctor(doctor).build());
+                }
+            }
+
+            currentDateTime = currentDateTime.plusHours(1);
+        }
+
+        return appointments;
+    }
 
     /**
      * @param appointment
@@ -57,4 +109,6 @@ public class AppointmentManagerImpl implements AppointmentManager {
     public void cancelAppointment(long id) {
         appointmentRepository.deleteById(id);
     }
+
+
 }

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -62,5 +64,16 @@ public class AppointmentConverter {
         LocalDate date1 = LocalDate.parse(date);
         LocalTime start1 = LocalTime.parse(start);
         return LocalDateTime.of(date1,start1);
+    }
+
+    public LocalTime fromStringToTime(String time){
+        LocalTime time1 = null;
+        try{
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m");
+            time1 = LocalTime.parse(time, formatter);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return time1;
     }
 }
