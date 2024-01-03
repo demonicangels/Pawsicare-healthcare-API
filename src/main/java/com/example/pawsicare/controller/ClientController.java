@@ -10,7 +10,7 @@ import com.example.pawsicare.business.responses.GetAllClientsResponse;
 import com.example.pawsicare.business.responses.GetClientResponse;
 import com.example.pawsicare.business.responses.UpdateClientResponse;
 import com.example.pawsicare.business.security.token.AccessToken;
-import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
+import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.domain.Role;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -31,14 +31,14 @@ public class ClientController {
 
     private final ClientManager clientManager;
     private final ClientConverter converter;
-    private final AccessTokenDecoderEncoderImpl accessTokenService;
+    private final AccessTokenDecoder accessTokenDecoder;
     private String errorMsg = "User not allowed!";
 
     @RolesAllowed({"Client"})
     @GetMapping("/clientInfo")
     public ResponseEntity<GetClientResponse> getClient(@RequestParam(name = "id") Long id, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
 
-        AccessToken tokenClaims = accessTokenService.decode(token);
+        AccessToken tokenClaims = accessTokenDecoder.decode(token);
         Long userId = tokenClaims.getId();
         boolean isClient = tokenClaims.hasRole(Role.Client.name());
 
@@ -101,7 +101,7 @@ public class ClientController {
     @PutMapping()
     public ResponseEntity<UpdateClientResponse> updateClient(@RequestParam(name = "id") long id, @RequestBody @Valid UpdateClientRequest request) throws UserNotAuthenticatedException {
 
-        AccessToken tokenClaims = accessTokenService.decode(request.getToken());
+        AccessToken tokenClaims = accessTokenDecoder.decode(request.getToken());
         Long userId = tokenClaims.getId();
         boolean isClient = tokenClaims.hasRole(Role.Client.name());
 

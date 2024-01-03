@@ -12,6 +12,6 @@ public interface ClientManager {
     Client getClient(long id);
 
     List<Client> getClients();
-    void deleteClient(long id, RefreshToken token);
+    void deleteUser(long id, RefreshToken token);
 
 }

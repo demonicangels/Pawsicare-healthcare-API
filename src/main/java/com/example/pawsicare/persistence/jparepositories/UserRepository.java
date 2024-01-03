@@ -1,6 +1,5 @@
 package com.example.pawsicare.persistence.jparepositories;
 
-import com.example.pawsicare.domain.User;
 import com.example.pawsicare.persistence.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -3,12 +3,15 @@ package com.example.pawsicare.business.impl;
 
 import com.example.pawsicare.business.exceptions.RefreshTokenExpiredException;
 import com.example.pawsicare.business.exceptions.UnauthorizedUserException;
+import com.example.pawsicare.business.exceptions.UserNotAuthenticatedException;
+import com.example.pawsicare.business.exceptions.UserNotFoundException;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.*;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.UserEntityConverter;
+import com.example.pawsicare.persistence.entity.RefreshTokenEntity;
 import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
@@ -18,6 +21,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -75,10 +79,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         else{
             throw new UnauthorizedUserException();
         }
-
-
-
-
     }
     @Override
     public RefreshToken verifyExpiration(RefreshToken token) {
@@ -100,8 +100,23 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    public RefreshToken getRefreshTokenByToken(String accessToken) {
-        return refreshTokenEntityConverter.fromEntity(refreshTokenRepository.findByToken(accessToken).get());
+    public RefreshToken getRefreshTokenByUser(User user) throws UserNotFoundException {
+        Optional<RefreshTokenEntity> refreshTokenEntityOptional = refreshTokenRepository.findByUserInfo(userConverter.toUserEntity(user));
+
+        if (!refreshTokenEntityOptional.isEmpty()) {
+            RefreshTokenEntity refreshTokenEntity = refreshTokenEntityOptional.get();
+            return refreshTokenEntityConverter.fromEntity(refreshTokenEntity);
+        }
+        throw new UserNotFoundException("User not found");
+    }
+
+    @Override
+    public RefreshToken getRefreshTokenByToken(String accessToken) throws UserNotAuthenticatedException {
+        Optional<RefreshTokenEntity> refreshTokenEntityOptional = refreshTokenRepository.findByToken(accessToken);
+        if(!refreshTokenEntityOptional.isEmpty()){
+            return refreshTokenEntityConverter.fromEntity(refreshTokenEntityOptional.get());
+        }
+        throw new UserNotAuthenticatedException("User not authenticated!");
     }
 
     @Override

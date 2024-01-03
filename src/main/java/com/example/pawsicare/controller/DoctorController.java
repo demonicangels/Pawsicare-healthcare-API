@@ -7,7 +7,7 @@ import com.example.pawsicare.business.requests.CreateDoctorRequest;
 import com.example.pawsicare.business.requests.UpdateDoctorRequest;
 import com.example.pawsicare.business.responses.*;
 import com.example.pawsicare.business.security.token.AccessToken;
-import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
+import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
@@ -29,7 +29,7 @@ public class DoctorController {
 
     private final DoctorManager doctorManager;
     private final DoctorConverter converter;
-    private final AccessTokenDecoderEncoderImpl accessTokenService;
+    private final AccessTokenDecoder accessTokenDecoder;
     private final UserEntityConverter userEntityConverter;
     private String errorMsg = "User not allowed!";
     private final UserRepository userRepository;
@@ -40,7 +40,7 @@ public class DoctorController {
                                                             @RequestParam("token") String token) throws UserNotAuthenticatedException {
         //only Clients and the Doctor himself are privy to a doctor's information
 
-        AccessToken tokenClaims = accessTokenService.decode(token);
+        AccessToken tokenClaims = accessTokenDecoder.decode(token);
         Optional<User> userFound = userRepository.getUserEntityById(tokenClaims.getId())
                 .map(userEntityConverter::fromUserEntity)
                 .map(Optional::of)
@@ -129,7 +129,7 @@ public class DoctorController {
 
         //only the doctor himself can update his information
 
-        AccessToken tokenClaims = accessTokenService.decode(request.getToken());
+        AccessToken tokenClaims = accessTokenDecoder.decode(request.getToken());
 
         Long userId = tokenClaims.getId();
 
@@ -159,7 +159,7 @@ public class DoctorController {
     @RolesAllowed({"Doctor"})
     @DeleteMapping()
     public ResponseEntity<Void> deleteDoctor(@RequestParam(name = "id") Long id, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
-        AccessToken tokenClaims = accessTokenService.decode(token);
+        AccessToken tokenClaims = accessTokenDecoder.decode(token);
 
         Long userId = tokenClaims.getId();
         boolean isDoctor = tokenClaims.hasRole(Role.Doctor.name());

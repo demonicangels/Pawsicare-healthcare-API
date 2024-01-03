@@ -1,7 +1,6 @@
 package com.example.pawsicare.controller;
 
 import com.example.pawsicare.business.dto.AppointmentDTO;
-import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.impl.AppointmentConverter;
 import com.example.pawsicare.business.impl.ClientConverter;
 import com.example.pawsicare.business.impl.DoctorConverter;
@@ -10,16 +9,13 @@ import com.example.pawsicare.business.requests.CreateAppointmentRequest;
 import com.example.pawsicare.business.requests.CreateDoctorScheduleRequest;
 import com.example.pawsicare.business.requests.UpdateAppointmentRequest;
 import com.example.pawsicare.business.responses.*;
-import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
-import com.example.pawsicare.domain.DayOfWeek;
 import com.example.pawsicare.domain.managerinterfaces.AppointmentManager;
 import com.example.pawsicare.domain.managerinterfaces.ClientManager;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
 import com.example.pawsicare.domain.managerinterfaces.PetManager;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @RestController
@@ -83,35 +77,6 @@ public class AppointmentController {
                 request.getEndDay(),
                 startTime,
                 endTime).stream().map(converter::toDTO).toList();
-//
-//
-//        AccessToken tokenClaims =  accessTokenService.decode(request.getToken());
-//
-//        Long doctorId = tokenClaims.getId();
-//
-//        DoctorDTO doctor = doctorConverter.toDTO(doctorManager.getDoctor(doctorId));
-//
-//        LocalDateTime currentDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
-//        LocalDateTime endDateTime = currentDateTime.plusWeeks(numberOfWeeks);
-//
-//        List<AppointmentDTO> appointments = new ArrayList<>();
-//
-//        while (currentDateTime.isBefore(endDateTime)){
-//            DayOfWeek dayOfWeek = DayOfWeek.values()[currentDateTime.get(ChronoField.DAY_OF_WEEK) - 1];
-//
-//            if(dayOfWeek.compareTo(request.getStartDay()) >= 0 && dayOfWeek.compareTo(request.getEndDay()) <= 0){
-//                if(currentDateTime.getHour() >= startTime.getHour() && currentDateTime.getHour() < endTime.getHour()){
-//                    LocalDateTime appStart = currentDateTime;
-//                    LocalDateTime appEnd = currentDateTime.plusMinutes(appointmentDurationInMinutes);
-//                    appointments.add(AppointmentDTO.builder()
-//                            .dateAndStart(appStart)
-//                            .dateAndEnd(appEnd)
-//                            .doctor(doctor).build());
-//                }
-//            }
-//
-//            currentDateTime = currentDateTime.plusHours(1);
-//        }
 
         return ResponseEntity.ok(GetAppointmentsResponse.builder()
                 .appointments(schedule).build());

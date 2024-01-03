@@ -3,6 +3,7 @@ package com.example.pawsicare.controller;
 import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
 import com.example.pawsicare.business.exceptions.RefreshTokenExpiredException;
 import com.example.pawsicare.business.exceptions.UserNotAuthenticatedException;
+import com.example.pawsicare.business.exceptions.UserNotFoundException;
 import com.example.pawsicare.business.requests.LoginUserRequest;
 import com.example.pawsicare.business.requests.RefreshTokenRequest;
 import com.example.pawsicare.business.responses.JWTResponse;
@@ -16,6 +17,7 @@ import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
 import com.example.pawsicare.domain.managerinterfaces.ClientManager;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
+import com.example.pawsicare.persistence.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.RefreshTokenEntity;
 import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
@@ -37,10 +39,9 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final AccessTokenDecoderEncoderImpl accessTokenService;
     private final RefreshTokenService refreshTokenService;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final RefreshTokenEntityConverter refreshTokenEntityConverter;
     private final UserRepository userRepository;
     private final ClientManager clientManager;
+    private final UserEntityConverter userEntityConverter;
 
     private String errorMsg = "User not allowed!";
 
@@ -53,13 +54,13 @@ public class AuthenticationController {
             return ResponseEntity.ok(response);
 
 
-        } catch (Exception e) {
+        }catch (Exception e) {
             throw new InvalidCredentialsException();
         }
     }
 
     @PostMapping("/refreshToken")
-    public JWTResponse refreshToken (@RequestBody RefreshTokenRequest token) throws UserNotAuthenticatedException {
+    public JWTResponse refreshToken (@RequestBody RefreshTokenRequest token) throws UserNotAuthenticatedException, UserNotFoundException {
 
         AccessToken access = accessTokenService.decode(token.getToken());
 
@@ -67,13 +68,9 @@ public class AuthenticationController {
 
         if(!optionalUser.isEmpty()) {
 
-            Optional<RefreshTokenEntity> refreshTFromDb = refreshTokenRepository.findByUserInfo(optionalUser.get());
+            RefreshToken refreshTFromDb = refreshTokenService.getRefreshTokenByUser(userEntityConverter.fromUserEntity(optionalUser.get()));
 
-            if (refreshTFromDb.isEmpty()) {
-                throw new UserNotAuthenticatedException("Refresh token not found");
-            }
-
-            RefreshToken refreshToken = refreshTokenEntityConverter.fromEntity(refreshTFromDb.get());
+            RefreshToken refreshToken = refreshTFromDb;
 
             RefreshToken notExpiredRefreshToken = refreshTokenService.verifyExpiration(refreshToken);
 
@@ -122,7 +119,7 @@ public class AuthenticationController {
         boolean isDoctor = tokenClaims.hasRole(Role.Doctor.name());
 
         if(userId.equals(id) && (isClient || isDoctor) ){
-            clientManager.deleteClient(id, refreshToken);
+            clientManager.deleteUser(id, refreshToken);
             return ResponseEntity.noContent().build();
         }
         throw new UserNotAuthenticatedException(errorMsg);

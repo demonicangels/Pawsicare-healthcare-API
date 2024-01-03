@@ -51,7 +51,7 @@ public class ClientManagerImpl implements ClientManager {
 
     @Transactional
     @Override
-    public void deleteClient(long id, RefreshToken token) {
+    public void deleteUser(long id, RefreshToken token) {
         refreshTokenService.clearRefreshToken(token);
         userRepository.deleteUserEntityById(id);
     }
