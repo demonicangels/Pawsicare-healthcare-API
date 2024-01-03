@@ -2,7 +2,7 @@ package com.example.pawsicare.controller;
 
 import com.example.pawsicare.business.dto.PetDTO;
 import com.example.pawsicare.business.exceptions.UserNotAuthenticatedException;
-import com.example.pawsicare.business.impl.PetConverter;
+import com.example.pawsicare.business.converters.PetConverter;
 import com.example.pawsicare.business.requests.CreatePetRequest;
 import com.example.pawsicare.business.requests.UpdatePetRequest;
 import com.example.pawsicare.business.responses.CreatePetResponse;
@@ -13,7 +13,7 @@ import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEnco
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.PetManager;
-import com.example.pawsicare.persistence.UserEntityConverter;
+import com.example.pawsicare.persistence.converters.UserEntityConverter;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;

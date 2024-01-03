@@ -1,4 +1,7 @@
---make a trigger so the same user doesn't save twoce in the auth token database table
+-- trigger so the same user doesn't save twice in the auth token database table
+
+-- DROP PROCEDURE IF EXISTS CreateTriggerForAuthTokensTableIfNoneExists;
+--
 -- DELIMITER //
 --     CREATE PROCEDURE CreateTriggerForAuthTokensTableIfNoneExists()
 --     BEGIN

@@ -2,7 +2,7 @@ package com.example.pawsicare.controller;
 
 import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.exceptions.UserNotAuthenticatedException;
-import com.example.pawsicare.business.impl.DoctorConverter;
+import com.example.pawsicare.business.converters.DoctorConverter;
 import com.example.pawsicare.business.requests.CreateDoctorRequest;
 import com.example.pawsicare.business.requests.UpdateDoctorRequest;
 import com.example.pawsicare.business.responses.*;
@@ -11,7 +11,7 @@ import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
-import com.example.pawsicare.persistence.UserEntityConverter;
+import com.example.pawsicare.persistence.converters.UserEntityConverter;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;

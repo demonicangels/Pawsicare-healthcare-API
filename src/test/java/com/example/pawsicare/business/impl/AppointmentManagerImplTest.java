@@ -1,23 +1,8 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.domain.Appointment;
-import com.example.pawsicare.persistence.AppointmentEntityConverter;
-import com.example.pawsicare.persistence.entity.AppointmentEntity;
-import com.example.pawsicare.persistence.jparepositories.AppointmentRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 class AppointmentManagerImplTest {
 

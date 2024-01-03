@@ -1,4 +1,4 @@
-package com.example.pawsicare.persistence;
+package com.example.pawsicare.persistence.converters;
 
 import com.example.pawsicare.domain.RefreshToken;
 import com.example.pawsicare.persistence.entity.RefreshTokenEntity;

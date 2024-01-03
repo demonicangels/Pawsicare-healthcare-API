@@ -9,8 +9,8 @@ import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEnco
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.*;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
-import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
-import com.example.pawsicare.persistence.UserEntityConverter;
+import com.example.pawsicare.persistence.converters.RefreshTokenEntityConverter;
+import com.example.pawsicare.persistence.converters.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.RefreshTokenEntity;
 import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
@@ -21,7 +21,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;

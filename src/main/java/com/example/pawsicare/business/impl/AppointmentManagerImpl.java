@@ -7,7 +7,7 @@ import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.managerinterfaces.AppointmentManager;
 import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
-import com.example.pawsicare.persistence.AppointmentEntityConverter;
+import com.example.pawsicare.persistence.converters.AppointmentEntityConverter;
 import com.example.pawsicare.persistence.jparepositories.AppointmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

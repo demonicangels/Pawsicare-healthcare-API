@@ -1,4 +1,4 @@
-package com.example.pawsicare.business.impl;
+package com.example.pawsicare.business.converters;
 
 import com.example.pawsicare.business.dto.PetDTO;
 import com.example.pawsicare.domain.Pet;

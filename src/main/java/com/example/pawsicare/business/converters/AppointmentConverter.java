@@ -1,4 +1,4 @@
-package com.example.pawsicare.business.impl;
+package com.example.pawsicare.business.converters;
 
 import com.example.pawsicare.business.dto.AppointmentDTO;
 import com.example.pawsicare.domain.Appointment;
@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor

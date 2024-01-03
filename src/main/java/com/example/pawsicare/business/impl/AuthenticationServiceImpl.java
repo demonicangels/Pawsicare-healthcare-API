@@ -1,5 +1,7 @@
 package com.example.pawsicare.business.impl;
 
+import com.example.pawsicare.business.converters.ClientConverter;
+import com.example.pawsicare.business.converters.DoctorConverter;
 import com.example.pawsicare.business.dto.ClientDTO;
 import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.exceptions.InvalidCredentialsException;
@@ -10,11 +12,11 @@ import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.*;
 import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
-import com.example.pawsicare.persistence.RefreshTokenEntityConverter;
+import com.example.pawsicare.persistence.converters.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
-import com.example.pawsicare.persistence.UserEntityConverter;
+import com.example.pawsicare.persistence.converters.UserEntityConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

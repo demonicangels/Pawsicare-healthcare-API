@@ -1,8 +1,7 @@
-package com.example.pawsicare.persistence;
+package com.example.pawsicare.persistence.converters;
 
 import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.persistence.entity.AppointmentEntity;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

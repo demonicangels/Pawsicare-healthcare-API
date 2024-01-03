@@ -4,7 +4,7 @@ import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.RefreshToken;
 import com.example.pawsicare.domain.managerinterfaces.ClientManager;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
-import com.example.pawsicare.persistence.UserEntityConverter;
+import com.example.pawsicare.persistence.converters.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.ClientEntity;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import jakarta.transaction.Transactional;

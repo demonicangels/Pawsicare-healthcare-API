@@ -3,7 +3,7 @@ package com.example.pawsicare.business.impl;
 import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
-import com.example.pawsicare.persistence.UserEntityConverter;
+import com.example.pawsicare.persistence.converters.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.DoctorEntity;
 import com.example.pawsicare.persistence.jparepositories.DoctorRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;

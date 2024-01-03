@@ -1,10 +1,10 @@
 package com.example.pawsicare.controller;
 
 import com.example.pawsicare.business.dto.AppointmentDTO;
-import com.example.pawsicare.business.impl.AppointmentConverter;
-import com.example.pawsicare.business.impl.ClientConverter;
-import com.example.pawsicare.business.impl.DoctorConverter;
-import com.example.pawsicare.business.impl.PetConverter;
+import com.example.pawsicare.business.converters.AppointmentConverter;
+import com.example.pawsicare.business.converters.ClientConverter;
+import com.example.pawsicare.business.converters.DoctorConverter;
+import com.example.pawsicare.business.converters.PetConverter;
 import com.example.pawsicare.business.requests.CreateAppointmentRequest;
 import com.example.pawsicare.business.requests.CreateDoctorScheduleRequest;
 import com.example.pawsicare.business.requests.UpdateAppointmentRequest;

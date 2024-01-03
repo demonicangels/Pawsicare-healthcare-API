@@ -1,5 +1,6 @@
 package com.example.pawsicare.business.impl;
 
+import com.example.pawsicare.business.converters.DoctorConverter;
 import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.responses.CreateDoctorResponse;
 import com.example.pawsicare.business.responses.GetAllDoctorsResponse;
@@ -9,11 +10,10 @@ import com.example.pawsicare.persistence.entity.DoctorEntity;
 import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.DoctorRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
-import com.example.pawsicare.persistence.UserEntityConverter;
+import com.example.pawsicare.persistence.converters.UserEntityConverter;
 import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.data.convert.EntityConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;

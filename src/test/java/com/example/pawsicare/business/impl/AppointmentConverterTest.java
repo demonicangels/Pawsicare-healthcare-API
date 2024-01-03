@@ -1,5 +1,9 @@
 package com.example.pawsicare.business.impl;
 
+import com.example.pawsicare.business.converters.AppointmentConverter;
+import com.example.pawsicare.business.converters.ClientConverter;
+import com.example.pawsicare.business.converters.DoctorConverter;
+import com.example.pawsicare.business.converters.PetConverter;
 import com.example.pawsicare.business.dto.AppointmentDTO;
 import com.example.pawsicare.business.dto.ClientDTO;
 import com.example.pawsicare.business.dto.DoctorDTO;
@@ -10,7 +14,6 @@ import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.Pet;
 import static org.assertj.core.api.Assertions.*;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
