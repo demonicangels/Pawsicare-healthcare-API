@@ -133,8 +133,9 @@ public class DoctorController {
 
         Long userId = tokenClaims.getId();
 
-        if(userId.equals(request.getId())) {
+        if(userId.equals(request.getId()) && tokenClaims.hasRole(Role.Doctor.name())) {
             DoctorDTO doctorDTO = DoctorDTO.builder()
+                    .id(userId)
                     .name(request.getName())
                     .password(request.getPassword())
                     .description(request.getDescription())
@@ -143,12 +144,12 @@ public class DoctorController {
                     .field(request.getField())
                     .build();
 
-            Optional<DoctorDTO> doc = Optional.ofNullable(converter.toDTO(doctorManager.updateDoctor(converter.fromDTO(doctorDTO))));
+            Optional<DoctorDTO> doctorDTOOptional = Optional.of(converter.toDTO(doctorManager.updateDoctor(converter.fromDTO(doctorDTO))));
 
-            if (!doc.isEmpty()) {
+            if (!doctorDTOOptional.isEmpty()) {
 
                 UpdateDoctorResponse doctorResponse = UpdateDoctorResponse.builder()
-                        .updatedDoctor(doctorDTO)
+                        .updatedDoctor(doctorDTOOptional.get())
                         .build();
 
                 return ResponseEntity.status(HttpStatus.OK).body(doctorResponse);

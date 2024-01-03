@@ -11,6 +11,7 @@ import com.example.pawsicare.business.responses.GetClientResponse;
 import com.example.pawsicare.business.responses.UpdateClientResponse;
 import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.AccessTokenDecoder;
+import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.Role;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -99,29 +100,28 @@ public class ClientController {
     }
     @RolesAllowed({"Client"})
     @PutMapping()
-    public ResponseEntity<UpdateClientResponse> updateClient(@RequestParam(name = "id") long id, @RequestBody @Valid UpdateClientRequest request) throws UserNotAuthenticatedException {
+    public ResponseEntity<UpdateClientResponse> updateClient(@RequestBody @Valid UpdateClientRequest request) throws UserNotAuthenticatedException {
 
         AccessToken tokenClaims = accessTokenDecoder.decode(request.getToken());
         Long userId = tokenClaims.getId();
         boolean isClient = tokenClaims.hasRole(Role.Client.name());
 
-        if(userId.equals(request.getId()) && isClient){
+        if (userId.equals(request.getId()) && isClient) {
+
             ClientDTO client = ClientDTO.builder()
-                    .name(request.getName())
+                    .id(userId)
                     .phoneNumber(request.getPhoneNumber())
                     .email(request.getEmail())
                     .password(request.getPassword())
                     .build();
 
-            Optional<ClientDTO> client1 = Optional.ofNullable(converter.toDTO(clientManager.updateClient(converter.fromDTO(client))));
+            Client updatedClient = clientManager.updateClient(converter.fromDTO(client));
 
-            if(client1.isPresent()){
-                UpdateClientResponse clientResponse = UpdateClientResponse.builder()
-                        .updatedClient(client1.get())
-                        .build();
+            UpdateClientResponse clientResponse = UpdateClientResponse.builder()
+                    .updatedClient(converter.toDTO(updatedClient))
+                    .build();
 
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body(clientResponse);
-            }
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(clientResponse);
         }
         throw new UserNotAuthenticatedException(errorMsg);
     }

@@ -94,61 +94,6 @@ class DoctorManagerImplTest {
 
     }
 
-    /**
-     * @verifies return a doctor object with updated fields
-     * @see DoctorManagerImpl #updateDoctor()( Doctor )
-     */
-    @Test
-     void updateDoctor_shouldReturnADoctorObjectWithUpdatedFields() throws Exception {
-       //Arrange
-
-       UserRepository userRepositoryMock = mock(UserRepository.class);
-       DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
-       UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
-       DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
-       PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
-
-       DoctorEntity updateDoctor = DoctorEntity.builder()
-                        .name("Nia")
-                        .field("neurology")
-                        .email("nia@mail.com")
-                        .build();
-
-       Doctor doctor = Doctor.builder()
-               .name("Nia")
-               .field("neurology")
-               .email("nia@mail.com")
-               .build();
-
-       DoctorDTO doctorDTO = DoctorDTO.builder()
-               .name("Nia")
-               .field("neurology")
-               .email("nia@mail.com")
-               .build();
-
-       when(userRepositoryMock.save(updateDoctor)).thenReturn(updateDoctor);
-       when(userEntityConverterMock.fromDoctorEntity(updateDoctor)).thenReturn(doctor);
-       when(userEntityConverterMock.toUserEntity(doctor)).thenReturn(updateDoctor);
-       when(userEntityConverterMock.toDoctorEntity(doctor)).thenReturn(updateDoctor);
-       when(doctorConverterMock.toDTO(doctor)).thenReturn(doctorDTO);
-       when(doctorConverterMock.fromDTO(doctorDTO)).thenReturn(doctor);
-       when(passwordEncoderMock.encode("123")).thenReturn("123");
-
-
-        DoctorManagerImpl sut = new DoctorManagerImpl(userEntityConverterMock,userRepositoryMock,doctorRepositoryMock,passwordEncoderMock);
-
-        //Act
-
-        UpdateDoctorResponse sutResponse = UpdateDoctorResponse.builder()
-                .updatedDoctor(doctorConverterMock.toDTO(sut.updateDoctor(userEntityConverterMock.fromDoctorEntity(updateDoctor))))
-                .build();
-
-        //Assert
-        Assertions.assertEquals(updateDoctor,userEntityConverterMock.toDoctorEntity(doctorConverterMock.fromDTO(sutResponse.getUpdatedDoctor())));
-        assertThat(updateDoctor.getId()).isEqualTo(sutResponse.getUpdatedDoctor().getId());
-        assertThat(updateDoctor.getName()).isEqualTo(sutResponse.getUpdatedDoctor().getName());
-
-    }
 
     /**
      * @verifies return a list with all doctors when doctors are present
@@ -383,5 +328,68 @@ class DoctorManagerImplTest {
 
         //Assert
         verify(userRepositoryMock, times(1)).deleteUserEntityById(1L);
+    }
+
+    /**
+     * @verifies verify the repository method is called correctly
+     * @see DoctorManagerImpl#updateDoctor(Doctor)
+     */
+    @Test
+    public void updateDoctor_shouldVerifyTheRepositoryMethodIsCalledCorrectly() throws Exception {
+
+        //Arrange
+        UserRepository userRepositoryMock = mock(UserRepository.class);
+        DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
+        UserEntityConverter userEntityConverterMock = mock(UserEntityConverter.class);
+        DoctorConverter doctorConverterMock = mock(DoctorConverter.class);
+        PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
+
+        DoctorEntity updateDoctor = DoctorEntity.builder()
+                .id(1L)
+                .phoneNumber("09876422")
+                .email("nia@mail.com")
+                .password("123")
+                .build();
+
+        Doctor doctor = Doctor.builder()
+                .id(1L)
+                .phoneNumber("09876422")
+                .email("nia@mail.com")
+                .password("123")
+                .build();
+
+        DoctorDTO doctorDTO = DoctorDTO.builder()
+                .name("Nia")
+                .field("neurology")
+                .email("nia@mail.com")
+                .build();
+
+        when(userRepositoryMock.save(updateDoctor)).thenReturn(updateDoctor);
+        when(userEntityConverterMock.fromDoctorEntity(updateDoctor)).thenReturn(doctor);
+        when(userEntityConverterMock.toUserEntity(doctor)).thenReturn(updateDoctor);
+        when(userEntityConverterMock.toDoctorEntity(doctor)).thenReturn(updateDoctor);
+        when(doctorConverterMock.toDTO(doctor)).thenReturn(doctorDTO);
+        when(doctorConverterMock.fromDTO(doctorDTO)).thenReturn(doctor);
+        when(passwordEncoderMock.encode("123")).thenReturn("123");
+
+
+        DoctorManagerImpl sut = new DoctorManagerImpl(userEntityConverterMock,userRepositoryMock,doctorRepositoryMock,passwordEncoderMock);
+
+        //Act
+
+        sut.updateDoctor(userEntityConverterMock.fromDoctorEntity(updateDoctor));
+
+
+        //Assert
+        verify(userRepositoryMock).updateUserEntityById(updateDoctor.getId(),updateDoctor.getEmail(),updateDoctor.getPhoneNumber(),updateDoctor.getPassword());
+    }
+
+    /**
+     * @verifies set the values of the variables from the object from the db when their values are null or empty
+     * @see DoctorManagerImpl#updateDoctor(Doctor)
+     */
+    @Test
+    public void updateDoctor_shouldSetTheValuesOfTheVariablesFromTheObjectFromTheDbWhenTheirValuesAreNullOrEmpty() throws Exception {
+        //TODO implement this unittest
     }
 }

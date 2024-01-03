@@ -39,7 +39,6 @@ public class AppointmentController {
     private final ClientConverter clientConverter;
     private final DoctorConverter doctorConverter;
     private final PetConverter petConverter;
-    private final AccessTokenDecoderEncoderImpl accessTokenService;
 
 
 

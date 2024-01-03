@@ -1,10 +1,12 @@
 package com.example.pawsicare.business.impl;
 
+import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
 import com.example.pawsicare.persistence.converters.UserEntityConverter;
 import com.example.pawsicare.persistence.entity.DoctorEntity;
+import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.DoctorRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import jakarta.annotation.security.RolesAllowed;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,13 +46,33 @@ public class DoctorManagerImpl implements DoctorManager {
     /**
      * @param doctor
      * @return updated doctor when updated
-     * @should return a doctor object with updated fields
+     * @should verify the repository method is called correctly
+     * @should set the values of the variables from the object from the db when their values are null or empty
      */
     @RolesAllowed({"Doctor"})
     @Override
     public Doctor updateDoctor(Doctor doctor) {
+        Optional<UserEntity> userEntity = userRepository.getUserEntityById(doctor.getId());
 
-        return converter.fromDoctorEntity((DoctorEntity) userRepository.save(converter.toUserEntity(doctor)));
+        if(!userEntity.isEmpty()){
+            DoctorEntity doctorEntity = (DoctorEntity) userEntity.get();
+
+           if(doctor.getEmail() == null || doctor.getEmail().isEmpty()){
+               doctor.setEmail(doctorEntity.getEmail());
+           }else if(doctor.getPhoneNumber() == null || doctor.getPhoneNumber().isEmpty()){
+               doctor.setPhoneNumber(doctorEntity.getPhoneNumber());
+           }
+
+           if(doctor.getPassword() == null || doctor.getPassword().isEmpty()){
+               doctor.setPassword(doctorEntity.getPassword());
+           }else{
+               String encodedPass = passwordEncoder.encode(doctor.getPassword());
+               doctor.setPassword(encodedPass);
+           }
+        }
+        userRepository.updateUserEntityById(doctor.getId(), doctor.getEmail(), doctor.getPhoneNumber(), doctor.getPassword());
+
+       return getDoctor(doctor.getId());
     }
 
     /**

@@ -27,5 +27,4 @@ public class ClientEntity extends UserEntity {
     )
     private List<DoctorEntity> doctors;
 
-
 }

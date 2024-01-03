@@ -12,6 +12,7 @@ import com.example.pawsicare.business.requests.UpdateAppointmentRequest;
 import com.example.pawsicare.business.responses.CreateAppointmentResponse;
 import com.example.pawsicare.business.responses.GetAppointmentsResponse;
 import com.example.pawsicare.business.responses.UpdateAppointmentResponse;
+import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.controller.AppointmentController;
 import com.example.pawsicare.domain.*;
 import com.example.pawsicare.domain.managerinterfaces.AppointmentManager;
