@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -152,23 +153,15 @@ class AppointmentRepositoryTest {
     @Test
     void update_rescheduleAnAppointment(){
 
-        DoctorEntity doctor = DoctorEntity.builder()
-                .name("Maria")
-                .email("maria@gmail.com")
-                .password("123")
-                .field("neurology")
-                .build();
-
-        entityManager.persist(doctor);
-
         DoctorEntity doctor2 = DoctorEntity.builder()
+                .id(2L)
                 .name("Maria")
                 .email("maria@gmail.com")
                 .password("123")
                 .field("neurology")
                 .build();
 
-        entityManager.persist(doctor2);
+        doctor2 = entityManager.merge(doctor2);
 
         AppointmentEntity updatedAppointment = AppointmentEntity.builder()
                 .id(1L)
@@ -179,13 +172,17 @@ class AppointmentRepositoryTest {
                 .build();
 
         updatedAppointment = entityManager.merge(updatedAppointment);
-        appointmentRepository.save(updatedAppointment);
 
-        AppointmentEntity dbUpdatedAppointment = appointmentRepository.findById(1L).get();
+        entityManager.persist(updatedAppointment);
+
+        Long mergedAppId = updatedAppointment.getId();
+
+        AppointmentEntity dbUpdatedAppointment = entityManager.find(AppointmentEntity.class,mergedAppId);
 
         assertNotNull(dbUpdatedAppointment);
-        assertEquals(1L,dbUpdatedAppointment.getId());
+        assertEquals(mergedAppId,dbUpdatedAppointment.getId());
         assertEquals(dbUpdatedAppointment.getDoctor(), doctor2);
+
     }
 
 
