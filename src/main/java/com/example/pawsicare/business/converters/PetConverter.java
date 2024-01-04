@@ -8,8 +8,19 @@ import org.springframework.stereotype.Service;
 public class PetConverter {
     public Pet fromDTO(PetDTO petDTO){
 
+        if(petDTO.getId() == 0){
+            return Pet.builder()
+                    .ownerId(petDTO.getOwnerId())
+                    .name(petDTO.getName())
+                    .birthday(petDTO.getBirthday())
+                    .age(petDTO.getAge())
+                    .type(petDTO.getType())
+                    .gender(petDTO.getGender())
+                    .information(petDTO.getInformation())
+                    .build();
+        }
         return Pet.builder()
-                .id(petDTO.getId() != 0 ? petDTO.getId() : 0 )
+                .id(petDTO.getId() != 0 ? petDTO.getId() : null )
                 .ownerId(petDTO.getOwnerId())
                 .name(petDTO.getName())
                 .birthday(petDTO.getBirthday())

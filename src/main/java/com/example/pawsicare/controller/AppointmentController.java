@@ -9,12 +9,12 @@ import com.example.pawsicare.business.requests.CreateAppointmentRequest;
 import com.example.pawsicare.business.requests.CreateDoctorScheduleRequest;
 import com.example.pawsicare.business.requests.UpdateAppointmentRequest;
 import com.example.pawsicare.business.responses.*;
-import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.domain.managerinterfaces.AppointmentManager;
 import com.example.pawsicare.domain.managerinterfaces.ClientManager;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
 import com.example.pawsicare.domain.managerinterfaces.PetManager;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,7 +39,6 @@ public class AppointmentController {
     private final ClientConverter clientConverter;
     private final DoctorConverter doctorConverter;
     private final PetConverter petConverter;
-
 
 
     @RolesAllowed({"Doctor", "Client"})
@@ -81,6 +80,7 @@ public class AppointmentController {
                 .appointments(schedule).build());
     }
 
+    @Transactional
     @RolesAllowed({"Client"})
     @PostMapping
     public ResponseEntity<CreateAppointmentResponse> createAppointment(@RequestBody @Valid CreateAppointmentRequest appointmentRequest){

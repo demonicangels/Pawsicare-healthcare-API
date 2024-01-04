@@ -39,7 +39,7 @@ public class AppointmentEntity {
     @JoinColumn(name = "doctor")
     private DoctorEntity doctor;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="pet")
     private PetEntity pet;
 
