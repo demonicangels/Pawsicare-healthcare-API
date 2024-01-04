@@ -22,6 +22,9 @@ public class PetConverter {
 
     public PetDTO toDTO (Pet pet){
 
+        if(pet == null){
+            return new PetDTO();
+        }
         return PetDTO.builder()
                 .id(pet.getId())
                 .ownerId(pet.getOwnerId())

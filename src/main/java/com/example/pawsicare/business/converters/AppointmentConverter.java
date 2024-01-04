@@ -2,6 +2,7 @@ package com.example.pawsicare.business.converters;
 
 import com.example.pawsicare.business.dto.AppointmentDTO;
 import com.example.pawsicare.domain.Appointment;
+import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.config.ExcludeFromCodeCoverage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class AppointmentConverter {
                 .id(appointment.getId())
                 .dateAndStart(appointment.getDateAndStart())
                 .dateAndEnd(appointment.getDateAndEnd())
-                .client(clientConverter.toDTO(appointment.getClient()))
+                .client(clientConverter.toDTO(appointment.getClient() == null ? new Client() : appointment.getClient()))
                 .doctor(doctorConverter.toDTO(appointment.getDoctor()))
                 .pet(petConverter.toDTO(appointment.getPet()))
                 .build();

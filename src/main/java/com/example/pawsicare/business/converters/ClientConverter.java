@@ -9,7 +9,10 @@ public class ClientConverter {
 
     public ClientDTO toDTO (Client client){
 
-        return ClientDTO.builder()
+       if(client == null || client == new Client()){
+           return new ClientDTO();
+       }
+       return ClientDTO.builder()
                 .id(client.getId())
                 .name(client.getName())
                 .birthday(client.getBirthday())
