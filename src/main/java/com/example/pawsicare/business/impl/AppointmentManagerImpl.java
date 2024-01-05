@@ -8,6 +8,8 @@ import com.example.pawsicare.domain.managerinterfaces.AppointmentManager;
 import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
 import com.example.pawsicare.persistence.converters.AppointmentEntityConverter;
+import com.example.pawsicare.persistence.converters.PetEntityConverter;
+import com.example.pawsicare.persistence.converters.UserEntityConverter;
 import com.example.pawsicare.persistence.jparepositories.AppointmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,10 +31,13 @@ public class AppointmentManagerImpl implements AppointmentManager {
     private final AppointmentEntityConverter converter;
     private final AccessTokenDecoder accessTokenDecoder;
     private final DoctorManager doctorManager;
+    private final UserEntityConverter userEntityConverter;
+    private final PetEntityConverter petEntityConverter;
 
 
     private int numberOfDaysInMonth = 0;
     private int appointmentDurationInMinutes = 60;
+
 
     @Override
     public List<Appointment> createDoctorSchedule(String token, DayOfWeek startDay, DayOfWeek endDay, LocalTime startTime, LocalTime endTime) {
@@ -51,11 +56,11 @@ public class AppointmentManagerImpl implements AppointmentManager {
 
         List<Appointment> appointments = new ArrayList<>();
 
-        while (currentDateTime.isBefore(endDateTime)){
+        while (currentDateTime.isBefore(endDateTime)) {
             DayOfWeek dayOfWeek = DayOfWeek.values()[currentDateTime.get(ChronoField.DAY_OF_WEEK) - 1];
 
-            if(dayOfWeek.compareTo(startDay) >= 0 && dayOfWeek.compareTo(endDay) <= 0){
-                if(currentDateTime.getHour() >= startTime.getHour() && currentDateTime.getHour() < endTime.getHour()){
+            if (dayOfWeek.compareTo(startDay) >= 0 && dayOfWeek.compareTo(endDay) <= 0) {
+                if (currentDateTime.getHour() >= startTime.getHour() && currentDateTime.getHour() < endTime.getHour()) {
                     LocalDateTime appStart = currentDateTime;
                     LocalDateTime appEnd = currentDateTime.plusMinutes(appointmentDurationInMinutes);
                     appointments.add(Appointment.builder()
@@ -68,6 +73,11 @@ public class AppointmentManagerImpl implements AppointmentManager {
             currentDateTime = currentDateTime.plusHours(1);
         }
 
+        for (Appointment a: appointments){
+
+            appointmentRepository.save(converter.toEntity(a));
+        }
+
         return appointments;
     }
 
@@ -77,8 +87,11 @@ public class AppointmentManagerImpl implements AppointmentManager {
      * @return created appointment
      */
     @Override
-    public Optional<Appointment> createAppointment(Appointment appointment) {
-        return Optional.of(converter.fromEntity(appointmentRepository.save(converter.toEntity(appointment))));
+    public void createAppointment(Appointment appointment) {
+        appointmentRepository.updateAppointmentEntityByDateAndAndDateAndStartAndDoctor(appointment.getDateAndStart(),
+                userEntityConverter.toDoctorEntity(appointment.getDoctor()),
+                userEntityConverter.toClientEntity(appointment.getClient()),
+                petEntityConverter.toEntity(appointment.getPet()));
     }
 
     /**
@@ -101,6 +114,15 @@ public class AppointmentManagerImpl implements AppointmentManager {
     @Override
     public Optional<List<Appointment>> getUsersAppointments(long userId) {
         return Optional.of(appointmentRepository.findAppointmentEntitiesByClient_IdOrDoctor_Id(userId,userId).stream().map(converter :: fromEntity).toList());
+    }
+
+    @Override
+    public List<Appointment> getDoctorSchedule(long docId) {
+
+       return appointmentRepository.getDocSchedule(docId)
+               .stream()
+               .map(converter::fromEntity)
+               .toList();
     }
 
     /**

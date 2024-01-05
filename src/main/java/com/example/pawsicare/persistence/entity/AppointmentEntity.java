@@ -1,5 +1,6 @@
 package com.example.pawsicare.persistence.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class AppointmentEntity {
     @Column(name = "dateAndEndTime")
     private LocalDateTime dateAndEnd;
 
+    @Nullable
     @ManyToOne
     @JoinColumn(name = "client")
     private ClientEntity client;
@@ -39,6 +41,7 @@ public class AppointmentEntity {
     @JoinColumn(name = "doctor")
     private DoctorEntity doctor;
 
+    @Nullable
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="pet")
     private PetEntity pet;

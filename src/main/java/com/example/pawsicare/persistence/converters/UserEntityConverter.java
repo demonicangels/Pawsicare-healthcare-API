@@ -40,7 +40,9 @@ public class UserEntityConverter {
     }
 
     public Client fromClientEntity (ClientEntity client){
-
+        if(client == null){
+            return null;
+        }
          return Client.builder()
                 .id(client.getId())
                 .name(client.getName())
@@ -54,6 +56,9 @@ public class UserEntityConverter {
 
     public ClientEntity toClientEntity (Client client){
 
+        if(client == null){
+            return null;
+        }
         return ClientEntity.builder()
                 .id(client.getId())
                 .name(client.getName())
@@ -66,6 +71,9 @@ public class UserEntityConverter {
     }
 
     public Doctor fromDoctorEntity (DoctorEntity doctor){
+        if(doctor == null){
+            return null;
+        }
         return Doctor.builder()
                 .id(doctor.getId())
                 .name(doctor.getName())

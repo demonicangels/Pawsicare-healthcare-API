@@ -14,6 +14,9 @@ public class PetEntityConverter {
     private final UserRepository userRepository;
 
     public Pet fromEntity (PetEntity pet){
+        if(pet == null){
+            return null;
+        }
         return Pet.builder()
                 .id(pet.getId())
                 .name(pet.getName())
@@ -26,7 +29,10 @@ public class PetEntityConverter {
     }
 
     public PetEntity toEntity (Pet pet){
-        if(pet.getId() == 0){
+        if(pet == null){
+            return null;
+        }
+        else if(pet.getId() == 0){
             return PetEntity.builder()
                     .name(pet.getName())
                     .client(userRepository.getUserEntityById(pet.getOwnerId()).map(ClientEntity.class :: cast).orElse(null))

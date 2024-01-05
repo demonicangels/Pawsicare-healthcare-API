@@ -40,7 +40,19 @@ public class AppointmentController {
     private final DoctorConverter doctorConverter;
     private final PetConverter petConverter;
 
+    //TODO do the authentication for the appointment controller
+    @RolesAllowed({"Doctor", "Client"})
+    @GetMapping("/getDocSchedule")
+    public ResponseEntity<GetAppointmentsResponse> getDoctorsSchedule(@Valid @RequestParam(name = "docId") Long docId, @RequestParam(name = "token") String token){
+        List<AppointmentDTO> schedule = appointmentManager.getDoctorSchedule(docId)
+                .stream()
+                .map(converter::toDTO)
+                .toList();
 
+        return ResponseEntity.ok().body(GetAppointmentsResponse.builder()
+                .appointments(schedule)
+                .build());
+    }
     @RolesAllowed({"Doctor", "Client"})
     @GetMapping(params = "userId")
     public ResponseEntity<GetAppointmentsResponse> getUsersAppointments(@Valid @RequestParam(name = "userId")long userId){
@@ -84,6 +96,7 @@ public class AppointmentController {
     @RolesAllowed({"Client"})
     @PostMapping
     public ResponseEntity<CreateAppointmentResponse> createAppointment(@RequestBody @Valid CreateAppointmentRequest appointmentRequest){
+
         LocalDateTime dateAndStart = converter.dateAndTime(appointmentRequest.getDate(),appointmentRequest.getStart());
         LocalDateTime dateAndEnd = converter.dateAndTime(appointmentRequest.getDate(),appointmentRequest.getEnd());
         AppointmentDTO appointment = AppointmentDTO.builder()
@@ -94,18 +107,9 @@ public class AppointmentController {
                 .pet(petConverter.toDTO(petManager.getPet(appointmentRequest.getPetId())))
                 .build();
 
-        Optional<AppointmentDTO> app = Optional.ofNullable(appointmentManager.createAppointment(converter.fromDTO(appointment))
-                .map(converter :: toDTO)
-                .orElse(null));
+        appointmentManager.createAppointment(converter.fromDTO(appointment));
 
-        if(app.isPresent()){
-            CreateAppointmentResponse appointmentResponse = CreateAppointmentResponse.builder()
-                   .appointment(app.get())
-                   .build();
-         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentResponse);
-        }
-       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @RolesAllowed({"Doctor","Client"})
