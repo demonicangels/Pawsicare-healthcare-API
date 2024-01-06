@@ -22,5 +22,6 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity,L
 
     @Query("select a from AppointmentEntity a where a.doctor.id = :docId and a.client = null")
     List<AppointmentEntity> getDocSchedule(@Param("docId") Long docId);
+    @Modifying
     void deleteById(long appId);
 }

@@ -131,9 +131,10 @@ public class AppointmentController {
         }
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
+    @Transactional
     @RolesAllowed({"Doctor","Client"})
     @DeleteMapping(params = "id")
-    public ResponseEntity<Void> cancelAppointment(@RequestParam(name = "id")long id){
+    public ResponseEntity<Void> cancelAppointment(@RequestParam(name = "id")long id, @RequestParam(name = "token") String token){
         appointmentManager.cancelAppointment(id);
         return ResponseEntity.ok().build();
     }
