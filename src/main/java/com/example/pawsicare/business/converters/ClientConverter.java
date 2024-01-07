@@ -25,6 +25,10 @@ public class ClientConverter {
 
     public Client fromDTO (ClientDTO clientDTO){
 
+        if (clientDTO == null){
+            return new Client();
+        }
+
         return Client.builder()
                 .id(clientDTO.getId())
                 .name(clientDTO.getName())

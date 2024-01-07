@@ -10,6 +10,7 @@ import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
 import com.example.pawsicare.persistence.converters.AppointmentEntityConverter;
 import com.example.pawsicare.persistence.converters.PetEntityConverter;
 import com.example.pawsicare.persistence.converters.UserEntityConverter;
+import com.example.pawsicare.persistence.entity.AppointmentEntity;
 import com.example.pawsicare.persistence.jparepositories.AppointmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -100,8 +101,15 @@ public class AppointmentManagerImpl implements AppointmentManager {
      * @return updated appointment
      */
     @Override
-    public Optional<Appointment> rescheduleAppointment(Appointment appointment) {
-        return Optional.of(converter.fromEntity(appointmentRepository.save(converter.toEntity(appointment))));
+    public void rescheduleAppointment(Appointment appointment) {
+        appointmentRepository.updateAppointmentEntityByDoctorAndClientAndPet(appointment.getDateAndStart(),
+                appointment.getDateAndEnd(),
+                userEntityConverter.toDoctorEntity(appointment.getDoctor()),
+                userEntityConverter.toClientEntity(appointment.getClient()),
+                petEntityConverter.toEntity(appointment.getPet()));
+
+        appointmentRepository.updateAppointmentEntityByIdAndDoctorAndClientAndPet(appointment.getId(),
+                userEntityConverter.toDoctorEntity(appointment.getDoctor()));
     }
 
     /**

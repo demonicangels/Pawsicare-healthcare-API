@@ -112,24 +112,24 @@ public class AppointmentController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Transactional
     @RolesAllowed({"Doctor","Client"})
-    @PutMapping(params = "id")
-    public ResponseEntity<UpdateAppointmentResponse> rescheduleAppointment (@RequestBody @Valid UpdateAppointmentRequest appointmentRequest){
+    @PutMapping()
+    public ResponseEntity<Void> rescheduleAppointment (@RequestBody @Valid UpdateAppointmentRequest appointmentRequest){
         AppointmentDTO appointment = AppointmentDTO.builder()
+                .id(appointmentRequest.getId())
                 .dateAndStart(appointmentRequest.getDateAndStart())
                 .dateAndEnd(appointmentRequest.getDateAndEnd())
+                .doctor(appointmentRequest.getDoctor())
+                .client(appointmentRequest.getClient())
+                .pet(appointmentRequest.getPet())
                 .build();
 
-        Optional<AppointmentDTO> api = Optional.ofNullable(appointmentManager.rescheduleAppointment(converter.fromDTO(appointment)).map(converter :: toDTO).orElse(null));
+        appointmentManager.rescheduleAppointment(converter.fromDTO(appointment));
 
-        if(api.isPresent()){
-            UpdateAppointmentResponse updateAppointmentResponse = UpdateAppointmentResponse.builder()
-                    .updatedAppointment(api.get())
-                    .build();
 
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateAppointmentResponse);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+
     }
     @Transactional
     @RolesAllowed({"Doctor","Client"})

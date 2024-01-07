@@ -43,8 +43,17 @@ public class AppointmentConverter {
      */
 
     public Appointment fromDTO (AppointmentDTO appointmentDTO){
+        if(appointmentDTO.getId() == null){
+            return Appointment.builder()
+                    .dateAndStart(appointmentDTO.getDateAndStart())
+                    .dateAndEnd(appointmentDTO.getDateAndEnd())
+                    .client(clientConverter.fromDTO(appointmentDTO.getClient()))
+                    .doctor(doctorConverter.fromDTO(appointmentDTO.getDoctor()))
+                    .pet(petConverter.fromDTO(appointmentDTO.getPet()))
+                    .build();
+        }
         return Appointment.builder()
-                //.id(appointmentDTO.getId())
+                .id(appointmentDTO.getId())
                 .dateAndStart(appointmentDTO.getDateAndStart())
                 .dateAndEnd(appointmentDTO.getDateAndEnd())
                 .client(clientConverter.fromDTO(appointmentDTO.getClient()))
