@@ -35,15 +35,16 @@ public class ClientController {
     private final AccessTokenDecoder accessTokenDecoder;
     private String errorMsg = "User not allowed!";
 
-    @RolesAllowed({"Client"})
+    @RolesAllowed({"Client", "Doctor"})
     @GetMapping("/clientInfo")
     public ResponseEntity<GetClientResponse> getClient(@RequestParam(name = "id") Long id, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
 
         AccessToken tokenClaims = accessTokenDecoder.decode(token);
         Long userId = tokenClaims.getId();
         boolean isClient = tokenClaims.hasRole(Role.Client.name());
+        boolean isDoctor = tokenClaims.hasRole(Role.Doctor.name());
 
-        if(userId.equals(id) && isClient){
+        if(userId.equals(id) && (isClient || isDoctor)){
             Optional<ClientDTO> client = Optional.ofNullable(converter.toDTO(clientManager.getClient(id)));
             if(client.isPresent()){
 
@@ -57,7 +58,7 @@ public class ClientController {
         throw new UserNotAuthenticatedException(errorMsg);
     }
 
-    @RolesAllowed({"Doctor"})
+    @RolesAllowed({"Doctor", "Client"})
     @GetMapping()
     public ResponseEntity<GetAllClientsResponse> getClients(){
 

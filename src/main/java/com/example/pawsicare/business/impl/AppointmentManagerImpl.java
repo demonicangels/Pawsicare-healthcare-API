@@ -10,11 +10,11 @@ import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
 import com.example.pawsicare.persistence.converters.AppointmentEntityConverter;
 import com.example.pawsicare.persistence.converters.PetEntityConverter;
 import com.example.pawsicare.persistence.converters.UserEntityConverter;
-import com.example.pawsicare.persistence.entity.AppointmentEntity;
 import com.example.pawsicare.persistence.jparepositories.AppointmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
@@ -36,10 +36,19 @@ public class AppointmentManagerImpl implements AppointmentManager {
     private final PetEntityConverter petEntityConverter;
 
 
-    private int numberOfDaysInMonth = 0;
+    private int numberOfDaysInMonth = LocalDate.now().lengthOfMonth();
     private int appointmentDurationInMinutes = 60;
 
 
+    /**
+     * @param token
+     * @param startDay
+     * @param endDay
+     * @param startTime
+     * @param endTime
+     * @should a list with created appointments in the specified range
+     * @return a list with the doctors automatically created schedule
+     */
     @Override
     public List<Appointment> createDoctorSchedule(String token, DayOfWeek startDay, DayOfWeek endDay, LocalTime startTime, LocalTime endTime) {
         AccessToken tokenClaims =  accessTokenDecoder.decode(token);
@@ -57,7 +66,7 @@ public class AppointmentManagerImpl implements AppointmentManager {
 
         List<Appointment> appointments = new ArrayList<>();
 
-        while (currentDateTime.isBefore(endDateTime)) {
+        while (currentDateTime.isBefore(endDateTime) || currentDateTime.equals(endDateTime)) {
             DayOfWeek dayOfWeek = DayOfWeek.values()[currentDateTime.get(ChronoField.DAY_OF_WEEK) - 1];
 
             if (dayOfWeek.compareTo(startDay) >= 0 && dayOfWeek.compareTo(endDay) <= 0) {
@@ -89,6 +98,7 @@ public class AppointmentManagerImpl implements AppointmentManager {
      */
     @Override
     public void createAppointment(Appointment appointment) {
+
         appointmentRepository.updateAppointmentEntityByDateAndAndDateAndStartAndDoctor(appointment.getDateAndStart(),
                 userEntityConverter.toDoctorEntity(appointment.getDoctor()),
                 userEntityConverter.toClientEntity(appointment.getClient()),
@@ -124,6 +134,13 @@ public class AppointmentManagerImpl implements AppointmentManager {
         return Optional.of(appointmentRepository.findAppointmentEntitiesByClient_IdOrDoctor_Id(userId,userId).stream().map(converter :: fromEntity).toList());
     }
 
+    /**
+     * @param docId
+     * @should  return all doctors available slots when present
+     * @should  return an empty list if the doctor has no available slots left
+     * @return list of appointments
+     *
+     */
     @Override
     public List<Appointment> getDoctorSchedule(long docId) {
 
