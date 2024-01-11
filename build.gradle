@@ -23,9 +23,9 @@ sonar {
 				'src/**/business/requests/**/*',
 				'src/**/business/responses/**/*',
 				'src/**/business/security/**/*',
-				'src/**/business/impl/DoctorConverter*.*',
-				'src/**/business/impl/ClientConverter*.*',
-				'src/**/business/impl/PetConverter*.*',
+				'src/**/business/converters/DoctorConverter*.*',
+				'src/**/business/converters/ClientConverter*.*',
+				'src/**/business/converters/PetConverter*.*',
 				'src/**/business/impl/TokenConverter*.*',
 				'src/**/controller/ClientController/*.*',
 				'src/**/domain/**/*',
@@ -39,8 +39,8 @@ sonar {
 				'src/**/business/impl/ClientManagerImpl*.*',
 				'src/**/business/impl/EmailManagerImpl*.*',
 				'src/**/business/impl/RefreshTokenServiceImpl*.*',
-				'src/**/business/impl/AppointmentConverter*.*'
-
+				'src/**/business/converters/AppointmentConverter*.*',
+				'src/**/business/converters/**/*'
 		]
 		property "sonar.coverage.jacoco.xmlReportPaths", "$rootDir/build/jacocoHtml/jacocoTestReport.html"
 	}
@@ -128,9 +128,9 @@ jacocoTestReport {
 						'src/**/business/security/**/*',
 						'src/**/business/security/token/**/*',
 						'src/**/business/security/auth/**',
-						'src/**/business/impl/DoctorConverter*.*',
-						'src/**/business/impl/ClientConverter*.*',
-						'src/**/business/impl/PetConverter*.*',
+						'src/**/business/converters/DoctorConverter*.*',
+						'src/**/business/converters/ClientConverter*.*',
+						'src/**/business/converters/PetConverter*.*',
 						'src/**/business/impl/TokenConverter*.*',
 						'src/**/domain/ClientController/*.*',
 						'src/**/domain/PetController/*.*',
@@ -144,7 +144,8 @@ jacocoTestReport {
 						'src/**/business/impl/EmailManagerImpl*.*',
 						'src/**/domain/**/*',
 						'src/**/business/impl/RefreshTokenServiceImpl*.*',
-						'src/**/business/impl/AppointmentConverter*.*'
+						'src/**/business/converters/AppointmentConverter*.*',
+						'src/**/business/converters/**/*'
 				])
 
 			}))
