@@ -229,11 +229,11 @@ class PetManagerImplTest {
     }
 
     /**
-     * @verifies set the values of the variables from the object from the db when their values are null or empty
+     * @verifies set the values of the variables from the object from the db when their values are null
      * @see PetManagerImpl#updatePet(Pet)
      */
     @Test
-    void updatePet_shouldSetTheValuesOfTheVariablesFromTheObjectFromTheDbWhenTheirValuesAreNullOrEmpty() throws Exception {
+    void updatePet_shouldSetTheValuesOfTheVariablesFromTheObjectFromTheDbWhenTheirValuesAreNull() throws Exception {
         // Arrange
         PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
         PetRepository petRepositoryMock = mock(PetRepository.class);
@@ -250,6 +250,46 @@ class PetManagerImplTest {
                 .id(1L)
                 .name(null)
                 .information(null)
+                .build();
+
+        when(petRepositoryMock.getPetEntityById(pet.getId())).thenReturn(updatePetEntity);
+
+        // Act
+        sut.updatePet(pet);
+
+        // Assert
+        verify(petRepositoryMock).getPetEntityById(pet.getId());
+        verify(petRepositoryMock).updatePetEntityById(
+                pet.getId(),
+                updatePetEntity.getName(),
+                updatePetEntity.getInformation()
+        );
+        assertEquals(pet.getName(), updatePetEntity.getName());
+        assertEquals(pet.getInformation(), updatePetEntity.getInformation());
+    }
+
+    /**
+     * @verifies set the values of the variables from the object from the db when their values are empty
+     * @see PetManagerImpl#updatePet(Pet)
+     */
+    @Test
+    void updatePet_shouldSetTheValuesOfTheVariablesFromTheObjectFromTheDbWhenTheirValuesAreEmpty() throws Exception {
+        // Arrange
+        PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
+        PetRepository petRepositoryMock = mock(PetRepository.class);
+
+        PetManagerImpl sut = new PetManagerImpl(petRepositoryMock,petEntityConverter);
+
+        PetEntity updatePetEntity = PetEntity.builder()
+                .id(1L)
+                .name("Fluffy")
+                .information("Cute pet")
+                .build();
+
+        Pet pet = Pet.builder()
+                .id(1L)
+                .name("")
+                .information("")
                 .build();
 
         when(petRepositoryMock.getPetEntityById(pet.getId())).thenReturn(updatePetEntity);

@@ -386,11 +386,11 @@ class DoctorManagerImplTest {
     }
 
     /**
-     * @verifies set the values of the variables from the object from the db when their values are null or empty
+     * @verifies set the values of the variables from the object from the db when their values are null
      * @see DoctorManagerImpl#updateDoctor(Doctor)
      */
     @Test
-    void updateDoctor_shouldSetTheValuesOfTheVariablesFromTheObjectFromTheDbWhenTheirValuesAreNullOrEmpty() throws Exception {
+    void updateDoctor_shouldSetTheValuesOfTheVariablesFromTheObjectFromTheDbWhenTheirValuesAreNull() throws Exception {
 
         PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
         UserRepository userRepositoryMock = mock(UserRepository.class);
@@ -410,8 +410,8 @@ class DoctorManagerImplTest {
         Doctor doctor = Doctor.builder()
                 .id(1L)
                 .phoneNumber("09876422")
-                .email("nia@mail.com")
-                .password("123")
+                .email(null)
+                .password(null)
                 .build();
 
         when(userRepositoryMock.getUserEntityById(updateDoctor.getId())).thenReturn(Optional.of(updateDoctor));
@@ -429,4 +429,51 @@ class DoctorManagerImplTest {
                 updateDoctor.getPassword()
         );
     }
+
+    /**
+     * @verifies set the values of the variables from the object from the db when their values are empty
+     * @see DoctorManagerImpl#updateDoctor(Doctor)
+     */
+    @Test
+    void updateDoctor_shouldSetTheValuesOfTheVariablesFromTheObjectFromTheDbWhenTheirValuesAreEmpty() throws Exception {
+        // Arrange
+        UserEntityConverter userEntityConverter = mock(UserEntityConverter.class);
+        DoctorRepository doctorRepositoryMock = mock(DoctorRepository.class);
+        PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+        UserRepository userRepository = mock(UserRepository.class);
+
+        DoctorManagerImpl sut = new DoctorManagerImpl(userEntityConverter, userRepository, doctorRepositoryMock, passwordEncoder);
+
+        DoctorEntity updateDoctorEntity = DoctorEntity.builder()
+                .id(1L)
+                .email("email@example.com")
+                .phoneNumber("123456789")
+                .password("newPassword")
+                .build();
+
+        Doctor doctor = Doctor.builder()
+                .id(1L)
+                .email("")
+                .phoneNumber("")
+                .password("")
+                .build();
+
+        when(userRepository.getUserEntityById(doctor.getId())).thenReturn(Optional.ofNullable(updateDoctorEntity));
+
+        // Act
+        sut.updateDoctor(doctor);
+
+        // Assert
+        verify(userRepository, times(2)).getUserEntityById(doctor.getId());
+        verify(userRepository).updateUserEntityById(
+                doctor.getId(),
+                updateDoctorEntity.getEmail(),
+                updateDoctorEntity.getPhoneNumber(),
+                updateDoctorEntity.getPassword()
+        );
+
+        assertEquals(doctor.getEmail(), updateDoctorEntity.getEmail());
+        assertEquals(doctor.getPassword(), updateDoctorEntity.getPassword());
+    }
 }
+

@@ -35,14 +35,13 @@ public class ClientManagerImpl implements ClientManager {
     public Client updateClient(Client client) {
         Optional<UserEntity> userEntity = userRepository.getUserEntityById(client.getId());
 
-        Client updatedClient = null;
-
         if(!userEntity.isEmpty()){
             ClientEntity clientEntity = (ClientEntity) userEntity.get();
 
             if(client.getEmail() == null || client.getEmail().isEmpty()){
                 client.setEmail(clientEntity.getEmail());
-            }else if(client.getPhoneNumber() == null || client.getPhoneNumber().isEmpty()){
+            }
+            if(client.getPhoneNumber() == null || client.getPhoneNumber().isEmpty()){
                 client.setPhoneNumber(clientEntity.getPhoneNumber());
             }
 

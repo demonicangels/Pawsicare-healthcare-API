@@ -45,7 +45,8 @@ public class DoctorManagerImpl implements DoctorManager {
     /**
      * @param doctor
      * @should verify the repository method is called correctly
-     * @should set the values of the variables from the object from the db when their values are null or empty
+     * @should set the values of the variables from the object from the db when their values are null
+     * @should  set the values of the variables from the object from the db when their values are empty
      */
     @RolesAllowed({"Doctor"})
     @Override
@@ -55,9 +56,11 @@ public class DoctorManagerImpl implements DoctorManager {
         if(!userEntity.isEmpty()){
             DoctorEntity doctorEntity = (DoctorEntity) userEntity.get();
 
-           if(doctor.getEmail() == null || doctor.getEmail().isEmpty()){
+           if(doctor.getEmail() == null || doctor.getEmail().isEmpty()) {
                doctor.setEmail(doctorEntity.getEmail());
-           }else if(doctor.getPhoneNumber() == null || doctor.getPhoneNumber().isEmpty()){
+           }
+
+           if(doctor.getPhoneNumber() == null || doctor.getPhoneNumber().isEmpty()){
                doctor.setPhoneNumber(doctorEntity.getPhoneNumber());
            }
 

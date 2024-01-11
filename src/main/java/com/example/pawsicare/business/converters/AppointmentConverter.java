@@ -81,7 +81,7 @@ public class AppointmentConverter {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m");
             time1 = LocalTime.parse(time, formatter);
         }catch(Exception e){
-            e.printStackTrace();
+            throw e;
         }
         return time1;
     }
