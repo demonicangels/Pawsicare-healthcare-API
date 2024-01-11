@@ -9,6 +9,7 @@ import com.example.pawsicare.persistence.converters.PetEntityConverter;
 import com.example.pawsicare.persistence.entity.ClientEntity;
 import com.example.pawsicare.persistence.entity.PetEntity;
 import com.example.pawsicare.persistence.jparepositories.PetRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -92,41 +93,6 @@ class PetManagerImplTest {
                 .build();
         //Assert
         assertThat(sutResponse.getPets()).isEmpty();
-    }
-
-    /**
-     * @verifies return a pet object with the updated fields
-     * @see PetManagerImpl#updatePet(Pet)
-     */
-    @Test
-    void updatePet_shouldReturnAPetObjectWithTheUpdatedFields() throws Exception {
-        //TODO make checks also for when the name is null and the description is null
-
-        //Arrange
-        PetRepository petRepositoryMock = mock(PetRepository.class);
-        PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
-
-        Pet pet1 = new Pet(1L,1L,"", Gender.FEMALE,"Cat","12/12/2020",null,"");
-
-
-        PetEntity petEntity = PetEntity.builder()
-                .id(1L)
-                .name("nia")
-                .information("hii")
-                .gender(Gender.FEMALE)
-                .build();
-
-        when(petEntityConverter.fromEntity(petEntity)).thenReturn(pet1);
-        when(petEntityConverter.toEntity((pet1))).thenReturn(petEntity);
-        when(petRepositoryMock.getPetEntityById(1L)).thenReturn(petEntity);
-
-        PetManagerImpl sut = new PetManagerImpl(petRepositoryMock,petEntityConverter);
-
-        //Act
-        sut.updatePet(pet1);
-
-        //Assert
-        verify(petRepositoryMock).updatePetEntityById(1L, "nia", "hii");
     }
 
     /**
@@ -222,5 +188,83 @@ class PetManagerImplTest {
 
         //Assert
         verify(petRepository, times(1)).deleteById(1L);
+    }
+
+    /**
+     * @verifies verify the repository method is called correctly
+     * @see PetManagerImpl#updatePet(Pet)
+     */
+    @Test
+    void updatePet_shouldVerifyTheRepositoryMethodIsCalledCorrectly() throws Exception {
+        // Arrange
+        PetRepository petRepositoryMock = mock(PetRepository.class);
+        PetEntityConverter petEntityConverterMock = mock(PetEntityConverter.class);
+
+        PetEntity updatePetEntity = PetEntity.builder()
+                .id(1L)
+                .name("Fluffy")
+                .information("Cute pet")
+                .build();
+
+        Pet pet = Pet.builder()
+                .id(1L)
+                .name(null)
+                .information(null)
+                .build();
+
+        when(petRepositoryMock.getPetEntityById(pet.getId())).thenReturn(updatePetEntity);
+
+        PetManagerImpl sut = new PetManagerImpl(petRepositoryMock,petEntityConverterMock);
+
+        // Act
+        sut.updatePet(pet);
+
+        // Assert
+        verify(petRepositoryMock).getPetEntityById(pet.getId());
+        verify(petRepositoryMock).updatePetEntityById(
+                pet.getId(),
+                updatePetEntity.getName(),
+                updatePetEntity.getInformation()
+        );
+    }
+
+    /**
+     * @verifies set the values of the variables from the object from the db when their values are null or empty
+     * @see PetManagerImpl#updatePet(Pet)
+     */
+    @Test
+    void updatePet_shouldSetTheValuesOfTheVariablesFromTheObjectFromTheDbWhenTheirValuesAreNullOrEmpty() throws Exception {
+        // Arrange
+        PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
+        PetRepository petRepositoryMock = mock(PetRepository.class);
+
+        PetManagerImpl sut = new PetManagerImpl(petRepositoryMock,petEntityConverter);
+
+        PetEntity updatePetEntity = PetEntity.builder()
+                .id(1L)
+                .name("Fluffy")
+                .information("Cute pet")
+                .build();
+
+        Pet pet = Pet.builder()
+                .id(1L)
+                .name(null)
+                .information(null)
+                .build();
+
+        when(petRepositoryMock.getPetEntityById(pet.getId())).thenReturn(updatePetEntity);
+
+        // Act
+        sut.updatePet(pet);
+
+        // Assert
+        verify(petRepositoryMock).getPetEntityById(pet.getId());
+        verify(petRepositoryMock).updatePetEntityById(
+                pet.getId(),
+                updatePetEntity.getName(),
+                updatePetEntity.getInformation()
+        );
+        assertEquals(pet.getName(), updatePetEntity.getName());
+        assertEquals(pet.getInformation(), updatePetEntity.getInformation());
     }
 }

@@ -1,6 +1,5 @@
 package com.example.pawsicare.business.impl;
 
-import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.Doctor;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
@@ -45,7 +44,6 @@ public class DoctorManagerImpl implements DoctorManager {
 
     /**
      * @param doctor
-     * @return updated doctor when updated
      * @should verify the repository method is called correctly
      * @should set the values of the variables from the object from the db when their values are null or empty
      */

@@ -32,7 +32,8 @@ public class PetManagerImpl implements PetManager {
     /**
      * @param pet
      * @return updated pet object
-     * @should return a pet object with the updated fields
+     * @should verify the repository method is called correctly
+     * @should set the values of the variables from the object from the db when their values are null or empty
      *
      */
     @Transactional
