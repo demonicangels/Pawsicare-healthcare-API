@@ -89,6 +89,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.jetbrains:annotations:24.0.0'
 	implementation 'org.flywaydb:flyway-core'
+	implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 	implementation 'mysql:mysql-connector-java:8.0.23'
 	implementation 'org.flywaydb:flyway-mysql:8.4.4'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -98,6 +99,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.4'
 	testImplementation 'com.playtika.testcontainers:embedded-mysql:3.0.0-RC9'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
 
 }
@@ -152,7 +155,7 @@ jacocoTestReport {
 	}
 }
 
-tasks.named('test') {
+test{
 	useJUnitPlatform()
 	finalizedBy jacocoTestReport
 }

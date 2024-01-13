@@ -8,6 +8,7 @@ import com.example.pawsicare.business.dto.ClientDTO;
 import com.example.pawsicare.business.dto.DoctorDTO;
 import com.example.pawsicare.business.dto.PetDTO;
 import com.example.pawsicare.business.requests.CreateAppointmentRequest;
+import com.example.pawsicare.business.requests.CreateDoctorScheduleRequest;
 import com.example.pawsicare.business.requests.UpdateAppointmentRequest;
 import com.example.pawsicare.business.responses.CreateAppointmentResponse;
 import com.example.pawsicare.business.responses.GetAppointmentsResponse;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,102 +38,205 @@ import static org.mockito.Mockito.*;
 
 class AppointmentControllerTest {
 
-//    @Test
-//    void testGetUsersAppointments() {
-//        // Arrange
-//        AppointmentManager appointmentManager = mock(AppointmentManager.class);
-//        DoctorManager doctorManager = mock(DoctorManager.class);
-//        ClientManager clientManager = mock(ClientManager.class);
-//        PetManager petManager = mock(PetManager.class);
-//        ClientConverter clientConverter = mock(ClientConverter.class);
-//        DoctorConverter doctorConverter = mock(DoctorConverter.class);
-//        PetConverter petConverter = mock(PetConverter.class);
-//        AppointmentConverter converter = mock(AppointmentConverter.class);
-//        AppointmentController appointmentController = new AppointmentController(appointmentManager,
-//                doctorManager,
-//                clientManager,
-//                petManager,
-//                converter,
-//                clientConverter,
-//                doctorConverter,
-//                petConverter);
-//
-//        AppointmentRepository appointmentRepository = mock(AppointmentRepository.class);
-//
-//        long userId = 1L;
-//
-//        Appointment appointment = Appointment.builder()
-//                .id(1L)
-//                .dateAndStart(LocalDateTime.now())
-//                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
-//                .client(null)
-//                .doctor(null)
-//                .build();
-//
-//        AppointmentDTO appointmentDTO = AppointmentDTO.builder()
-//                .id(1L)
-//                .dateAndStart(LocalDateTime.now())
-//                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
-//                .client(null)
-//                .doctor(null)
-//                .build();
-//
-//        AppointmentEntity appointmentEntity = AppointmentEntity.builder()
-//                .id(1L)
-//                .dateAndStart(LocalDateTime.now())
-//                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
-//                .client(null)
-//                .doctor(null)
-//                .build();
-//
-//        List<Appointment> appointments = List.of(appointment);
-//        List<AppointmentEntity> appointmentEntities = List.of(appointmentEntity);
-//
-//        when(appointmentManager.getUsersAppointments(userId)).thenReturn(Optional.of(appointments));
-//        when(appointmentRepository.findAppointmentEntitiesByClient_IdOrDoctor_Id(userId,userId)).thenReturn(appointmentEntities);
-//        when(converter.toDTO(any(Appointment.class))).thenReturn(appointmentDTO);
-//
-//
-//        // Act
-//        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.getUsersAppointments(userId);
-//
-//        // Assert
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//        assertNotNull(responseEntity.getBody().getAppointments());
-//        assertEquals(1, responseEntity.getBody().getAppointments().stream().count());
-//    }
-//
-//    @Test
-//    void testGetUsersAppointmentsNotFound() {
-//        // Arrange
-//        AppointmentManager appointmentManager = mock(AppointmentManager.class);
-//        DoctorManager doctorManager = mock(DoctorManager.class);
-//        ClientManager clientManager = mock(ClientManager.class);
-//        PetManager petManager = mock(PetManager.class);
-//        ClientConverter clientConverter = new ClientConverter();
-//        DoctorConverter doctorConverter = new DoctorConverter();
-//        PetConverter petConverter = new PetConverter();
-//        AppointmentConverter converter = new AppointmentConverter(doctorConverter,clientConverter,petConverter);
-//
-//        AppointmentController appointmentController = new AppointmentController(appointmentManager,
-//                doctorManager,
-//                clientManager,
-//                petManager,
-//                converter,
-//                clientConverter,
-//                doctorConverter,
-//                petConverter);
-//
-//        long userId = 1L;
-//        when(appointmentManager.getUsersAppointments(userId)).thenReturn(Optional.empty());
-//
-//        // Act
-//        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.getUsersAppointments(userId);
-//
-//        // Assert
-//        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-//    }
-//
+    @Test
+    void testGetDoctorsSchedule() {
+        // Arrange
+        AppointmentManager appointmentManager = mock(AppointmentManager.class);
+        DoctorManager doctorManager = mock(DoctorManager.class);
+        ClientManager clientManager = mock(ClientManager.class);
+        PetManager petManager = mock(PetManager.class);
+        ClientConverter clientConverter = mock(ClientConverter.class);
+        DoctorConverter doctorConverter = mock(DoctorConverter.class);
+        PetConverter petConverter = mock(PetConverter.class);
+        AppointmentConverter converter = mock(AppointmentConverter.class);
+        AppointmentController appointmentController = new AppointmentController(appointmentManager,
+                doctorManager,
+                clientManager,
+                petManager,
+                converter,
+                clientConverter,
+                doctorConverter,
+                petConverter);
+
+        Long docId = 1L;
+        String token = "testToken";
+
+        Appointment appointment = Appointment.builder()
+                .id(1L)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.now().plusHours(2))
+                .build();
+
+        AppointmentDTO appointmentDTO = AppointmentDTO.builder()
+                .id(1L)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.now().plusHours(2))
+                .build();
+
+        List<Appointment> appointmentList = List.of(appointment);
+
+        when(appointmentManager.getDoctorSchedule(docId)).thenReturn(appointmentList);
+        when(converter.toDTO(any())).thenReturn(appointmentDTO);
+
+
+        List<AppointmentDTO> appointmentDTOList = appointmentList.stream().map(converter::toDTO).toList();
+
+        // Act
+        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.getDoctorsSchedule(docId, token);
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(appointmentDTOList, Objects.requireNonNull(responseEntity.getBody()).getAppointments());
+        verify(appointmentManager, times(1)).getDoctorSchedule(docId);
+        verify(converter, times(2)).toDTO(any());
+    }
+
+    @Test
+    void testGetUsersAppointments() {
+        // Arrange
+        AppointmentManager appointmentManager = mock(AppointmentManager.class);
+        DoctorManager doctorManager = mock(DoctorManager.class);
+        ClientManager clientManager = mock(ClientManager.class);
+        PetManager petManager = mock(PetManager.class);
+        ClientConverter clientConverter = mock(ClientConverter.class);
+        DoctorConverter doctorConverter = mock(DoctorConverter.class);
+        PetConverter petConverter = mock(PetConverter.class);
+        AppointmentConverter converter = mock(AppointmentConverter.class);
+        AppointmentController appointmentController = new AppointmentController(appointmentManager,
+                doctorManager,
+                clientManager,
+                petManager,
+                converter,
+                clientConverter,
+                doctorConverter,
+                petConverter);
+
+        Long userId = 1L;
+
+        AppointmentDTO appointmentDTO = AppointmentDTO.builder()
+                .id(4L)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.now().plusHours(2))
+                .build();
+
+        Appointment appointment = Appointment.builder()
+                .id(3L)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.now().plusHours(2))
+                .build();
+
+        List<Appointment> appointmentList = List.of(appointment);
+
+        when(appointmentManager.getUsersAppointments(userId)).thenReturn(Optional.of(appointmentList));
+        when(converter.toDTO(any())).thenReturn(appointmentDTO);
+
+        List<AppointmentDTO> appointmentDTOList = appointmentList.stream().map(converter::toDTO).toList();
+
+        // Act
+        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.getUsersAppointments(userId);
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(appointmentDTOList, Objects.requireNonNull(responseEntity.getBody()).getAppointments());
+        verify(appointmentManager, times(1)).getUsersAppointments(userId);
+        verify(converter, times(2)).toDTO(any());
+    }
+    @Test
+    void testGetUsersAppointmentsNotFound() {
+        // Arrange
+        AppointmentManager appointmentManager = mock(AppointmentManager.class);
+        DoctorManager doctorManager = mock(DoctorManager.class);
+        ClientManager clientManager = mock(ClientManager.class);
+        PetManager petManager = mock(PetManager.class);
+        ClientConverter clientConverter = mock(ClientConverter.class);
+        DoctorConverter doctorConverter = mock(DoctorConverter.class);
+        PetConverter petConverter = mock(PetConverter.class);
+        AppointmentConverter converter = mock(AppointmentConverter.class);
+        AppointmentController appointmentController = new AppointmentController(appointmentManager,
+                doctorManager,
+                clientManager,
+                petManager,
+                converter,
+                clientConverter,
+                doctorConverter,
+                petConverter);
+
+        Long userId = 1L;
+
+        when(appointmentManager.getUsersAppointments(userId)).thenReturn(Optional.empty());
+
+        // Act
+        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.getUsersAppointments(userId);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        verify(appointmentManager, times(1)).getUsersAppointments(userId);
+        verify(converter, never()).toDTO(any());
+    }
+
+    @Test
+    void testCreateDoctorSchedule() {
+        // Arrange
+        AppointmentManager appointmentManager = mock(AppointmentManager.class);
+        DoctorManager doctorManager = mock(DoctorManager.class);
+        ClientManager clientManager = mock(ClientManager.class);
+        PetManager petManager = mock(PetManager.class);
+        ClientConverter clientConverter = mock(ClientConverter.class);
+        DoctorConverter doctorConverter = mock(DoctorConverter.class);
+        PetConverter petConverter = mock(PetConverter.class);
+        AppointmentConverter converter = mock(AppointmentConverter.class);
+        AppointmentController appointmentController = new AppointmentController(appointmentManager,
+                doctorManager,
+                clientManager,
+                petManager,
+                converter,
+                clientConverter,
+                doctorConverter,
+                petConverter);
+
+        CreateDoctorScheduleRequest request = new CreateDoctorScheduleRequest();
+        request.setToken("testToken");
+        request.setStartDay(DayOfWeek.Monday);
+        request.setEndDay(DayOfWeek.Friday);
+
+        Appointment appointment = Appointment.builder()
+                .id(1L)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.now().plusHours(1))
+                .build();
+
+        LocalTime startTime = LocalTime.of(8,0);
+        LocalTime endTime = LocalTime.of(9,0);
+
+        List<Appointment> scheduleList = List.of(appointment);
+
+        when(converter.fromStringToTime(anyString())).thenReturn(LocalTime.of(8, 0));
+        when(appointmentManager.createDoctorSchedule(request.getToken(),request.getStartDay(),request.getEndDay(),startTime,endTime)).thenReturn(scheduleList);
+
+        when(appointmentManager.createDoctorSchedule(
+                request.getToken(),
+                request.getStartDay(),
+                request.getEndDay(),
+                LocalTime.of(8, 0),
+                LocalTime.of(17, 0)
+        )).thenReturn(scheduleList);
+
+        // Act
+        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.createDoctorSchedule(request);
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(scheduleList, Objects.requireNonNull(responseEntity.getBody()).getAppointments());
+        verify(appointmentManager, times(1)).createDoctorSchedule(
+                request.getToken(),
+                request.getStartDay(),
+                request.getEndDay(),
+                LocalTime.of(8, 0),
+                LocalTime.of(17, 0)
+        );
+        verify(converter, times(scheduleList.size())).toDTO(any());
+    }
+
 //    @Test
 //    void testCreateAppointment() {
 //        // Arrange

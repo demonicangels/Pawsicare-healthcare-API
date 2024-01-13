@@ -3,13 +3,14 @@ package com.example.pawsicare.business.security.token.impl;
 import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.exception.InvalidAccessTokenException;
 import com.example.pawsicare.domain.Role;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.business.security.token.AccessTokenEncoder;
@@ -25,11 +26,18 @@ import java.util.function.Function;
 import static java.lang.Long.parseLong;
 
 @Service
+@RequiredArgsConstructor
 public class AccessTokenDecoderEncoderImpl implements AccessTokenEncoder, AccessTokenDecoder {
     private final Key key;
 
-    public AccessTokenDecoderEncoderImpl(@Value("${jwt.secret}") String secretKey) {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+    Dotenv dotenv = Dotenv.configure()
+            .directory("C:\\Users\\nikol\\OneDrive\\Desktop\\PawsiCare")
+            .filename("jwtSecretKey.env")
+            .load();
+    String obtainedSecretKey = dotenv.get("jwt.secret");
+
+    public AccessTokenDecoderEncoderImpl() {
+        byte[] keyBytes = Decoders.BASE64.decode(obtainedSecretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 

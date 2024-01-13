@@ -15,12 +15,12 @@ import com.example.pawsicare.persistence.entity.RefreshTokenEntity;
 import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.RefreshTokenRepository;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -43,14 +43,18 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final RefreshTokenEntityConverter refreshTokenEntityConverter;
     private final Key key;
 
+    Dotenv dotenv = Dotenv.configure()
+            .directory("C:\\Users\\nikol\\OneDrive\\Desktop\\PawsiCare")
+            .filename("jwtSecretKey.env")
+            .load();
+    String obtainedSecretKey = dotenv.get("jwt.secret");
 
-    public RefreshTokenServiceImpl(@Value("${jwt.secret}") String secretKey,
-                                   UserRepository userRepository,
+    public RefreshTokenServiceImpl(UserRepository userRepository,
                                    UserEntityConverter userEntityConverter,
                                    AccessTokenDecoderEncoderImpl accessTokenEncoder,
                                    RefreshTokenRepository refreshTokenRepository,
                                    RefreshTokenEntityConverter refreshTokenEntityConverter) {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(obtainedSecretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.userRepository = userRepository;
         this.userConverter = userEntityConverter;
