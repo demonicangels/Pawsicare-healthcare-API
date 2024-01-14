@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface AppointmentManager {
 
-    List<Appointment> createDoctorSchedule(String token, DayOfWeek startDay, DayOfWeek endDay, LocalTime startTime, LocalTime endTime);
+    List<Appointment> createDoctorSchedule(long docId, DayOfWeek startDay, DayOfWeek endDay, LocalTime startTime, LocalTime endTime);
     void createAppointment(Appointment appointment);
     void rescheduleAppointment(Appointment appointment);
     Optional <List<Appointment>> getUsersAppointments(long userId);

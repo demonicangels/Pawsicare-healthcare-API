@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateAppointmentRequest {
+    private String token;
     private String date;
     private String start;
     private String end;

@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateAppointmentRequest {
+    private String token;
     private Long id;
     private LocalDateTime dateAndStart;
     private LocalDateTime dateAndEnd;

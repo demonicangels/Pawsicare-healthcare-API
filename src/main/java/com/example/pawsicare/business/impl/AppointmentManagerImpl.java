@@ -41,7 +41,7 @@ public class AppointmentManagerImpl implements AppointmentManager {
 
 
     /**
-     * @param token
+     * @param docId
      * @param startDay
      * @param endDay
      * @param startTime
@@ -50,12 +50,9 @@ public class AppointmentManagerImpl implements AppointmentManager {
      * @return a list with the doctors automatically created schedule
      */
     @Override
-    public List<Appointment> createDoctorSchedule(String token, DayOfWeek startDay, DayOfWeek endDay, LocalTime startTime, LocalTime endTime) {
-        AccessToken tokenClaims =  accessTokenDecoder.decode(token);
+    public List<Appointment> createDoctorSchedule(long docId, DayOfWeek startDay, DayOfWeek endDay, LocalTime startTime, LocalTime endTime) {
 
-        Long doctorId = tokenClaims.getId();
-
-        Doctor doctor = doctorManager.getDoctor(doctorId);
+        Doctor doctor = doctorManager.getDoctor(docId);
 
         LocalDateTime currentDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
 

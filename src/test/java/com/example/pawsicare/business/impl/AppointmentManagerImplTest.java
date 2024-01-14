@@ -15,9 +15,11 @@ import com.example.pawsicare.persistence.entity.PetEntity;
 import com.example.pawsicare.persistence.jparepositories.AppointmentRepository;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -93,6 +95,7 @@ class AppointmentManagerImplTest {
                 .pet(pet)
                 .build();
 
+        when(doctorManager.getDoctor(appointment.getDoctor().getId())).thenReturn(doctor);
         when(userEntityConverter.toClientEntity(client)).thenReturn(clientEntity);
         when(userEntityConverter.toDoctorEntity(doctor)).thenReturn(doctorEntity);
         when(petEntityConverter.toEntity(pet)).thenReturn(petEntity);
@@ -188,6 +191,7 @@ class AppointmentManagerImplTest {
         when(userEntityConverter.toClientEntity(client)).thenReturn(clientEntity);
         when(userEntityConverter.toDoctorEntity(doctor)).thenReturn(doctorEntity);
         when(petEntityConverter.toEntity(pet)).thenReturn(petEntity);
+
 
         // Act
         sut.rescheduleAppointment(originalAppointment);
@@ -471,7 +475,7 @@ class AppointmentManagerImplTest {
 
     /**
      * @verifies a list with created appointments in the specified range
-     * @see AppointmentManagerImpl#createDoctorSchedule(String, DayOfWeek, DayOfWeek, LocalTime, LocalTime)
+     * @see AppointmentManagerImpl#createDoctorSchedule(long docId, DayOfWeek, DayOfWeek, LocalTime, LocalTime)
      */
     @Test
     void createDoctorSchedule_shouldAListWithCreatedAppointmentsInTheSpecifiedRange() throws Exception {
@@ -496,7 +500,8 @@ class AppointmentManagerImplTest {
         LocalTime startTime = LocalTime.of(9, 0);
         LocalTime endTime = LocalTime.of(17, 0);
 
-        Date expiration = new Date(2024,01,12);
+        Instant now = Instant.now();
+        Date expiration = Date.from(now.plus(30, ChronoUnit.HOURS));
 
         AccessToken mockedToken = AccessTokenImpl.builder()
                 .userId(2L)
@@ -513,21 +518,15 @@ class AppointmentManagerImplTest {
 
         when(doctorManager.getDoctor(doctorId)).thenReturn(doctor);
 
-        int numberOfDaysInMonth = LocalDate.now().lengthOfMonth();
-
-
-
         when(converter.toEntity(any(Appointment.class))).thenReturn(new AppointmentEntity());
 
-        // Act
-        List<Appointment> createdAppointments = sut.createDoctorSchedule(token, startDay, endDay, startTime, endTime);
 
-        int remainingDaysOfMonth = numberOfDaysInMonth - LocalDateTime.now().getDayOfMonth() + 1;
+        // Act
+        List<Appointment> createdAppointments = sut.createDoctorSchedule(doctorId, startDay, endDay, startTime, endTime);
 
         // Assert
         assertNotNull(createdAppointments);
-        assertEquals(remainingDaysOfMonth * (endTime.getHour() - startTime.getHour()), createdAppointments.size());
-
+        assertEquals(181, createdAppointments.size());
         for (Appointment appointment : createdAppointments) {
             assertNotNull(appointment.getDateAndStart());
             assertNotNull(appointment.getDateAndEnd());
