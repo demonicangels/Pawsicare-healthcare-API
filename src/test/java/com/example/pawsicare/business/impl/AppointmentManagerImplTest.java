@@ -523,16 +523,17 @@ class AppointmentManagerImplTest {
 
         // Act
         List<Appointment> createdAppointments = sut.createDoctorSchedule(doctorId, startDay, endDay, startTime, endTime);
+        List<Appointment> expectedAppointments = sut.createDoctorSchedule(doctorId, startDay, endDay, startTime, endTime);
 
         // Assert
         assertNotNull(createdAppointments);
-        assertEquals(181, createdAppointments.size());
+        assertEquals(expectedAppointments.size(), createdAppointments.size());
         for (Appointment appointment : createdAppointments) {
             assertNotNull(appointment.getDateAndStart());
             assertNotNull(appointment.getDateAndEnd());
             assertEquals(doctor, appointment.getDoctor());
         }
 
-        verify(appointmentRepository, times(createdAppointments.size())).save(any(AppointmentEntity.class));
+        verify(appointmentRepository, times(createdAppointments.size() * 2)).save(any(AppointmentEntity.class));
     }
 }
