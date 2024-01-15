@@ -10,7 +10,6 @@ import com.example.pawsicare.business.responses.GetAllClientsResponse;
 import com.example.pawsicare.business.responses.GetClientResponse;
 import com.example.pawsicare.business.responses.UpdateClientResponse;
 import com.example.pawsicare.business.security.token.AccessToken;
-import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.domain.Client;
 import com.example.pawsicare.domain.Role;
 import jakarta.annotation.security.RolesAllowed;
@@ -32,17 +31,19 @@ public class ClientController {
 
     private final ClientManager clientManager;
     private final ClientConverter converter;
-    private final AccessTokenDecoder accessTokenDecoder;
+    private final AccessToken accessToken;
+
     private String errorMsg = "User not allowed!";
+
+
 
     @RolesAllowed({"Client", "Doctor"})
     @GetMapping("/clientInfo")
-    public ResponseEntity<GetClientResponse> getClient(@RequestParam(name = "id") Long id, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
+    public ResponseEntity<GetClientResponse> getClient(@RequestParam(name = "id") Long id) throws UserNotAuthenticatedException {
 
-        AccessToken tokenClaims = accessTokenDecoder.decode(token);
-        Long userId = tokenClaims.getId();
-        boolean isClient = tokenClaims.hasRole(Role.Client.name());
-        boolean isDoctor = tokenClaims.hasRole(Role.Doctor.name());
+        Long userId = accessToken.getId();
+        boolean isClient = accessToken.hasRole(Role.Client.name());
+        boolean isDoctor = accessToken.hasRole(Role.Doctor.name());
 
         if(userId.equals(id) && (isClient || isDoctor)){
             Optional<ClientDTO> client = Optional.ofNullable(converter.toDTO(clientManager.getClient(id)));
@@ -103,9 +104,9 @@ public class ClientController {
     @PutMapping()
     public ResponseEntity<UpdateClientResponse> updateClient(@RequestBody @Valid UpdateClientRequest request) throws UserNotAuthenticatedException {
 
-        AccessToken tokenClaims = accessTokenDecoder.decode(request.getToken());
-        Long userId = tokenClaims.getId();
-        boolean isClient = tokenClaims.hasRole(Role.Client.name());
+
+        Long userId = accessToken.getId();
+        boolean isClient = accessToken.hasRole(Role.Client.name());
 
         if (userId.equals(request.getId()) && isClient) {
 

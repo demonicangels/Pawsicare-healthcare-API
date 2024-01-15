@@ -47,11 +47,11 @@ public class AppointmentController {
     private final PetConverter petConverter;
     private final AccessTokenDecoder accessTokenDecoder;
     private final UserRepository userRepository;
+    private final AccessToken accessToken;
 
     @RolesAllowed({"Doctor", "Client"})
     @GetMapping("/getDocSchedule")
-    public ResponseEntity<GetAppointmentsResponse> getDoctorsSchedule(@Valid @RequestParam(name = "docId") Long docId, @RequestParam(name = "token") String token){
-        AccessToken accessToken = accessTokenDecoder.decode(token);
+    public ResponseEntity<GetAppointmentsResponse> getDoctorsSchedule(@Valid @RequestParam(name = "docId") Long docId){
         Optional<UserEntity> user = userRepository.getUserEntityById(accessToken.getId());
         boolean isDoctor = accessToken.hasRole(Role.Doctor.name());
         boolean isClient = accessToken.hasRole(Role.Client.name());
@@ -74,9 +74,8 @@ public class AppointmentController {
     }
     @RolesAllowed({"Doctor", "Client"})
     @GetMapping(params = "userId")
-    public ResponseEntity<GetAppointmentsResponse> getUsersAppointments(@Valid @RequestParam(name = "userId")long userId, @Valid @RequestParam(name="token") String token){
+    public ResponseEntity<GetAppointmentsResponse> getUsersAppointments(@Valid @RequestParam(name = "userId")long userId){
 
-        AccessToken accessToken = accessTokenDecoder.decode(token);
         Optional<UserEntity> user = userRepository.getUserEntityById(accessToken.getId());
         boolean isDoctor = accessToken.hasRole(Role.Doctor.name());
         boolean isClient = accessToken.hasRole(Role.Client.name());
@@ -104,7 +103,6 @@ public class AppointmentController {
     @PostMapping("/schedule")
     public ResponseEntity<GetAppointmentsResponse> createDoctorSchedule(@RequestBody @Valid CreateDoctorScheduleRequest request){
 
-        AccessToken accessToken = accessTokenDecoder.decode(request.getToken());
         boolean isDoctor = accessToken.hasRole(Role.Doctor.name());
         Optional<UserEntity> user = userRepository.getUserEntityById(accessToken.getId());
 
@@ -130,7 +128,6 @@ public class AppointmentController {
     @PostMapping
     public ResponseEntity<Void> createAppointment(@RequestBody @Valid CreateAppointmentRequest appointmentRequest){
 
-        AccessToken accessToken = accessTokenDecoder.decode(appointmentRequest.getToken());
         Optional<UserEntity> user = userRepository.getUserEntityById(accessToken.getId());
         boolean isClient = accessToken.hasRole(Role.Client.name());
 
@@ -158,7 +155,7 @@ public class AppointmentController {
     @PutMapping()
     public ResponseEntity<Void> rescheduleAppointment (@RequestBody @Valid UpdateAppointmentRequest appointmentRequest){
 
-        AccessToken accessToken = accessTokenDecoder.decode(appointmentRequest.getToken());
+
         Optional<UserEntity> user = userRepository.getUserEntityById(accessToken.getId());
         boolean isClient = accessToken.hasRole(Role.Client.name());
         boolean isDoctor = accessToken.hasRole(Role.Doctor.name());
@@ -194,8 +191,8 @@ public class AppointmentController {
     @Transactional
     @RolesAllowed({"Doctor","Client"})
     @DeleteMapping(params = "id")
-    public ResponseEntity<Void> cancelAppointment(@RequestParam(name = "id")long id, @RequestParam(name = "token") String token){
-        AccessToken accessToken = accessTokenDecoder.decode(token);
+    public ResponseEntity<Void> cancelAppointment(@RequestParam(name = "id")long id){
+
         Optional<UserEntity> user = userRepository.getUserEntityById(accessToken.getId());
         boolean isClient = accessToken.hasRole(Role.Client.name());
         boolean isDoctor = accessToken.hasRole(Role.Doctor.name());

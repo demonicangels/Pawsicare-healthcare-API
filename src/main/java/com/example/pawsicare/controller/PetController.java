@@ -9,7 +9,6 @@ import com.example.pawsicare.business.responses.CreatePetResponse;
 import com.example.pawsicare.business.responses.GetAllPetsResponse;
 import com.example.pawsicare.business.responses.GetPetResponse;
 import com.example.pawsicare.business.security.token.AccessToken;
-import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.PetManager;
@@ -33,9 +32,9 @@ public class PetController {
 
     private final PetConverter converter;
 
-    private final AccessTokenDecoderEncoderImpl accessTokenService;
     private final UserRepository userRepository;
     private final UserEntityConverter userEntityConverter;
+    private final AccessToken accessToken;
 
     private String errorMsg = "User not allowed!";
 
@@ -43,16 +42,15 @@ public class PetController {
     @PostMapping()
     public ResponseEntity<CreatePetResponse> createPet(@RequestBody @Valid CreatePetRequest request) throws UserNotAuthenticatedException {
 
-        AccessToken tokenClaims = accessTokenService.decode(request.getToken());
 
-        Optional<User> userFound = userRepository.getUserEntityById(tokenClaims.getId())
+        Optional<User> userFound = userRepository.getUserEntityById(accessToken.getId())
                 .map(userEntityConverter::fromUserEntity)
                 .map(Optional::of)
                 .orElse(Optional.empty());
 
         if(!userFound.isEmpty()){
-            Long userId = tokenClaims.getId();
-            boolean isClient = tokenClaims.hasRole(Role.Client.name());
+            Long userId = accessToken.getId();
+            boolean isClient = accessToken.hasRole(Role.Client.name());
 
             if(userId.equals(request.getOwnerId()) && isClient){
 
@@ -83,19 +81,17 @@ public class PetController {
 
     @RolesAllowed({"Client","Doctor"})
     @GetMapping()
-    public ResponseEntity<GetAllPetsResponse> getPetsByOwnerId(@RequestParam(name = "ownerId") Long ownerId, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
+    public ResponseEntity<GetAllPetsResponse> getPetsByOwnerId(@RequestParam(name = "ownerId") Long ownerId) throws UserNotAuthenticatedException {
 
-        AccessToken tokenClaims = accessTokenService.decode(token);
-
-        Optional<User> userFound = userRepository.getUserEntityById(tokenClaims.getId())
+        Optional<User> userFound = userRepository.getUserEntityById(accessToken.getId())
                 .map(userEntityConverter::fromUserEntity)
                 .map(Optional::of)
                 .orElse(Optional.empty());
 
         if(!userFound.isEmpty()){
-            Long userId = tokenClaims.getId();
-            boolean isClient = tokenClaims.hasRole(Role.Client.name());
-            boolean isDoctor = tokenClaims.hasRole(Role.Doctor.name());
+            Long userId = accessToken.getId();
+            boolean isClient = accessToken.hasRole(Role.Client.name());
+            boolean isDoctor = accessToken.hasRole(Role.Doctor.name());
 
             if(userId.equals(ownerId) && isClient || isDoctor){
 
@@ -135,16 +131,14 @@ public class PetController {
     @PutMapping()
     public ResponseEntity<Void> updatePet(@RequestBody @Valid UpdatePetRequest request) throws UserNotAuthenticatedException {
 
-        AccessToken tokenClaims = accessTokenService.decode(request.getToken());
-
-        Optional<User> userFound = userRepository.getUserEntityById(tokenClaims.getId())
+        Optional<User> userFound = userRepository.getUserEntityById(accessToken.getId())
                 .map(userEntityConverter::fromUserEntity)
                 .map(Optional::of)
                 .orElse(Optional.empty());
 
         if(!userFound.isEmpty()) {
-            Long userId = tokenClaims.getId();
-            boolean isClient = tokenClaims.hasRole(Role.Client.name());
+            Long userId = accessToken.getId();
+            boolean isClient = accessToken.hasRole(Role.Client.name());
 
             if (userId.equals(request.getOwnerId()) && isClient) {
                 PetDTO pet = PetDTO.builder()
@@ -165,17 +159,17 @@ public class PetController {
 
     @RolesAllowed({"Client"})
     @DeleteMapping()
-    public ResponseEntity<Void> deletePet(@RequestParam(name = "id") long id, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
+    public ResponseEntity<Void> deletePet(@RequestParam(name = "id") long id) throws UserNotAuthenticatedException {
 
-        AccessToken tokenClaims = accessTokenService.decode(token);
 
-        Optional<User> userFound = userRepository.getUserEntityById(tokenClaims.getId())
+
+        Optional<User> userFound = userRepository.getUserEntityById(accessToken.getId())
                 .map(userEntityConverter::fromUserEntity)
                 .map(Optional::of)
                 .orElse(Optional.empty());
 
         if (!userFound.isEmpty()) {
-            boolean isClient = tokenClaims.hasRole(Role.Client.name());
+            boolean isClient = accessToken.hasRole(Role.Client.name());
 
             if (isClient) {
                 petManager.deletePet(id);

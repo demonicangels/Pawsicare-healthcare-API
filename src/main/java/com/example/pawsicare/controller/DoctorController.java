@@ -7,7 +7,6 @@ import com.example.pawsicare.business.requests.CreateDoctorRequest;
 import com.example.pawsicare.business.requests.UpdateDoctorRequest;
 import com.example.pawsicare.business.responses.*;
 import com.example.pawsicare.business.security.token.AccessToken;
-import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
 import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
@@ -29,19 +28,17 @@ public class DoctorController {
 
     private final DoctorManager doctorManager;
     private final DoctorConverter converter;
-    private final AccessTokenDecoder accessTokenDecoder;
     private final UserEntityConverter userEntityConverter;
+    private final AccessToken accessToken;
     private String errorMsg = "User not allowed!";
     private final UserRepository userRepository;
 
     @RolesAllowed({"Client","Doctor"})
     @GetMapping("/docInfo")
-    public ResponseEntity<GetDoctorResponse> getDoctorById( @RequestParam("id") Long id,
-                                                            @RequestParam("token") String token) throws UserNotAuthenticatedException {
-        //only Clients and the Doctor himself are privy to a doctor's information
+    public ResponseEntity<GetDoctorResponse> getDoctorById( @RequestParam("id") Long id) throws UserNotAuthenticatedException {
 
-        AccessToken tokenClaims = accessTokenDecoder.decode(token);
-        Optional<User> userFound = userRepository.getUserEntityById(tokenClaims.getId())
+        //only Clients and the Doctor himself are privy to a doctor's information
+        Optional<User> userFound = userRepository.getUserEntityById(accessToken.getId())
                 .map(userEntityConverter::fromUserEntity)
                 .map(Optional::of)
                 .orElse(Optional.empty());
@@ -49,9 +46,9 @@ public class DoctorController {
 
         if (!userFound.isEmpty()){
 
-            Long userId = tokenClaims.getId();
-            boolean isDoctor = tokenClaims.hasRole(Role.Doctor.name());
-            boolean isClient = tokenClaims.hasRole(Role.Client.name());
+            Long userId = accessToken.getId();
+            boolean isDoctor = accessToken.hasRole(Role.Doctor.name());
+            boolean isClient = accessToken.hasRole(Role.Client.name());
 
             if (userId.equals(id) && isDoctor || isClient){
                 Optional<DoctorDTO> doctor = Optional.ofNullable(converter.toDTO(doctorManager.getDoctor(id)));
@@ -129,11 +126,9 @@ public class DoctorController {
 
         //only the doctor himself can update his information
 
-        AccessToken tokenClaims = accessTokenDecoder.decode(request.getToken());
+        Long userId = accessToken.getId();
 
-        Long userId = tokenClaims.getId();
-
-        if(userId.equals(request.getId()) && tokenClaims.hasRole(Role.Doctor.name())) {
+        if(userId.equals(request.getId()) && accessToken.hasRole(Role.Doctor.name())) {
             DoctorDTO doctorDTO = DoctorDTO.builder()
                     .id(userId)
                     .name(request.getName())
@@ -159,11 +154,10 @@ public class DoctorController {
     }
     @RolesAllowed({"Doctor"})
     @DeleteMapping()
-    public ResponseEntity<Void> deleteDoctor(@RequestParam(name = "id") Long id, @RequestParam(name = "token") String token) throws UserNotAuthenticatedException {
-        AccessToken tokenClaims = accessTokenDecoder.decode(token);
+    public ResponseEntity<Void> deleteDoctor(@RequestParam(name = "id") Long id) throws UserNotAuthenticatedException {
 
-        Long userId = tokenClaims.getId();
-        boolean isDoctor = tokenClaims.hasRole(Role.Doctor.name());
+        Long userId = accessToken.getId();
+        boolean isDoctor = accessToken.hasRole(Role.Doctor.name());
 
         if(userId.equals(id) && isDoctor){
             doctorManager.deleteDoctor(id);

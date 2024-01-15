@@ -66,7 +66,8 @@ class AppointmentControllerTest {
                 doctorConverter,
                 petConverter,
                 accessTokenDecoder,
-                userRepository);
+                userRepository,
+                accessToken);
 
         Long docId = 1L;
         String token = "testToken";
@@ -101,7 +102,7 @@ class AppointmentControllerTest {
         List<AppointmentDTO> appointmentDTOList = appointmentList.stream().map(converter::toDTO).toList();
 
         // Act
-        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.getDoctorsSchedule(docId, token);
+        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.getDoctorsSchedule(docId);
 
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -133,7 +134,8 @@ class AppointmentControllerTest {
                 doctorConverter,
                 petConverter,
                 accessTokenDecoder,
-                userRepository);
+                userRepository,
+                accessToken);
 
         Long userId = 1L;
         String token = "zdr";
@@ -167,7 +169,7 @@ class AppointmentControllerTest {
         List<AppointmentDTO> appointmentDTOList = appointmentList.stream().map(converter::toDTO).toList();
 
         // Act
-        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.getUsersAppointments(userId,token);
+        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.getUsersAppointments(userId);
 
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -198,7 +200,8 @@ class AppointmentControllerTest {
                 doctorConverter,
                 petConverter,
                 accessTokenDecoder,
-                userRepository);
+                userRepository,
+                accessToken);
 
         Long userId = 1L;
         String token = "zdr";
@@ -214,7 +217,7 @@ class AppointmentControllerTest {
         when(userRepository.getUserEntityById(userId)).thenReturn(Optional.ofNullable(userEntity));
 
         // Act
-        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.getUsersAppointments(userId, token);
+        ResponseEntity<GetAppointmentsResponse> responseEntity = appointmentController.getUsersAppointments(userId);
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
@@ -246,7 +249,8 @@ class AppointmentControllerTest {
                 doctorConverter,
                 petConverter,
                 accessTokenDecoder,
-                userRepository);
+                userRepository,
+                accessToken);
 
         LocalTime startTime = LocalTime.of(8,0);
         LocalTime endTime = LocalTime.of(9,0);
@@ -354,7 +358,8 @@ class AppointmentControllerTest {
                 doctorConverter,
                 petConverter,
                 accessTokenDecoder,
-                userRepository);
+                userRepository,
+                accessToken);
 
         long userId = 1L;
 
@@ -495,7 +500,8 @@ class AppointmentControllerTest {
                 doctorConverter,
                 petConverter,
                 accessTokenDecoder,
-                userRepository);
+                userRepository,
+                accessToken);
 
         long userId = 1L;
 
@@ -606,7 +612,8 @@ class AppointmentControllerTest {
                 doctorConverter,
                 petConverter,
                 accessTokenDecoder,
-                userRepository);
+                userRepository,
+                accessToken);
 
         long userId = 1L;
 
@@ -678,7 +685,8 @@ class AppointmentControllerTest {
                 doctorConverter,
                 petConverter,
                 accessTokenDecoder,
-                userRepository);
+                userRepository,
+                accessToken);
 
         long userId = 1L;
 
@@ -741,7 +749,8 @@ class AppointmentControllerTest {
                 doctorConverter,
                 petConverter,
                 accessTokenDecoder,
-                userRepository);
+                userRepository,
+                accessToken);
 
         Client client = new Client();
         client.setId(2L);
@@ -770,7 +779,7 @@ class AppointmentControllerTest {
 
 
         // Act
-        ResponseEntity<Void> responseEntity = appointmentController.cancelAppointment(appointmentId, token);
+        ResponseEntity<Void> responseEntity = appointmentController.cancelAppointment(appointmentId);
 
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -799,7 +808,8 @@ class AppointmentControllerTest {
                 doctorConverter,
                 petConverter,
                 accessTokenDecoder,
-                userRepository);
+                userRepository,
+                accessToken);
 
         long appointmentId = 1L;
         long userId = 2L;
@@ -815,7 +825,7 @@ class AppointmentControllerTest {
         when(userRepository.getUserEntityById(userId)).thenReturn(Optional.ofNullable(userEntity));
 
         // Act
-        ResponseEntity<Void> responseEntity = appointmentController.cancelAppointment(appointmentId, token);
+        ResponseEntity<Void> responseEntity = appointmentController.cancelAppointment(appointmentId);
 
         // Assert
         assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
