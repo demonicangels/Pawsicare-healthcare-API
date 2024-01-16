@@ -44,7 +44,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final Key key;
 
     Dotenv dotenv = Dotenv.configure()
-            .directory("C:\\Users\\nikol\\OneDrive\\Desktop\\PawsiCare")
             .filename("jwtSecretKey.env")
             .load();
     String obtainedSecretKey = dotenv.get("jwt.secret");

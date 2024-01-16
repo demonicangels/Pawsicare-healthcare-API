@@ -13,7 +13,7 @@ import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.RefreshToken;
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
-import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
+import com.example.pawsicare.domain.managerinterfaces.AuthService;
 import com.example.pawsicare.domain.managerinterfaces.ClientManager;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.converters.UserEntityConverter;
@@ -33,7 +33,7 @@ import java.util.Optional;
 @CrossOrigin(origins = {"http://localhost:5173"}, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
 public class AuthenticationController {
 
-    private final AuthenticationService authenticationService;
+    private final AuthService authenticationService;
     private final AccessTokenDecoderEncoderImpl accessTokenService;
     private final RefreshTokenService refreshTokenService;
     private final UserRepository userRepository;

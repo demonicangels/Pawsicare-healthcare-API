@@ -32,13 +32,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-class AuthenticationServiceImplTest {
+class AuthServiceImplTest {
 
     //partial integration tests
 
     /**
      * @verifies return an accessToken based on the loggedIn user
-     * @see AuthenticationServiceImpl#generateAccessToken(User)
+     * @see AuthServiceImpl#generateAccessToken(User)
      */
     @Test
     void generateAccessToken_shouldReturnAnAccessTokenBasedOnTheLoggedInUser() throws Exception {
@@ -54,7 +54,7 @@ class AuthenticationServiceImplTest {
         RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
         RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
+        AuthServiceImpl sut = new AuthServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
 
         User user = Client.builder()
                 .id(1L)
@@ -77,7 +77,7 @@ class AuthenticationServiceImplTest {
 
     /**
      * @verifies return IllegalArgument exception when user is null
-     * @see AuthenticationServiceImpl#generateAccessToken(User)
+     * @see AuthServiceImpl#generateAccessToken(User)
      */
     @Test
     void generateAccessToken_shouldReturnIllegalArgumentExceptionWhenUserIsNull() throws Exception {
@@ -95,7 +95,7 @@ class AuthenticationServiceImplTest {
             RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
             RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
+            AuthServiceImpl sut = new AuthServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
 
             when(sut.generateAccessToken(null)).thenThrow(new IllegalArgumentException("User cannot be null"));
 
@@ -111,7 +111,7 @@ class AuthenticationServiceImplTest {
 
     /**
      * @verifies return false if no user with that id is found in the db
-     * @see AuthenticationServiceImpl#authenticateUser(Long)
+     * @see AuthServiceImpl#authenticateUser(Long)
      */
     @Test
     void authenticateUser_shouldReturnFalseIfNoUserWithThatIdIsFoundInTheDb() throws Exception {
@@ -126,7 +126,7 @@ class AuthenticationServiceImplTest {
         RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
         RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
+        AuthServiceImpl sut = new AuthServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
 
         UserEntity userEntity = UserEntity.builder()
                 .id(1L)
@@ -150,7 +150,7 @@ class AuthenticationServiceImplTest {
 
     /**
      * @verifies return true if a user with the same id is found in the database
-     * @see AuthenticationServiceImpl#authenticateUser(Long)
+     * @see AuthServiceImpl#authenticateUser(Long)
      */
     @Test
     void authenticateUser_shouldReturnTrueIfAUserWithTheSameIdIsFoundInTheDatabase() throws Exception {
@@ -164,7 +164,7 @@ class AuthenticationServiceImplTest {
         RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
         RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
+        AuthServiceImpl sut = new AuthServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
 
         UserEntity userEntity = UserEntity.builder()
                 .id(1L)
@@ -195,7 +195,7 @@ class AuthenticationServiceImplTest {
 
     /**
      * @verifies return a user when credentials are correct
-     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
+     * @see AuthServiceImpl#loginUser(LoginUserRequest)
      */
     @Test
     void loginUser_shouldReturnAUserWhenCredentialsAreCorrect() throws Exception {
@@ -210,7 +210,7 @@ class AuthenticationServiceImplTest {
         RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
         RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
+        AuthServiceImpl sut = new AuthServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
 
 
 
@@ -268,7 +268,7 @@ class AuthenticationServiceImplTest {
 
     /**
      * @verifies return exception if credentials are not correct
-     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
+     * @see AuthServiceImpl#loginUser(LoginUserRequest)
      */
     @Test
     void loginUser_shouldReturnExceptionIfCredentialsAreNotCorrect() throws Exception {
@@ -282,7 +282,7 @@ class AuthenticationServiceImplTest {
             RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
             RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-            AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
+            AuthServiceImpl sut = new AuthServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
 
 
             UserEntity userEntity = UserEntity.builder()
@@ -337,7 +337,7 @@ class AuthenticationServiceImplTest {
 
     /**
      * @verifies return doctor obj if a doctor is logged in
-     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
+     * @see AuthServiceImpl#loginUser(LoginUserRequest)
      */
     @Test
     void loginUser_shouldReturnDoctorObjIfADoctorIsLoggedIn() throws Exception {
@@ -352,7 +352,7 @@ class AuthenticationServiceImplTest {
         RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
         RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
+        AuthServiceImpl sut = new AuthServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
 
         UserEntity userEntity = UserEntity.builder()
                 .id(1L)
@@ -399,7 +399,7 @@ class AuthenticationServiceImplTest {
 
     /**
      * @verifies return client obj if a client is logged in
-     * @see AuthenticationServiceImpl#loginUser(LoginUserRequest)
+     * @see AuthServiceImpl#loginUser(LoginUserRequest)
      */
     @Test
     void loginUser_shouldReturnClientObjIfAClientIsLoggedIn() throws Exception {
@@ -414,7 +414,7 @@ class AuthenticationServiceImplTest {
         RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);RefreshTokenRepository refreshTokenRepository = mock(RefreshTokenRepository.class);
         RefreshTokenEntityConverter refreshTokenEntityConverter = mock(RefreshTokenEntityConverter.class);
 
-        AuthenticationServiceImpl sut = new AuthenticationServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
+        AuthServiceImpl sut = new AuthServiceImpl(doctorConverterMock,clientConverterMock,userEntityConverterMock,userRepositoryMock,passwordEncoder,accessTokenEncoder,refreshTokenService,refreshTokenRepository,refreshTokenEntityConverter);
 
         UserEntity userEntity = UserEntity.builder()
                 .id(1L)

@@ -200,13 +200,16 @@ public class AppointmentController {
 
         if(!user.isEmpty() && !appointments.isEmpty() && isClient || isDoctor ){
             boolean isCorrectUsersAppointments = false;
-            for (Appointment a: appointments.get()){
-                if(a.getClient().getId().equals(accessToken.getId())){
-                    isCorrectUsersAppointments = true;
+
+            if (appointments.isPresent()) {
+                for (Appointment a : appointments.get()) {
+                    if (a.getClient().getId().equals(accessToken.getId())) {
+                        isCorrectUsersAppointments = true;
+                    }
                 }
             }
 
-            if(isCorrectUsersAppointments){
+            if (isCorrectUsersAppointments) {
                 appointmentManager.cancelAppointment(id);
                 return ResponseEntity.ok().build();
             }

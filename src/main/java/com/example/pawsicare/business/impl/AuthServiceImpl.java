@@ -10,7 +10,7 @@ import com.example.pawsicare.business.responses.JWTResponse;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
 import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.*;
-import com.example.pawsicare.domain.managerinterfaces.AuthenticationService;
+import com.example.pawsicare.domain.managerinterfaces.AuthService;
 import com.example.pawsicare.domain.managerinterfaces.RefreshTokenService;
 import com.example.pawsicare.persistence.converters.RefreshTokenEntityConverter;
 import com.example.pawsicare.persistence.entity.UserEntity;
@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class AuthServiceImpl implements AuthService {
 
     private final DoctorConverter doctorConverter;
     private final ClientConverter clientConverter;

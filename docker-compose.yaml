@@ -1,0 +1,81 @@
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker compose reference guide at
+# https://docs.docker.com/compose/compose-file/
+
+# Here the instructions define your application as a service called "app".
+# This service is built from the Dockerfile in the current directory.
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+#services:
+##  mysql:
+##    image: mysql:8.0
+##    command: --default-authentication-plugin=mysql_native_password #  authentication plugin
+##    container_name: mysqldb
+##    restart: always
+##    environment:
+##      MYSQL_ROOT_PASSWORD: "Ior7dh8Nrr"
+##      MYSQL_DATABASE: 'mysql_pawsicare'
+##    volumes:
+##      - mysql-data:/var/lib/mysql
+##    ports:
+##      - "3308:3306"
+#
+#
+#  spring-app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3308/pawsicare #  datasource URL 'mysql'
+#      SPRING_DATASOURCE_USERNAME: "root"
+#      SPRING_DATASOURCE_PASSWORD: "Ior7dh8Nrr"
+#    env_file:
+#      - jwtSecretKey.env
+##    depends_on:
+##      - mysql # 'spring-app' starts after 'mysql'
+##volumes:
+##  mysql-data:
+
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysqlPawsicare
+    environment:
+      - MYSQL_DATABASE=docker_pawsicare
+      - MYSQL_PASSWORD=Ior7dh8Nrr
+      - MYSQL_ROOT_PASSWORD=Ior7dh8Nrr
+    ports:
+      - 3307:3306
+    networks:
+      - my_network
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "mysql"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/docker-pawsicare'
+      - 'SPRING_DATASOURCE_USERNAME=root'
+      - 'SPRING_DATASOURCE_PASSWORD=Ior7dh8Nrr'
+    networks:
+      - my_network
+
+networks:
+  my_network:
+
+volumes:
+  mysql-data:
