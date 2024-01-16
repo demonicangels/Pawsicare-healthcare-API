@@ -39,7 +39,8 @@ sonar {
 				'src/**/business/impl/EmailManagerImpl*.*',
 				'src/**/business/impl/RefreshTokenServiceImpl*.*',
 				'src/**/business/converters/AppointmentConverter*.*',
-				'src/**/business/converters/**/*'
+				'src/**/business/converters/**/*',
+				'src/**/persistence/jparepositories/**/*'
 		]
 		property "sonar.coverage.jacoco.xmlReportPaths", "$rootDir/build/jacocoHtml/jacocoTestReport.html"
 	}
@@ -146,7 +147,8 @@ jacocoTestReport {
 						'src/**/domain/**/*',
 						'src/**/business/impl/RefreshTokenServiceImpl*.*',
 						'src/**/business/converters/AppointmentConverter*.*',
-						'src/**/business/converters/**/*'
+						'src/**/business/converters/**/*',
+						'src/**/persistence/jparepositories/**/*'
 				])
 
 			}))
