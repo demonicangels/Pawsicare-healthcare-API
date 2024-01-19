@@ -30,7 +30,7 @@ public class EmailManagerImpl implements EmailManager {
 
             helper.setFrom(sender);
             helper.setTo(recipient);
-            helper.setSubject("PawsiCare contacts");
+            helper.setSubject(details.getSubject());
             helper.setText("From: %s Message: %s".formatted(details.getUserEmail(), details.getMessage()));
 
             javaMailSender.send(mimeMessage);

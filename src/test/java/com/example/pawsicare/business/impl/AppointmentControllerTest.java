@@ -17,10 +17,7 @@ import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.controller.AppointmentController;
 import com.example.pawsicare.domain.*;
-import com.example.pawsicare.domain.managerinterfaces.AppointmentManager;
-import com.example.pawsicare.domain.managerinterfaces.ClientManager;
-import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
-import com.example.pawsicare.domain.managerinterfaces.PetManager;
+import com.example.pawsicare.domain.managerinterfaces.*;
 import com.example.pawsicare.persistence.converters.AppointmentEntityConverter;
 import com.example.pawsicare.persistence.converters.PetEntityConverter;
 import com.example.pawsicare.persistence.converters.UserEntityConverter;
@@ -54,9 +51,9 @@ class AppointmentControllerTest {
         DoctorConverter doctorConverter = mock(DoctorConverter.class);
         PetConverter petConverter = mock(PetConverter.class);
         AppointmentConverter converter = mock(AppointmentConverter.class);
-        AccessTokenDecoder accessTokenDecoder = mock(AccessTokenDecoder.class);
         UserRepository userRepository = mock(UserRepository.class);
         AccessToken accessToken = mock(AccessToken.class);
+        EmailManager emailManager = mock(EmailManager.class);
         AppointmentController appointmentController = new AppointmentController(appointmentManager,
                 doctorManager,
                 clientManager,
@@ -65,9 +62,9 @@ class AppointmentControllerTest {
                 clientConverter,
                 doctorConverter,
                 petConverter,
-                accessTokenDecoder,
                 userRepository,
-                accessToken);
+                accessToken,
+                emailManager);
 
         Long docId = 1L;
         String token = "testToken";
@@ -93,7 +90,6 @@ class AppointmentControllerTest {
         when(appointmentManager.getDoctorSchedule(docId)).thenReturn(appointmentList);
         when(converter.toDTO(any())).thenReturn(appointmentDTO);
         when(accessToken.getId()).thenReturn(docId);
-        when(accessTokenDecoder.decode(token)).thenReturn(accessToken);
         when(accessToken.hasRole(Role.Doctor.name())).thenReturn(true);
         when(userRepository.getUserEntityById(docId)).thenReturn(Optional.ofNullable(userEntity));
 
@@ -122,9 +118,9 @@ class AppointmentControllerTest {
         DoctorConverter doctorConverter = mock(DoctorConverter.class);
         PetConverter petConverter = mock(PetConverter.class);
         AppointmentConverter converter = mock(AppointmentConverter.class);
-        AccessTokenDecoder accessTokenDecoder = mock(AccessTokenDecoder.class);
         UserRepository userRepository = mock(UserRepository.class);
         AccessToken accessToken = mock(AccessToken.class);
+        EmailManager emailManager = mock(EmailManager.class);
         AppointmentController appointmentController = new AppointmentController(appointmentManager,
                 doctorManager,
                 clientManager,
@@ -133,9 +129,9 @@ class AppointmentControllerTest {
                 clientConverter,
                 doctorConverter,
                 petConverter,
-                accessTokenDecoder,
                 userRepository,
-                accessToken);
+                accessToken,
+                emailManager);
 
         Long userId = 1L;
         String token = "zdr";
@@ -161,7 +157,6 @@ class AppointmentControllerTest {
         when(appointmentManager.getUsersAppointments(userId)).thenReturn(Optional.of(appointmentList));
         when(converter.toDTO(any())).thenReturn(appointmentDTO);
         when(accessToken.getId()).thenReturn(userId);
-        when(accessTokenDecoder.decode(token)).thenReturn(accessToken);
         when(accessToken.hasRole(Role.Doctor.name())).thenReturn(true);
         when(userRepository.getUserEntityById(userId)).thenReturn(Optional.ofNullable(userEntity));
 
@@ -188,9 +183,9 @@ class AppointmentControllerTest {
         DoctorConverter doctorConverter = mock(DoctorConverter.class);
         PetConverter petConverter = mock(PetConverter.class);
         AppointmentConverter converter = mock(AppointmentConverter.class);
-        AccessTokenDecoder accessTokenDecoder = mock(AccessTokenDecoder.class);
         UserRepository userRepository = mock(UserRepository.class);
         AccessToken accessToken = mock(AccessToken.class);
+        EmailManager emailManager = mock(EmailManager.class);
         AppointmentController appointmentController = new AppointmentController(appointmentManager,
                 doctorManager,
                 clientManager,
@@ -199,9 +194,9 @@ class AppointmentControllerTest {
                 clientConverter,
                 doctorConverter,
                 petConverter,
-                accessTokenDecoder,
                 userRepository,
-                accessToken);
+                accessToken,
+                emailManager);
 
         Long userId = 1L;
         String token = "zdr";
@@ -212,7 +207,6 @@ class AppointmentControllerTest {
 
         when(appointmentManager.getUsersAppointments(userId)).thenReturn(Optional.empty());
         when(accessToken.getId()).thenReturn(userId);
-        when(accessTokenDecoder.decode(token)).thenReturn(accessToken);
         when(accessToken.hasRole(Role.Doctor.name())).thenReturn(true);
         when(userRepository.getUserEntityById(userId)).thenReturn(Optional.ofNullable(userEntity));
 
@@ -237,9 +231,9 @@ class AppointmentControllerTest {
         PetConverter petConverter = mock(PetConverter.class);
         AppointmentConverter converter = mock(AppointmentConverter.class);
         AppointmentEntityConverter appointmentEntityConverter = mock(AppointmentEntityConverter.class);
-        AccessTokenDecoder accessTokenDecoder = mock(AccessTokenDecoder.class);
         UserRepository userRepository = mock(UserRepository.class);
         AccessToken accessToken = mock(AccessToken.class);
+        EmailManager emailManager = mock(EmailManager.class);
         AppointmentController appointmentController = new AppointmentController(appointmentManager,
                 doctorManager,
                 clientManager,
@@ -248,9 +242,9 @@ class AppointmentControllerTest {
                 clientConverter,
                 doctorConverter,
                 petConverter,
-                accessTokenDecoder,
                 userRepository,
-                accessToken);
+                accessToken,
+                emailManager);
 
         LocalTime startTime = LocalTime.of(8,0);
         LocalTime endTime = LocalTime.of(9,0);
@@ -295,7 +289,6 @@ class AppointmentControllerTest {
         when(appointmentEntityConverter.toEntity(appointment)).thenReturn(appointmentEntity);
         when(converter.toDTO(appointment)).thenReturn(appointmentDTO);
         when(accessToken.getId()).thenReturn(docId);
-        when(accessTokenDecoder.decode(token)).thenReturn(accessToken);
         when(accessToken.hasRole(Role.Doctor.name())).thenReturn(true);
         when(userRepository.getUserEntityById(docId)).thenReturn(Optional.ofNullable(userEntity));
 
@@ -346,9 +339,9 @@ class AppointmentControllerTest {
         AppointmentConverter converter = mock(AppointmentConverter.class);
         UserEntityConverter userEntityConverter = mock(UserEntityConverter.class);
         PetEntityConverter petEntityConverter = mock(PetEntityConverter.class);
-        AccessTokenDecoder accessTokenDecoder = mock(AccessTokenDecoder.class);
         UserRepository userRepository = mock(UserRepository.class);
         AccessToken accessToken = mock(AccessToken.class);
+        EmailManager emailManager = mock(EmailManager.class);
         AppointmentController appointmentController = new AppointmentController(appointmentManager,
                 doctorManager,
                 clientManager,
@@ -357,9 +350,9 @@ class AppointmentControllerTest {
                 clientConverter,
                 doctorConverter,
                 petConverter,
-                accessTokenDecoder,
                 userRepository,
-                accessToken);
+                accessToken,
+                emailManager);
 
         long userId = 1L;
 
@@ -456,7 +449,6 @@ class AppointmentControllerTest {
         when(userEntityConverter.toClientEntity(client)).thenReturn(clientEntity);
         when(petEntityConverter.toEntity(pet1)).thenReturn(petEntity);
         when(accessToken.getId()).thenReturn(userId);
-        when(accessTokenDecoder.decode(token)).thenReturn(accessToken);
         when(accessToken.hasRole(Role.Client.name())).thenReturn(true);
         when(userRepository.getUserEntityById(userId)).thenReturn(Optional.ofNullable(userEntity));
 
@@ -488,9 +480,9 @@ class AppointmentControllerTest {
         DoctorConverter doctorConverter = mock(DoctorConverter.class);
         PetConverter petConverter = mock(PetConverter.class);
         AppointmentConverter converter = mock(AppointmentConverter.class);
-        AccessTokenDecoder accessTokenDecoder = mock(AccessTokenDecoder.class);
         AccessToken accessToken = mock(AccessToken.class);
         UserRepository userRepository = mock(UserRepository.class);
+        EmailManager emailManager = mock(EmailManager.class);
         AppointmentController appointmentController = new AppointmentController(appointmentManager,
                 doctorManager,
                 clientManager,
@@ -499,9 +491,9 @@ class AppointmentControllerTest {
                 clientConverter,
                 doctorConverter,
                 petConverter,
-                accessTokenDecoder,
                 userRepository,
-                accessToken);
+                accessToken,
+                emailManager);
 
         long userId = 1L;
 
@@ -572,7 +564,6 @@ class AppointmentControllerTest {
         when(doctorManager.getDoctor(2L)).thenReturn(doctor);
         when(petManager.getPet(3L)).thenReturn(pet1);
         when(accessToken.getId()).thenReturn(userId);
-        when(accessTokenDecoder.decode(token)).thenReturn(accessToken);
         when(accessToken.hasRole(Role.Doctor.name())).thenReturn(true);
         when(userRepository.getUserEntityById(userId)).thenReturn(Optional.ofNullable(userEntity));
 
@@ -588,11 +579,6 @@ class AppointmentControllerTest {
         // Arrange
         String token = "zdr";
         AppointmentManager appointmentManager = mock(AppointmentManager.class);
-        UpdateAppointmentRequest request = UpdateAppointmentRequest.builder()
-                .token(token)
-                .dateAndStart(LocalDateTime.now())
-                .dateAndEnd(LocalDateTime.of(2023,11,27,12,00,00))
-                .build();
         DoctorManager doctorManager = mock(DoctorManager.class);
         ClientManager clientManager = mock(ClientManager.class);
         PetManager petManager = mock(PetManager.class);
@@ -600,9 +586,9 @@ class AppointmentControllerTest {
         DoctorConverter doctorConverter = mock(DoctorConverter.class);
         PetConverter petConverter = mock(PetConverter.class);
         AppointmentConverter converter = mock(AppointmentConverter.class);
-        AccessTokenDecoder accessTokenDecoder = mock(AccessTokenDecoder.class);
         UserRepository userRepository = mock(UserRepository.class);
         AccessToken accessToken = mock(AccessToken.class);
+        EmailManager emailManager = mock(EmailManager.class);
         AppointmentController appointmentController = new AppointmentController(appointmentManager,
                 doctorManager,
                 clientManager,
@@ -611,9 +597,9 @@ class AppointmentControllerTest {
                 clientConverter,
                 doctorConverter,
                 petConverter,
-                accessTokenDecoder,
                 userRepository,
-                accessToken);
+                accessToken,
+                emailManager);
 
         long userId = 1L;
 
@@ -623,6 +609,15 @@ class AppointmentControllerTest {
 
         Client client = Client.builder()
                 .id(userId).role(Role.Client).build();
+
+        ClientDTO clientDTO = ClientDTO.builder()
+                .id(userId).role(Role.Client).build();
+
+        DoctorDTO doctorDTO = DoctorDTO.builder()
+                .id(userId).role(Role.Doctor).build();
+
+        PetDTO petDTO = PetDTO.builder()
+                .name("Ana").build();
 
         Appointment appointment = Appointment.builder()
                 .id(1L)
@@ -639,12 +634,19 @@ class AppointmentControllerTest {
                 .doctor(null)
                 .build();
 
+        UpdateAppointmentRequest request = UpdateAppointmentRequest.builder()
+                .token(token)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.of(2023,11,27,12,00,00))
+                .client(clientDTO)
+                .doctor(doctorDTO)
+                .pet(petDTO)
+                .build();
 
 
         when(converter.fromDTO(any(AppointmentDTO.class))).thenReturn(appointment);
         when(converter.toDTO(any(Appointment.class))).thenReturn(appointmentDTO);
         when(accessToken.getId()).thenReturn(userId);
-        when(accessTokenDecoder.decode(token)).thenReturn(accessToken);
         when(accessToken.hasRole(Role.Client.name())).thenReturn(true);
         when(userRepository.getUserEntityById(userId)).thenReturn(Optional.ofNullable(userEntity));
         when(appointmentManager.getUsersAppointments(userId)).thenReturn(Optional.of(List.of(appointment)));
@@ -673,9 +675,9 @@ class AppointmentControllerTest {
         DoctorConverter doctorConverter = mock(DoctorConverter.class);
         PetConverter petConverter = mock(PetConverter.class);
         AppointmentConverter converter = mock(AppointmentConverter.class);
-        AccessTokenDecoder accessTokenDecoder = mock(AccessTokenDecoder.class);
         UserRepository userRepository = mock(UserRepository.class);
         AccessToken accessToken = mock(AccessToken.class);
+        EmailManager emailManager = mock(EmailManager.class);
         AppointmentController appointmentController = new AppointmentController(appointmentManager,
                 doctorManager,
                 clientManager,
@@ -684,9 +686,9 @@ class AppointmentControllerTest {
                 clientConverter,
                 doctorConverter,
                 petConverter,
-                accessTokenDecoder,
                 userRepository,
-                accessToken);
+                accessToken,
+                emailManager);
 
         long userId = 1L;
 
@@ -715,7 +717,6 @@ class AppointmentControllerTest {
         when(converter.fromDTO(appointmentDTO)).thenReturn(appointment);
         when(converter.toDTO(appointment)).thenReturn(appointmentDTO);
         when(accessToken.getId()).thenReturn(userId);
-        when(accessTokenDecoder.decode(token)).thenReturn(accessToken);
         when(accessToken.hasRole(Role.Client.name())).thenReturn(true);
         when(userRepository.getUserEntityById(userId)).thenReturn(Optional.ofNullable(userEntity));
 
@@ -737,9 +738,9 @@ class AppointmentControllerTest {
         DoctorConverter doctorConverter = new DoctorConverter();
         PetConverter petConverter = new PetConverter();
         AppointmentConverter converter = new AppointmentConverter(doctorConverter,clientConverter,petConverter);
-        AccessTokenDecoder accessTokenDecoder = mock(AccessTokenDecoder.class);
         UserRepository userRepository = mock(UserRepository.class);
         AccessToken accessToken = mock(AccessToken.class);
+        EmailManager emailManager = mock(EmailManager.class);
         AppointmentController appointmentController = new AppointmentController(appointmentManager,
                 doctorManager,
                 clientManager,
@@ -748,20 +749,14 @@ class AppointmentControllerTest {
                 clientConverter,
                 doctorConverter,
                 petConverter,
-                accessTokenDecoder,
                 userRepository,
-                accessToken);
+                accessToken,
+                emailManager);
 
         Client client = new Client();
         client.setId(2L);
 
-        Appointment appointment = Appointment.builder()
-                .id(1L)
-                .dateAndStart(LocalDateTime.now())
-                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
-                .client(client)
-                .doctor(null)
-                .build();
+
 
         long appointmentId = 1L;
         long userId = 2L;
@@ -771,8 +766,23 @@ class AppointmentControllerTest {
                 .id(userId)
                 .role(Role.Client.ordinal()).build();
 
+        Doctor doctor = Doctor.builder()
+                .id(userId).role(Role.Doctor).build();
+
+        Pet pet = Pet.builder()
+                .name("Ana").build();
+
+
+        Appointment appointment = Appointment.builder()
+                .id(1L)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
+                .client(client)
+                .doctor(doctor)
+                .pet(pet)
+                .build();
+
         when(accessToken.getId()).thenReturn(userId);
-        when(accessTokenDecoder.decode(token)).thenReturn(accessToken);
         when(accessToken.hasRole(Role.Client.name())).thenReturn(true);
         when(userRepository.getUserEntityById(userId)).thenReturn(Optional.ofNullable(userEntity));
         when(appointmentManager.getUsersAppointments(userId)).thenReturn(Optional.of(List.of(appointment)));
@@ -796,9 +806,9 @@ class AppointmentControllerTest {
         DoctorConverter doctorConverter = new DoctorConverter();
         PetConverter petConverter = new PetConverter();
         AppointmentConverter converter = new AppointmentConverter(doctorConverter,clientConverter,petConverter);
-        AccessTokenDecoder accessTokenDecoder = mock(AccessTokenDecoder.class);
         UserRepository userRepository = mock(UserRepository.class);
         AccessToken accessToken = mock(AccessToken.class);
+        EmailManager emailManager = mock(EmailManager.class);
         AppointmentController appointmentController = new AppointmentController(appointmentManager,
                 doctorManager,
                 clientManager,
@@ -807,9 +817,9 @@ class AppointmentControllerTest {
                 clientConverter,
                 doctorConverter,
                 petConverter,
-                accessTokenDecoder,
                 userRepository,
-                accessToken);
+                accessToken,
+                emailManager);
 
         long appointmentId = 1L;
         long userId = 2L;
@@ -819,10 +829,16 @@ class AppointmentControllerTest {
                 .id(userId)
                 .role(Role.Client.ordinal()).build();
 
+        Appointment appointment = Appointment.builder()
+                .id(1L)
+                .dateAndStart(LocalDateTime.now())
+                .dateAndEnd(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT))
+                .build();
+
         when(accessToken.getId()).thenReturn(userId);
-        when(accessTokenDecoder.decode(token)).thenReturn(accessToken);
         when(accessToken.hasRole(Role.Client.name())).thenReturn(true);
         when(userRepository.getUserEntityById(userId)).thenReturn(Optional.ofNullable(userEntity));
+
 
         // Act
         ResponseEntity<Void> responseEntity = appointmentController.cancelAppointment(appointmentId);

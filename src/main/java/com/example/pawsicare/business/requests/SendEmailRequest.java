@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class SendEmailRequest {
     String userEmail;
     String message;
+    String subject;
 }

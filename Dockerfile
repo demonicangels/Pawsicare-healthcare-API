@@ -10,7 +10,7 @@ COPY jwtSecretKey.env jwtSecretKey.env
 COPY src/main/resources/application.properties application.properties
 
 # Install bash
-RUN apk --no-cache add bash
+RUN apk --no-cache add bash  #install command in linux
 
 # Expose the port that the application runs on
 EXPOSE 8080

@@ -7,16 +7,13 @@ import com.example.pawsicare.business.converters.DoctorConverter;
 import com.example.pawsicare.business.converters.PetConverter;
 import com.example.pawsicare.business.requests.CreateAppointmentRequest;
 import com.example.pawsicare.business.requests.CreateDoctorScheduleRequest;
+import com.example.pawsicare.business.requests.SendEmailRequest;
 import com.example.pawsicare.business.requests.UpdateAppointmentRequest;
 import com.example.pawsicare.business.responses.*;
 import com.example.pawsicare.business.security.token.AccessToken;
-import com.example.pawsicare.business.security.token.AccessTokenDecoder;
 import com.example.pawsicare.domain.Appointment;
 import com.example.pawsicare.domain.Role;
-import com.example.pawsicare.domain.managerinterfaces.AppointmentManager;
-import com.example.pawsicare.domain.managerinterfaces.ClientManager;
-import com.example.pawsicare.domain.managerinterfaces.DoctorManager;
-import com.example.pawsicare.domain.managerinterfaces.PetManager;
+import com.example.pawsicare.domain.managerinterfaces.*;
 import com.example.pawsicare.persistence.entity.UserEntity;
 import com.example.pawsicare.persistence.jparepositories.UserRepository;
 import jakarta.annotation.security.RolesAllowed;
@@ -45,9 +42,9 @@ public class AppointmentController {
     private final ClientConverter clientConverter;
     private final DoctorConverter doctorConverter;
     private final PetConverter petConverter;
-    private final AccessTokenDecoder accessTokenDecoder;
     private final UserRepository userRepository;
     private final AccessToken accessToken;
+    private final EmailManager emailManager;
 
     @RolesAllowed({"Doctor", "Client"})
     @GetMapping("/getDocSchedule")
@@ -145,6 +142,14 @@ public class AppointmentController {
 
             appointmentManager.createAppointment(converter.fromDTO(appointment));
 
+            emailManager.sendEmail(SendEmailRequest.builder()
+                    .message(String.format("Appointment confirmation for appointment on %s with Dr. %s for your pet %s",
+                            appointment.getDateAndStart(),
+                            appointment.getDoctor().getName(),
+                            appointment.getPet().getName()))
+                    .subject("Appointment confirmation")
+                    .build());
+
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -182,6 +187,13 @@ public class AppointmentController {
 
                appointmentManager.rescheduleAppointment(converter.fromDTO(appointment));
 
+               emailManager.sendEmail(SendEmailRequest.builder()
+                       .message(String.format("Appointment confirmation for appointment on %s with Dr. %s for your pet %s",
+                               appointment.getDateAndStart(),
+                               appointment.getDoctor().getName(),
+                               appointment.getPet().getName()))
+                       .subject("Appointment confirmation")
+                       .build());
 
                return ResponseEntity.status(HttpStatus.ACCEPTED).build();
            }
@@ -211,6 +223,19 @@ public class AppointmentController {
 
             if (isCorrectUsersAppointments) {
                 appointmentManager.cancelAppointment(id);
+
+                Appointment appointment = appointments.get().stream().filter(app -> app.getId() == id)
+                        .findFirst()
+                        .get();
+
+                emailManager.sendEmail(SendEmailRequest.builder()
+                        .message(String.format("Your appointment on %s with Dr. %s for your pet %s is has been cancelled",
+                                appointment.getDateAndStart(),
+                                appointment.getDoctor().getName(),
+                                appointment.getPet().getName()))
+                        .subject("Appointment cancellation")
+                        .build());
+
                 return ResponseEntity.ok().build();
             }
         }
