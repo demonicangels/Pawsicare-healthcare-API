@@ -11,8 +11,6 @@ public interface RefreshTokenService {
     RefreshToken decode (String refreshToken);
     RefreshToken verifyExpiration(RefreshToken token);
     void clearRefreshToken(RefreshToken token);
-
     RefreshToken getRefreshTokenByUser(User user) throws UserNotFoundException;
-
     RefreshToken getRefreshTokenByToken(String accessToken) throws UserNotAuthenticatedException;
 }

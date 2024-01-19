@@ -102,18 +102,24 @@ public class AuthenticationController {
 
     @RolesAllowed({"Client", "Doctor"})
     @DeleteMapping()
-    public ResponseEntity<Void> deleteUser(@RequestParam(name = "id") long id) throws UserNotAuthenticatedException {
-
-
-        RefreshToken refreshToken = refreshTokenService.getRefreshTokenByToken(accessToken.toString());
+    public ResponseEntity<Void> deleteUser(@RequestParam(name = "id") long id) throws UserNotAuthenticatedException, UserNotFoundException {
 
         Long userId = accessToken.getId();
         boolean isClient = accessToken.hasRole(Role.Client.name());
         boolean isDoctor = accessToken.hasRole(Role.Doctor.name());
 
-        if(userId.equals(id) && (isClient || isDoctor) ){
+        Optional<UserEntity> userEntity = userRepository.getUserEntityById(userId);
+
+        if(userEntity.isEmpty()){
+            throw new UserNotFoundException(errorMsg);
+        }
+
+        RefreshToken refreshToken = refreshTokenService.getRefreshTokenByUser(userEntityConverter.fromUserEntity(userEntity.get()));
+
+
+        if(userId.equals(id) && refreshToken != null && (isClient || isDoctor)){
             clientManager.deleteUser(id, refreshToken);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         }
         throw new UserNotAuthenticatedException(errorMsg);
     }
