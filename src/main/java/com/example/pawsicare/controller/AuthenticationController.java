@@ -9,7 +9,6 @@ import com.example.pawsicare.business.requests.RefreshTokenRequest;
 import com.example.pawsicare.business.responses.JWTResponse;
 import com.example.pawsicare.business.security.token.AccessToken;
 import com.example.pawsicare.business.security.token.impl.AccessTokenDecoderEncoderImpl;
-import com.example.pawsicare.business.security.token.impl.AccessTokenImpl;
 import com.example.pawsicare.domain.RefreshToken;
 import com.example.pawsicare.domain.Role;
 import com.example.pawsicare.domain.User;
@@ -39,6 +38,7 @@ public class AuthenticationController {
     private final UserRepository userRepository;
     private final ClientManager clientManager;
     private final UserEntityConverter userEntityConverter;
+    private final AccessToken accessToken;
 
     private String errorMsg = "User not allowed!";
 
@@ -78,10 +78,6 @@ public class AuthenticationController {
                 // Generate a new access token
                 if (isUserAuthenticated.equals(true)) {
 
-                    AccessTokenImpl accessToken = AccessTokenImpl.builder()
-                            .userId(userInfo.getId())
-                            .role(userInfo.getRole()).build();
-
                     // Generate a new access token using the information from the existing access token
                     String newAccessToken = accessTokenService.generateJWT(accessToken);
 
@@ -106,14 +102,14 @@ public class AuthenticationController {
 
     @RolesAllowed({"Client", "Doctor"})
     @DeleteMapping()
-    public ResponseEntity<Void> deleteUser(@RequestParam(name = "id") long id, @RequestParam(name = "token")String token) throws UserNotAuthenticatedException {
-        AccessToken tokenClaims = accessTokenService.decode(token);
+    public ResponseEntity<Void> deleteUser(@RequestParam(name = "id") long id) throws UserNotAuthenticatedException {
 
-        RefreshToken refreshToken = refreshTokenService.getRefreshTokenByToken(token);
 
-        Long userId = tokenClaims.getId();
-        boolean isClient = tokenClaims.hasRole(Role.Client.name());
-        boolean isDoctor = tokenClaims.hasRole(Role.Doctor.name());
+        RefreshToken refreshToken = refreshTokenService.getRefreshTokenByToken(accessToken.toString());
+
+        Long userId = accessToken.getId();
+        boolean isClient = accessToken.hasRole(Role.Client.name());
+        boolean isDoctor = accessToken.hasRole(Role.Doctor.name());
 
         if(userId.equals(id) && (isClient || isDoctor) ){
             clientManager.deleteUser(id, refreshToken);
